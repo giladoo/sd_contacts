@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+<!--    <record id="sd_contacts_test_act" model="ir.actions.act_window">-->
+<!--            <field name="name">Test</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="res_model">sd_contacts.test</field>-->
+
+<!--        </record>-->
+<!--        <menuitem action="sd_contacts_test_act" id="sd_contacts_test_menu" />-->
+
+</odoo>
