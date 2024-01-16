@@ -4,7 +4,7 @@
         <t t-call="website.layout">
             <div class="container h-100 my-4 px-1 ">
                 <div class="sd_employee_contacts  ">
-                    <div>
+                    <div class="mx-4">
                         <input type="text" class="contacts_search form-control shadow-sm w-lg-25 w-md-50"/>
                     </div>
                     <div>
