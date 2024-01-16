@@ -55,13 +55,13 @@ publicWidget.registry.SdEmployeeContacts = publicWidget.Widget.extend({
 
         data.forEach(rec => {
             this.contacts_list.innerHTML += `
-            <div class="col-12 row mx-0 px-0 border-bottom align-items-center">
-                <div class="col-2 px-1 ">
-                    <div class=" img_div " style="background-image: url(/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128)"></div>
+            <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
+                <div class="col-3 col-md-2 py-1  ">
+                    <div class=" img_div rounded-circle border p-1 border-dark " style="background-image: url(/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
-                <div class="col-4 px-1 "> ${rec.name}</div>
-                <div class="col-1 px-1 "> ${rec.work_phone || ''}</div>
-                <div class="col-4 px-1 "> ${rec.work_email || ''}</div>
+                <div class=" col-7 col-md-4 px-1 text-center "> ${rec.name}</div>
+                <div class="col-2 col-md-1 px-1 text-center"> ${rec.work_phone || ''}</div>
+                <div class="col-md-4 px-1 d-none d-md-block text-center"> ${rec.work_email || ''}</div>
             </div>
             `
         })

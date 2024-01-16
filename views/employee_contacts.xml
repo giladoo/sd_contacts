@@ -2,20 +2,20 @@
 <odoo>
     <template id="employee_contacts">
         <t t-call="website.layout">
-            <div class="container h-100 my-2 ">
-                <div class="sd_employee_contacts ">
+            <div class="container h-100 my-4 px-1 ">
+                <div class="sd_employee_contacts  ">
                     <div>
-                        <input type="text" class="contacts_search form-control w-lg-25 w-md-50"/>
+                        <input type="text" class="contacts_search form-control shadow-sm w-lg-25 w-md-50"/>
                     </div>
                     <div>
                         <div class="contacts_search_keys"></div>
                     </div>
                     <div class="mt-3">
-                        <div class="row bg-400 mx-0 py-1">
-                            <div class="col-2 px-1 text-center">Image</div>
-                            <div class="col-4 px-1 text-center">Neme</div>
-                            <div class="col-1 px-1 text-center">Phone</div>
-                            <div class="col-4 px-1 text-center">Email</div>
+                        <div class="row bg-400 rounded-top shadow-sm mx-0 py-1">
+                            <div class="col-3 col-md-2 px-1 text-center">Image</div>
+                            <div class="col-7 col-md-4 px-1 text-center">Neme</div>
+                            <div class="col-2 col-md-1 px-1 text-center">Phone</div>
+                            <div class="col-md-4 px-1 text-center  d-none d-md-block">Email</div>
                         </div>
                         <div class="contacts_list mx-0 h-100"></div>
                     </div>
