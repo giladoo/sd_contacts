@@ -6,6 +6,7 @@ publicWidget.registry.SdEmployeeContacts = publicWidget.Widget.extend({
     selector: ".sd_employee_contacts",
     events:{
         "keyup .contacts_search": "_onContactsSearch",
+        "click .copy_to_clip_board": "_copyToClipBoard",
     },
     start(){
         this.contacts_list = this.el.querySelector('.contacts_list')
@@ -64,11 +65,30 @@ publicWidget.registry.SdEmployeeContacts = publicWidget.Widget.extend({
                     <div class="h6" >${rec.job_title|| ''}</div>
                     <div class="small">${rec.department_id[1] || ''}</div>
                 </div>
-                <div class="col-2 col-md-1 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
-                <div class="col-2 col-md-2 px-1 d-none d-md-block text-center small"> ${rec.work_email || ''}</div>
+                <div class="copy_to_clip_board col-2 col-md-1 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
+                <div class="copy_to_clip_board contact_email col-2 col-md-2 px-1 d-none d-md-block text-center small " >
+                   ${rec.work_email || ''}
+                </div>
             </div>
             `
         })
+    },
+    _copyToClipBoard(e){
+        let copyText = e.target.innerText;
+        let target = e.target
+        navigator.clipboard.writeText(target.innerText);
+        $(e.target).tooltip({
+            title: 'Copied',
+            trigger: 'manual',
+            container: target,
+            placement: 'top',
+            delay: {"show": 500, "hide": 100},
+        }).tooltip('show');
+        setTimeout(e=> $(target).tooltip('hide'), 1000)
+//      copyText.select();
+//      copyText.setSelectionRange(0, 99999); // For mobile devices
+
+       // Copy the text inside the text field
     },
     _isInclude(ar, st){
 //        console.log(ar.filter(rec => {
