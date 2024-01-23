@@ -59,7 +59,7 @@ publicWidget.registry.SdEmployeeContacts = publicWidget.Widget.extend({
                 <div class="col-3 col-md-2 py-1">
                     <div class="img_div rounded-circle border p-1 border-gray" style="background-image: url(/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
-                <div class="col-4 col-md-3 px-1 h6 text-center "> ${rec.name}</div>
+                <div class="col-7 col-md-3 px-1 h6 text-center "> ${rec.name}</div>
                 <div class="col-3 col-md-3 d-none d-md-block px-1 text-center">
                     <div class="h6" >${rec.job_title|| ''}</div>
                     <div class="small">${rec.department_id[1] || ''}</div>
