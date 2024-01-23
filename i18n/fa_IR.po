@@ -1,0 +1,43 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sd_contacts
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-23 10:54+0000\n"
+"PO-Revision-Date: 2024-01-23 14:26+0330\n"
+"Last-Translator: Arash Homayounfar <homayounfar@msn.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
+"Language: fa_IR\n"
+"X-Generator: Poedit 2.2\n"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
+msgid "Dep/Job"
+msgstr "سمت / واحد"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
+msgid "Email"
+msgstr "ایمیل"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
+msgid "Image"
+msgstr ""
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
+msgid "Neme"
+msgstr "نام و نام خانوادگی"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
+msgid "Phone"
+msgstr "تلفن"
