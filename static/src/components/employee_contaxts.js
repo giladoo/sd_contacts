@@ -1,6 +1,7 @@
 /** @odoo-module */
 import publicWidget from "web.public.widget";
 const { useState } = owl.hooks;
+import { _t } from "web.core"
 
 publicWidget.registry.SdEmployeeContacts = publicWidget.Widget.extend({
     selector: ".sd_employee_contacts",
@@ -84,7 +85,7 @@ publicWidget.registry.SdEmployeeContacts = publicWidget.Widget.extend({
         let target = e.target
         navigator.clipboard.writeText(target.innerText);
         $(e.target).tooltip({
-            title: 'Copied',
+            title: _t('Copied'),
             trigger: 'manual',
             container: target,
             placement: 'top',
