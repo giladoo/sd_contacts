@@ -60,14 +60,20 @@ publicWidget.registry.SdEmployeeContacts = publicWidget.Widget.extend({
                 <div class="col-3 col-md-2 py-1">
                     <div class="img_div rounded-circle border p-1 border-gray" style="background-image: url(/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
-                <div class="col-7 col-md-3 px-1 h6 text-center "> ${rec.name}</div>
-                <div class="col-3 col-md-3 d-none d-md-block px-1 text-center">
-                    <div class="h6" >${rec.job_title|| ''}</div>
-                    <div class="small">${rec.department_id[1] || ''}</div>
-                </div>
-                <div class="copy_to_clip_board col-2 col-md-1 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
-                <div class="copy_to_clip_board contact_email col-2 col-md-2 px-1 d-none d-md-block text-center small " >
-                   ${rec.work_email || ''}
+                <div class="row col-9 col-md-10 p-0">
+                    <div class="row col-12 col-md-7 mx-0 mb-1 px-0 ">
+                        <div class="col-6  px-1 h6 text-center "> ${rec.name}</div>
+                        <div class="col-6 px-1 text-center">
+                            <div class="h6" >${rec.job_title|| ''}</div>
+                            <div class="small">${rec.department_id[1] || ''}</div>
+                        </div>
+                    </div>
+                    <div class="row col-12 col-md-5 mx-0 mb-1 px-0">
+                        <div class="copy_to_clip_board  col-6 col-md-4 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
+                        <div class="copy_to_clip_board  contact_email col-6 col-md-8 px-1  text-center small " >
+                           ${rec.work_email || ''}
+                        </div>
+                    </div>
                 </div>
             </div>
             `

@@ -15,7 +15,7 @@
                             <div class="col-3 col-md-2 px-1 text-center">Image</div>
                             <div class="col-7 col-md-3 px-1 text-center">Neme</div>
                             <div class="col-3 col-md-3 px-1 text-center d-none d-md-block">Dep/Job</div>
-                            <div class="col-2 col-md-1 px-1 text-center">Phone</div>
+                            <div class="col-2 col-md-1 px-1 text-center d-none d-md-block">Phone</div>
                             <div class="col-4 col-md-3 px-1 text-center  d-none d-md-block">Email</div>
                         </div>
                         <div class="contacts_list mx-0 h-100"></div>
