@@ -1,0 +1,24 @@
+.sd_employee_contacts .table_header{
+    background-color: #484a9f;
+    color: #fff;
+}
+div .img_div{
+    max-width: 70px;
+    max-height: 70px;
+    min-height: 70px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.contacts_list{
+    min-height: 500px;
+    background: #fff;
+}
+
+.border-gray{
+    border-color: #6c757d !important;
+}
+
+.copy_to_clip_board{
+    cursor: pointer;
+}

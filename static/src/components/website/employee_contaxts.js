@@ -18,7 +18,7 @@ publicWidget.registry.SdEmployeeContacts = publicWidget.Widget.extend({
             employees: [],
             search: [''],
         })
-        console.log('sd_employee_contacts')
+//        console.log('sd_employee_contacts')
         this._rpc({
             model: 'hr.employee',
             method: 'search_read',

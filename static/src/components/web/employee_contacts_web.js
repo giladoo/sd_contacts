@@ -1,0 +1,130 @@
+/** @odoo-module */
+
+import { registry } from "@web/core/registry"
+const { Component } = owl;
+import { _t } from "web.core"
+const { useState, useRef } = owl.hooks;
+import { browser } from "@web/core/browser/browser";
+import { useService } from "@web/core/utils/hooks";
+
+export class SdContactsDashboard extends Component {
+//    events:{
+//        "keyup .contacts_search": "_onContactsSearch",
+//        "click .copy_to_clip_board": "_copyToClipBoard",
+//    }
+    async setup(){
+        super.setup();
+        this.orm = useService('orm')
+        this.contactsSearch = useRef('contacts_search')
+        this.contactsList = useRef('contacts_list')
+        this.contactsPhone = useRef('contacts_phone')
+        this.contactsEmail = useRef('contacts_email')
+//        console.log('setup updateList', this.contactsList)
+
+        this.state = useState({
+            employees: [],
+            search: [''],
+        })
+
+        await this.orm.searchRead('hr.employee', [], ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],)
+        .then(data=> {
+            this.state.employees = data;
+            console.log('E:', this.state.employees)
+            this.updateList(data)
+        })
+
+//        console.log('SdContactsDashboard:', this, this.contactsSearch.el)
+        this._onContactsSearch = this._onContactsSearch.bind(this);
+        this._copyToClipBoard = this._copyToClipBoard.bind(this);
+        browser.addEventListener('keyup', this._onContactsSearch);
+        this.contactsList.el.addEventListener('click', this._copyToClipBoard)
+    }
+    _onKeyUp(e){
+        console.log('e', e)
+    }
+    _onContactsSearch(e){
+//        console.log('_onContactsSearch', e, this.contactsSearch)
+//        return
+        let contacts_search_value = this.contactsSearch.el.value
+        if( e.keyCode == 13){
+            this.updateList(this.state.employees)
+            this.state.search = ['']
+            this.contactsSearch.el.value = ''
+        } else{
+            this.state.search = contacts_search_value.toLowerCase().split(' ')
+            console.log('search', this.state.search)
+            let the_list = this._isInclude(this.state.employees, this.state.search[0])
+            the_list = this.state.search[1] ? this._isInclude(the_list,this.state.search[1]) : the_list
+            the_list = this.state.search[2] ? this._isInclude(the_list,this.state.search[2]) : the_list
+            the_list.length > 0 ? this.updateList(the_list) : this.updateList([])
+        }
+
+    }
+    updateList(data){
+        if(!data || !this.contactsList){
+            return
+        }
+//        console.log('updateList', this.contactsList)
+        this.contactsList.el.innerHTML = '';
+//                        <div class="col-2 px-1 img_div "><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
+
+        data.forEach(rec => {
+            this.contactsList.el.innerHTML += `
+            <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
+                <div class="col-3 col-md-2 py-1">
+                    <div class="img_div rounded-circle border p-1 border-gray" style="background-image: url(/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128)"></div>
+                </div>
+                <div class="row col-9 col-md-10 p-3 p-md-0">
+                    <div class="row col-12 col-md-7 mx-0 mb-1 px-0 ">
+                        <div class="col-6  px-1 h6 text-center "> ${rec.name}</div>
+                        <div class="col-6 px-1 text-center">
+                            <div class="h6" >${rec.job_title|| ''}</div>
+                            <div class="small">${rec.department_id[1] || ''}</div>
+                        </div>
+                    </div>
+                    <div class="row col-12 col-md-5 mx-0 mb-1 px-0">
+                        <div ref="contacts_phone" class="copy_to_clip_board  col-6 col-md-4 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
+                        <div ref="contacts_email" class="copy_to_clip_board  contact_email col-6 col-md-8 px-1  text-center small " >
+                           ${rec.work_email || ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `
+        })
+    }
+    _copyToClipBoard(e){
+        let copyText = e.target.innerText;
+        let target = e.target
+        if (target.classList.contains('copy_to_clip_board')){
+            navigator.clipboard.writeText(target.innerText);
+            $(e.target).tooltip({
+                title: _t('Copied'),
+                trigger: 'manual',
+                container: target,
+                placement: 'top',
+                delay: {"show": 500, "hide": 100},
+            }).tooltip('show');
+            setTimeout(e=> $(target).tooltip('hide'), 1000)
+        }
+//      copyText.select();
+//      copyText.setSelectionRange(0, 99999); // For mobile devices
+
+       // Copy the text inside the text field
+    }
+    _isInclude(ar, st){
+//        console.log(ar.filter(rec => {
+//        return rec.name ? rec.name.includes(st) : false
+//            || rec.work_phone ? rec.work_phone.includes(st) : false
+//            || rec.work_email ? rec.work_email.includes(st) : false
+//        }))
+        return ar.filter(rec => {
+        return ((rec.name ? rec.name.includes(st) : false)
+            || (rec.work_phone ? rec.work_phone.includes(st) : false)
+            || (rec.work_email ? rec.work_email.includes(st) : false))
+        })
+    }
+}
+
+SdContactsDashboard.template = "sd_contacts.contacts_template";
+registry.category("actions").add("sd_contacts.contacts_dashboard", SdContactsDashboard);
