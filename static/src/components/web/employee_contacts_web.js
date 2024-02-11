@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry"
 const { Component } = owl;
 import { _t } from "web.core"
-const { useState, useRef } = owl.hooks;
+const { useState, useRef, onMounted, onWillUnmount } = owl.hooks;
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
@@ -12,8 +12,9 @@ export class SdContactsDashboard extends Component {
 //        "keyup .contacts_search": "_onContactsSearch",
 //        "click .copy_to_clip_board": "_copyToClipBoard",
 //    }
-    async setup(){
-        super.setup();
+    setup(){
+//        super.setup();
+        let self = this;
         this.orm = useService('orm')
         this.contactsSearch = useRef('contacts_search')
         this.contactsList = useRef('contacts_list')
@@ -26,24 +27,38 @@ export class SdContactsDashboard extends Component {
             search: [''],
         })
 
-        await this.orm.searchRead('hr.employee', [], ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],)
-        .then(data=> {
-            this.state.employees = data;
-            console.log('E:', this.state.employees)
-            this.updateList(data)
-        })
+
 
 //        console.log('SdContactsDashboard:', this, this.contactsSearch.el)
+
+        onMounted(async () => {
+//            console.log('con onMounted')
+            browser.addEventListener('keyup', self._onContactsSearch);
+            browser.addEventListener('click', self._copyToClipBoard)
+
+        await self.orm.searchRead('hr.employee',
+                                [],
+                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],)
+        .then(data=> {
+            self.state.employees = data;
+//            console.log('E:', this.state.employees)
+            self.updateList(data)
+        })
+        });
+        onWillUnmount(() => {
+//                    console.log('con onWillUnmount')
+
+            browser.removeEventListener('keyup', self._onContactsSearch);
+            browser.removeEventListener('click', self._copyToClipBoard)
+        });
         this._onContactsSearch = this._onContactsSearch.bind(this);
         this._copyToClipBoard = this._copyToClipBoard.bind(this);
-        browser.addEventListener('keyup', this._onContactsSearch);
-        this.contactsList.el.addEventListener('click', this._copyToClipBoard)
     }
     _onKeyUp(e){
         console.log('e', e)
     }
     _onContactsSearch(e){
-//        console.log('_onContactsSearch', e, this.contactsSearch)
+//        console.log('con _onContactsSearch', e, this.contactsSearch)
 //        return
         let contacts_search_value = this.contactsSearch.el.value
         if( e.keyCode == 13){
@@ -67,9 +82,9 @@ export class SdContactsDashboard extends Component {
 //        console.log('updateList', this.contactsList)
         this.contactsList.el.innerHTML = '';
 //                        <div class="col-2 px-1 img_div "><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
-
+        let contactsListHtml = ''
         data.forEach(rec => {
-            this.contactsList.el.innerHTML += `
+            contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
                 <div class="col-3 col-md-2 py-1">
                     <div class="img_div rounded-circle border p-1 border-gray" style="background-image: url(/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128)"></div>
@@ -92,6 +107,10 @@ export class SdContactsDashboard extends Component {
             </div>
             `
         })
+
+        contactsListHtml += '<div style="height: 100px;"></div>'
+        this.contactsList.el.innerHTML = contactsListHtml;
+
     }
     _copyToClipBoard(e){
         let copyText = e.target.innerText;
