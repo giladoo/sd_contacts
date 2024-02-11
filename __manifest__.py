@@ -19,7 +19,7 @@
     'version': '15.0.1.1.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'web', 'hr'],
+    'depends': ['base', 'web', 'hr', 'hr_extend'],
 
     # always loaded
     'data': [

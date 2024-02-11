@@ -38,7 +38,7 @@ export class SdContactsDashboard extends Component {
 
         await self.orm.searchRead('hr.employee',
                                 [],
-                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],)
+                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],{order: 'sequence'})
         .then(data=> {
             self.state.employees = data;
 //            console.log('E:', this.state.employees)

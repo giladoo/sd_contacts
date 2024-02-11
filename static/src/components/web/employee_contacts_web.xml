@@ -11,12 +11,12 @@
                         <div class="contacts_search_keys"></div>
                     </div>
                     <div class="mt-4 shadow-lg">
-                        <div class="row table_header1 bg-info-light rounded-top shadow-sm mx-0 py-1">
+                        <div class="row contacts_list_header rounded-top shadow-sm mx-0 py-1">
                             <div class="col-2 col-md-2 p-1 text-center"></div>
-                            <div class="col-6 col-md-3 p-1 text-center h6">Name</div>
-                            <div class="col-1 col-md-3 p-1 text-center h6 d-none d-md-block">Dep/Job</div>
-                            <div class="col-1 col-md-1 p-1 text-center h6 d-none d-md-block">Phone</div>
-                            <div class="col-1 col-md-3 p-1 text-center h6 d-none d-md-block">Email</div>
+                            <div class="col-6 col-md-3 p-1 text-center">Name</div>
+                            <div class="col-1 col-md-3 p-1 text-center d-none d-md-block">Dep/Job</div>
+                            <div class="col-1 col-md-1 p-1 text-center d-none d-md-block">Phone</div>
+                            <div class="col-1 col-md-3 p-1 text-center d-none d-md-block">Email</div>
                         </div>
                         <div t-ref="contacts_list" class="contacts_list mx-0 h-100"></div>
                     </div>
