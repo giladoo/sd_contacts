@@ -48,6 +48,7 @@ export class SdContactsDashboard extends Component {
         .then(data => JSON.parse(data))
         .then(data=> {
             self.state.employees = data['contact_list'];
+            self.state.contacts_filtered = data['contact_list'];
             self.state.companies = data['company_list'];
 //            console.log('E:', this.state.employees)
             self.updateList(self.state.employees)
@@ -77,13 +78,15 @@ export class SdContactsDashboard extends Component {
 //        return
         let contacts_search_value = this.contactsSearch.el.value
         if( e.keyCode == 13){
-            this.updateList(this.state.employees)
+            this.updateList(this.state.contacts_filtered)
+            console.log('_onContactsSearch:', this.state.contacts_filtered)
             this.state.search = ['']
             this.contactsSearch.el.value = ''
         } else{
             this.state.search = contacts_search_value.toLowerCase().split(' ')
-            console.log('search', this.state.search)
-            let the_list = this._isInclude(this.state.employees, this.state.search[0])
+            console.log('_onContactsSearch:', this.state.contacts_filtered)
+//            console.log('search', this.state.search)
+            let the_list = this._isInclude(this.state.contacts_filtered, this.state.search[0])
             the_list = this.state.search[1] ? this._isInclude(the_list,this.state.search[1]) : the_list
             the_list = this.state.search[2] ? this._isInclude(the_list,this.state.search[2]) : the_list
             the_list.length > 0 ? this.updateList(the_list) : this.updateList([])
