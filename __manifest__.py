@@ -16,7 +16,7 @@
     # for the full list
     'category': 'Service Desk/Service Desk',
     'application': True,
-    'version': '15.0.1.1.0',
+    'version': '15.0.1.1.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'web', 'hr', 'hr_extend'],
@@ -26,7 +26,7 @@
         # 'security/security.xml',
         # 'security/ir.model.access.csv',
         'views/views.xml',
-        # 'views/employee_contacts.xml',
+        'views/res_users.xml',
         ],
     'assets': {
         'web._assets_common_scripts': [

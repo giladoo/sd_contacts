@@ -5,11 +5,13 @@
             <div class="container h-100 my-4 px-1 ">
                 <div class="sd_employee_contacts  ">
                     <div class="mx-4">
-                        <input type="text" t-ref="contacts_search" class="contacts_search form-control shadow-sm w-lg-25 w-md-50"/>
+                        <input type="text" t-ref="contacts_search" class="contacts_search form-control shadow-lg w-lg-25 w-md-50"/>
                     </div>
                     <div>
                         <div class="contacts_search_keys"></div>
                     </div>
+                    <div t-ref="contacts_companies" class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-0 p-1 p-md-3 "></div>
+
                     <div class="mt-4 shadow-lg">
                         <div class="row contacts_list_header rounded-top shadow-sm mx-0 py-1">
                             <div class="col-2 col-md-2 p-1 text-center"></div>

@@ -20,10 +20,14 @@ export class SdContactsDashboard extends Component {
         this.contactsList = useRef('contacts_list')
         this.contactsPhone = useRef('contacts_phone')
         this.contactsEmail = useRef('contacts_email')
+        this.contactsCompanies = useRef('contacts_companies')
+
 //        console.log('setup updateList', this.contactsList)
 
         this.state = useState({
             employees: [],
+            contacts_filtered: [],
+            companies: [],
             search: [''],
         })
 
@@ -35,14 +39,25 @@ export class SdContactsDashboard extends Component {
 //            console.log('con onMounted')
             browser.addEventListener('keyup', self._onContactsSearch);
             browser.addEventListener('click', self._copyToClipBoard)
+            self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
 
-        await self.orm.searchRead('hr.employee',
-                                [],
-                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],{order: 'sequence'})
+//        await self.orm.searchRead('hr.employee',
+//                                [],
+//                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],{order: 'sequence'})
+        await self.orm.call('hr.employee', 'contact_web', [[]], {})
+        .then(data => JSON.parse(data))
         .then(data=> {
-            self.state.employees = data;
+            self.state.employees = data['contact_list'];
+            self.state.companies = data['company_list'];
 //            console.log('E:', this.state.employees)
-            self.updateList(data)
+            self.updateList(self.state.employees)
+            if (self.state.companies.length > 1){
+                self.contactsCompanies.el.classList.remove('d-none')
+                self.updateCompanyList(self.state.companies)
+                let e = Object();
+                e['target'] = 'all'
+                self._onContactsCompanies(e)
+            }
         })
         });
         onWillUnmount(() => {
@@ -50,12 +65,12 @@ export class SdContactsDashboard extends Component {
 
             browser.removeEventListener('keyup', self._onContactsSearch);
             browser.removeEventListener('click', self._copyToClipBoard)
+            self.contactsCompanies.el.removeEventListener('click', self._onContactsCompanies)
+
         });
         this._onContactsSearch = this._onContactsSearch.bind(this);
         this._copyToClipBoard = this._copyToClipBoard.bind(this);
-    }
-    _onKeyUp(e){
-        console.log('e', e)
+        this._onContactsCompanies = this._onContactsCompanies.bind(this);
     }
     _onContactsSearch(e){
 //        console.log('con _onContactsSearch', e, this.contactsSearch)
@@ -94,7 +109,8 @@ export class SdContactsDashboard extends Component {
                         <div class="col-6  px-1 h6 text-center "> ${rec.name}</div>
                         <div class="col-6 px-1 text-center">
                             <div class="h6" >${rec.job_title|| ''}</div>
-                            <div class="small">${rec.department_id[1] || ''}</div>
+                            <div class="small">${rec.department || ''}</div>
+                            <div class="small">${this.state.companies.length > 1 ? rec.company : ''}</div>
                         </div>
                     </div>
                     <div class="row col-12 col-md-5 mx-0 mb-1 px-0">
@@ -110,6 +126,37 @@ export class SdContactsDashboard extends Component {
 
         contactsListHtml += '<div style="height: 100px;"></div>'
         this.contactsList.el.innerHTML = contactsListHtml;
+
+    }
+    updateCompanyList(data){
+        this.contactsCompanies.el.innerHTML += `
+            <div class="contacts_companies_btn contacts_companies_all btn btn-primary border-0 m-1 text-center ">All</div>
+        `
+        data.forEach(rec => {
+            this.contactsCompanies.el.innerHTML += `
+                <div class="contacts_companies_btn btn btn-primary border-0 m-1 text-center "> ${rec}</div>
+            `
+        })
+    }
+    _onContactsCompanies(ev){
+        let contactsCompany = false
+        let target = ev.target
+        if (target == 'all' || target.classList.contains('contacts_companies_all')){
+            contactsCompany = 'all';
+            target = this.el.querySelector('.contacts_companies_all')
+            this.state.contacts_filtered =  this.state.employees
+        }
+        else if (target.classList.contains('contacts_companies_btn')){
+            contactsCompany = ev.target.innerText;
+            this.state.contacts_filtered =  this.state.employees.filter(rec => rec.company == contactsCompany)
+        }
+        if (contactsCompany){
+            let selected = this.contactsCompanies.el.querySelectorAll('.contacts_companies_selected')
+            selected.forEach(rec => rec.classList.remove('contacts_companies_selected'))
+            target.classList.add('contacts_companies_selected')
+            this.updateList(this.state.contacts_filtered)
+        }
+
 
     }
     _copyToClipBoard(e){
