@@ -12,7 +12,9 @@ class HrEmployeeSdContacts(models.Model):
         if self.env.is_admin():
             company_ids = self.env['res.company'].search([])
         else:
-            company_ids = self.env.user.sd_contacts_companies
+            # todo: error psycopg2.errors.UndefinedTable: relation "res_company_res_users_rel" does not exist
+            # company_ids = self.env.user.sd_contacts_companies
+            company_ids = self.env['res.company'].sudo().search([])
         employee_list =  self.sudo().search([('company_id', 'in', company_ids.ids)])
         print(f'''
                 
