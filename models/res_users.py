@@ -6,5 +6,5 @@ import json
 class ResUsersSdContacts(models.Model):
     _inherit = 'res.users'
 
-    sd_contacts_companies = fields.Many2many('res.company', 'res_users_company_sd_contacts')
+    sd_contacts_companies = fields.Many2many('res.company', )
 
