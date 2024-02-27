@@ -105,7 +105,7 @@ export class SdContactsDashboard extends Component {
             contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
                 <div class="col-3 col-md-2 py-1">
-                    <div class="img_div rounded-circle border p-1 border-gray" style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
+                    <div class="img_div rounded-circle border p-1 border-gray" style="background-image: url(/employee/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
                 <div class="row col-9 col-md-10 p-3 p-md-0">
                     <div class="row col-12 col-md-7 mx-0 mb-1 px-0 ">
