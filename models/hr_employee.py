@@ -33,6 +33,7 @@ class HrEmployeeSdContacts(models.Model):
                 'job_title' : rec.job_title,
                 'company' : rec.company_id.name,
                 'present' : rec.hr_presence_state,
+                'im_status' : rec.user_id.im_status,
              }
             for rec in employee_list
         ])

@@ -97,15 +97,24 @@ export class SdContactsDashboard extends Component {
         if(!data || !this.contactsList){
             return
         }
-//        console.log('updateList', this.contactsList)
+        let statusBorder = 'border-gray';
+        console.log('updateList', data)
         this.contactsList.el.innerHTML = '';
 //                        <div class="col-2 px-1 img_div "><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
         let contactsListHtml = ''
         data.forEach(rec => {
+            if (rec.im_status == 'online'){
+                statusBorder = 'border-success'
+            } else if (rec.im_status == 'away'){
+                statusBorder = 'border-warning'
+            } else {
+                statusBorder = 'border-gray'
+            }
+
             contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
                 <div class="col-3 col-md-2 py-1">
-                    <div class="img_div rounded-circle border border-3 p-1 ${rec.present == 'present' ? 'border-success' : 'border-gray'}" style="background-image: url(/employee/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
+                    <div class="img_div rounded-circle border border-3 p-1 ${statusBorder}" style="background-image: url(/employee/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
                 <div class="row col-9 col-md-10 p-3 p-md-0">
                     <div class="row col-12 col-md-7 mx-0 mb-1 px-0 ">
