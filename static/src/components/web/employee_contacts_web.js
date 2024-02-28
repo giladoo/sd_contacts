@@ -79,12 +79,12 @@ export class SdContactsDashboard extends Component {
         let contacts_search_value = this.contactsSearch.el.value
         if( e.keyCode == 13){
             this.updateList(this.state.contacts_filtered)
-            console.log('_onContactsSearch:', this.state.contacts_filtered)
+//            console.log('_onContactsSearch:', this.state.contacts_filtered)
             this.state.search = ['']
             this.contactsSearch.el.value = ''
         } else{
             this.state.search = contacts_search_value.toLowerCase().split(' ')
-            console.log('_onContactsSearch:', this.state.contacts_filtered)
+//            console.log('_onContactsSearch:', this.state.contacts_filtered)
 //            console.log('search', this.state.search)
             let the_list = this._isInclude(this.state.contacts_filtered, this.state.search[0])
             the_list = this.state.search[1] ? this._isInclude(the_list,this.state.search[1]) : the_list
@@ -105,7 +105,7 @@ export class SdContactsDashboard extends Component {
             contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
                 <div class="col-3 col-md-2 py-1">
-                    <div class="img_div rounded-circle border p-1 border-gray" style="background-image: url(/employee/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
+                    <div class="img_div rounded-circle border p-1 ${rec.present == 'present' ? 'border-success' : 'border-gray'}" style="background-image: url(/employee/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
                 <div class="row col-9 col-md-10 p-3 p-md-0">
                     <div class="row col-12 col-md-7 mx-0 mb-1 px-0 ">

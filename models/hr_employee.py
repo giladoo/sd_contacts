@@ -16,13 +16,13 @@ class HrEmployeeSdContacts(models.Model):
             # company_ids = self.env.user.sd_contacts_companies
             company_ids = self.env['res.company'].sudo().search([])
         employee_list =  self.sudo().search([('company_id', 'in', company_ids.ids)])
-        print(f'''
-                
-                {self.env.user.name}  is admin: {self.env.is_admin()}
-                {company_ids}
-                employee_list: {len(employee_list)}
-
-''')
+#         print(f'''
+#
+#                 {self.env.user.name}  is admin: {self.env.is_admin()}
+#                 {company_ids}
+#                 employee_list: {len(employee_list)}
+#
+# ''')
         contact_list = list([
             {
                 'id' : rec.id,
@@ -32,6 +32,7 @@ class HrEmployeeSdContacts(models.Model):
                 'department' : rec.department_id.name,
                 'job_title' : rec.job_title,
                 'company' : rec.company_id.name,
+                'present' : rec.hr_presence_state,
              }
             for rec in employee_list
         ])
