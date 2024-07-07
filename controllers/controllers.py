@@ -6,7 +6,6 @@ from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.tools import ustr
 from datetime import datetime, timedelta
 # import datetime
-from colorama import Fore
 import jdatetime
 import logging
 import json

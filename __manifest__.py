@@ -16,7 +16,7 @@
     # for the full list
     'category': 'Service Desk/Service Desk',
     'application': True,
-    'version': '15.0.1.1.1',
+    'version': '17.0.1.1.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'web', 'hr', 'hr_extend'],
@@ -34,9 +34,9 @@
         'web._assets_common_styles': [
         ],
         'web.assets_qweb': [
-            'sd_contacts/static/src/components/web/**/*.xml',
         ],
         'web.assets_backend': [
+            'sd_contacts/static/src/components/web/**/*.xml',
             'sd_contacts/static/src/components/web/**/*.scss',
             'sd_contacts/static/src/components/web/**/*.js',
         ],
