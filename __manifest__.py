@@ -27,6 +27,7 @@
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/res_users.xml',
+        'views/hr_employee.xml',
         ],
     'assets': {
         'web._assets_common_scripts': [
