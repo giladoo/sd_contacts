@@ -111,7 +111,7 @@ export class SdContactsDashboard extends Component {
             return
         }
         let statusBorder = 'border-gray';
-        console.log('updateList', data)
+//        console.log('updateList', data)
         this.contactsList.el.innerHTML = '';
 //                        <div class="col-2 px-1 img_div "><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
         let contactsListHtml = ''
