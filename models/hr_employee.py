@@ -30,6 +30,7 @@ class HrEmployeeSdContacts(models.Model):
                 'name' : rec.name,
                 'work_phone' : rec.work_phone,
                 'work_email' : rec.work_email,
+                'work_location' : rec.work_location_id.name,
                 'department' : rec.department_id.name,
                 'job_title' : rec.job_title,
                 'company' : rec.company_id.name,

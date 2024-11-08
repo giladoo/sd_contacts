@@ -110,26 +110,54 @@ export class SdContactsDashboard extends Component {
                 statusBorder = ''
             }
 
+//            contactsListHtml += `
+//            <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
+//                <div class="col-3 col-md-2 py-1">
+//                    <div class="img_div rounded-circle border  p-1 ${statusBorder}" style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
+//                </div>
+//                <div class="row col-9 col-md-10 p-3 p-md-0">
+//                    <div class="row col-12 col-md-7 mx-0 mb-1 px-0 ">
+//                        <div class="col-6  px-1 h6 text-center "> ${rec.name}</div>
+//                        <div class="col-6 px-1 text-center">
+//                            <div class="h6" >${rec.job_title|| ''}</div>
+//                            <div class="small">${rec.department || ''}</div>
+//                            <div class="small">${this.state.companies.length > 1 ? rec.company : ''}</div>
+//                        </div>
+//                    </div>
+//                    <div class="row col-12 col-md-5 mx-0 mb-1 px-0">
+//                        <div ref="contacts_phone" class="copy_to_clip_board  col-6 col-md-4 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
+//                        <div ref="contacts_email" class="copy_to_clip_board  contact_email col-6 col-md-8 px-1  text-center small " >
+//                           ${rec.work_email || ''}
+//                        </div>
+//                    </div>
+//                </div>
+//            </div>
+//            `
             contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
-                <div class="col-3 col-md-2 py-1">
+                <div class="col-2 col-md-2 py-1">
                     <div class="img_div rounded-circle border  p-1 ${statusBorder}" style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
-                <div class="row col-9 col-md-10 p-3 p-md-0">
-                    <div class="row col-12 col-md-7 mx-0 mb-1 px-0 ">
-                        <div class="col-6  px-1 h6 text-center "> ${rec.name}</div>
-                        <div class="col-6 px-1 text-center">
+
+                <div class="row col-10 col-md-10 p-3 p-md-0">
+
+                    <div class="row col-6 col-md-6 mx-0 mb-1 px-0 ">
+                        <div class="col-12 col-md-6 px-1 h6 text-center "> ${rec.name}</div>
+                        <div class="col-12 col-md-6 px-1 text-center">
                             <div class="h6" >${rec.job_title|| ''}</div>
                             <div class="small">${rec.department || ''}</div>
                             <div class="small">${this.state.companies.length > 1 ? rec.company : ''}</div>
                         </div>
                     </div>
-                    <div class="row col-12 col-md-5 mx-0 mb-1 px-0">
-                        <div ref="contacts_phone" class="copy_to_clip_board  col-6 col-md-4 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
-                        <div ref="contacts_email" class="copy_to_clip_board  contact_email col-6 col-md-8 px-1  text-center small " >
+
+                    <div class="row col-6 col-md-6 mx-0 mb-1 px-0">
+                        <div ref="contacts_location" class="col-12 col-md-3 px-1 h6 text-center"> ${rec.work_location || ''}</div>
+                        <div ref="contacts_phone" class="copy_to_clip_board col-12 col-md-3 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
+                        <div ref="contacts_email" class="copy_to_clip_board contact_email col-12 col-md-6 px-1  text-center small " >
                            ${rec.work_email || ''}
                         </div>
                     </div>
+
                 </div>
             </div>
             `
@@ -198,6 +226,7 @@ export class SdContactsDashboard extends Component {
         return ar.filter(rec => {
         return ((rec.name ? rec.name.includes(st) : false)
             || (rec.work_phone ? rec.work_phone.includes(st) : false)
+            || (rec.work_location ? rec.work_location.includes(st) : false)
             || (rec.work_email ? rec.work_email.includes(st) : false))
         })
     }
