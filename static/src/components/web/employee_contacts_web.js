@@ -20,6 +20,8 @@ export class SdContactsDashboard extends Component {
         this.contactsPhone = useRef('contacts_phone')
         this.contactsEmail = useRef('contacts_email')
         this.contactsCompanies = useRef('contacts_companies')
+        this.contactsSelectLocation = useRef('contacts_select_location')
+        this.contactsSelectDepartment = useRef('contacts_select_department')
 
 //        console.log('setup updateList', this.contactsList)
 
@@ -39,6 +41,8 @@ export class SdContactsDashboard extends Component {
             browser.addEventListener('keyup', self._onContactsSearch);
             browser.addEventListener('click', self._copyToClipBoard)
             self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
+            self.contactsSelectLocation.el.addEventListener('click', self._onContactsSelectLocation)
+            self.contactsSelectDepartment.el.addEventListener('click', self._onContactsSelectDepartment)
 
 //        await self.orm.searchRead('hr.employee',
 //                                [],
@@ -66,11 +70,21 @@ export class SdContactsDashboard extends Component {
             browser.removeEventListener('keyup', self._onContactsSearch);
             browser.removeEventListener('click', self._copyToClipBoard)
             self.contactsCompanies.el.removeEventListener('click', self._onContactsCompanies)
+            self.contactsSelectLocation.el.removeEventListener('click', self._onContactsSelectLocation)
+            self.contactsSelectDepartment.el.removeEventListener('click', self._onContactsSelectDepartment)
 
         });
         this._onContactsSearch = this._onContactsSearch.bind(this);
         this._copyToClipBoard = this._copyToClipBoard.bind(this);
         this._onContactsCompanies = this._onContactsCompanies.bind(this);
+        this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
+        this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
+    }
+    _onContactsSelectLocation(e){
+        console.log('_onContactsSelectLocation:', e)
+    }
+    _onContactsSelectDepartment(e){
+        console.log('_onContactsSelectDepartment:', e)
     }
     _onContactsSearch(e){
 //        console.log('con _onContactsSearch', e, this.contactsSearch)

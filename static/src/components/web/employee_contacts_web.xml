@@ -26,11 +26,24 @@
                             <div class="col-10 row p-3 p-md-0">
                                 <div class="col-6 row mx-0 mb-1 px-0">
                                     <div class="col-12 col-md-6 p-1 text-center">Name</div>
-                                    <div class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">Dep/Job</div>
+                                    <div t-ref="contacts_select_department" class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">
+                                        Dep/Job
+                                        <span>Dep/Job</span>
+                                        <br/>
+                                        <span>
+                                            <i class="fa fa-arrow-down"/>
+                                        </span>
+                                    </div>
 
                                 </div>
                                 <div class="col-6 row mx-0 mb-1 px-0">
-                                    <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block">Location</div>
+                                    <div t-ref="contacts_select_location" class="col-12 col-md-3 p-1 text-center d-none1 d-md-block">
+                                        <span>Location</span>
+                                        <br/>
+                                        <span>
+                                            <i class="fa fa-arrow-down"/>
+                                        </span>
+                                    </div>
                                     <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block">Phone</div>
                                     <div class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">Email</div>
 
