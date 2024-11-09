@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0e\n"
+"Project-Id-Version: Odoo Server 17.0e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-23 11:11+0000\n"
-"PO-Revision-Date: 2024-01-23 14:41+0330\n"
+"POT-Creation-Date: 2024-11-09 11:42+0000\n"
+"PO-Revision-Date: 2024-11-09 15:34+0330\n"
 "Last-Translator: Arash Homayounfar <homayounfar@msn.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,28 +18,95 @@ msgstr ""
 "X-Generator: Poedit 2.2\n"
 
 #. module: sd_contacts
-#. openerp-web
-#: code:addons/sd_contacts/static/src/components/employee_contaxts.js:0
+#. odoo-python
+#: code:addons/custom/addons/sd_contacts/models/hr_employee.py:0
+#: code:addons/sd_contacts/models/hr_employee.py:0
+#, python-format
+msgid "All"
+msgstr "همه"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/custom/addons/sd_contacts/static/src/components/website/employee_contaxts.js:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/sd_contacts/static/src/components/website/employee_contaxts.js:0
 #, python-format
 msgid "Copied"
 msgstr "کپی شد"
 
 #. module: sd_contacts
-#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
+#. odoo-javascript
+#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#, python-format
 msgid "Dep/Job"
-msgstr "سمت / واحد"
+msgstr "واحد سازمانی/عنوان شغلی"
 
 #. module: sd_contacts
-#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
+#. odoo-javascript
+#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#, python-format
+msgid "Department"
+msgstr "واحد سازمانی"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#, python-format
 msgid "Email"
 msgstr "ایمیل"
 
 #. module: sd_contacts
-#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
-msgid "Neme"
-msgstr "نام و نام خانوادگی"
+#: model:ir.model,name:sd_contacts.model_hr_employee
+msgid "Employee"
+msgstr "کارمند"
 
 #. module: sd_contacts
-#: model_terms:ir.ui.view,arch_db:sd_contacts.employee_contacts
+#: model:ir.actions.client,name:sd_contacts.sd_contacts_main_act
+#: model:ir.ui.menu,name:sd_contacts.sd_contacts_main_menu
+msgid "Employee Contacts"
+msgstr "تماس کارکنان"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#, python-format
+msgid "Location"
+msgstr "محل کار"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#, python-format
+msgid "Name"
+msgstr "نام"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#, python-format
 msgid "Phone"
 msgstr "تلفن"
+
+#. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_res_users__sd_contacts_companies
+msgid "Sd Contacts Companies"
+msgstr ""
+
+#. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_hr_employee__show_contact
+msgid "Show Contact"
+msgstr "نمایش تماس"
+
+#. module: sd_contacts
+#: model:ir.model,name:sd_contacts.model_res_users
+msgid "User"
+msgstr "کاربر"

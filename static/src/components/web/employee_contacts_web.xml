@@ -4,11 +4,45 @@
         <div class="vh-100 overflow-auto bg-muted">
             <div class="container h-100 my-4 px-1 ">
                 <div class="sd_employee_contacts  ">
-                    <div class="mx-0 col col-md-4">
-                        <input type="text" t-ref="contacts_search" class="contacts_search form-control shadow-lg"/>
+                    <div class="row mx-0">
+
+                        <div class="col-12 col-md-4">
+                            <div class="row">
+                                <div class="col-1 btn btn-outline-primary btn-close px-2"
+                                     t-ref="search_clear" t-on-click="() => this.selectFilterItems(true)">
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" t-ref="contacts_search" class="contacts_search form-control shadow-lg"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"  t-ref="contacts_select_location" >
+                            <Dropdown togglerClass="'btn btn-secondary  m-0 px-2 py-1'">
+                                <t t-set-slot="toggler">
+                                        <div class="" t-ref="selected_location"></div>
+                                </t>
+                                <t t-foreach="this.state.locations" t-as="layout" t-key="layout">
+                                    <DropdownItem onSelected="() => this.selectLocation(layout)">
+                                        <t t-esc="layout"></t>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
+                        </div>
+                        <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"  t-ref="contacts_select_department" >
+                            <Dropdown togglerClass="'btn btn-secondary  m-0 px-2 py-1'">
+                                <t t-set-slot="toggler">
+                                    <div t-ref="selected_department"></div>
+                                </t>
+                                <t t-foreach="this.state.departments" t-as="layout" t-key="layout">
+                                    <DropdownItem onSelected="() => this.selectDepartment(layout)">
+                                        <t t-esc="layout"></t>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
+                        </div>
                     </div>
-                    <div>
-                        <div class="contacts_search_keys"></div>
+                    <div class="row">
+                        <div class="col-4  contacts_search_keys1"></div>
                     </div>
                     <div t-ref="contacts_companies" class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-4 p-1 p-md-3 "></div>
 
@@ -28,22 +62,10 @@
                                     <div class="col-12 col-md-6 p-1 text-center">Name</div>
                                     <div t-ref="contacts_select_department" class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">
                                         Dep/Job
-                                        <span>Dep/Job</span>
-                                        <br/>
-                                        <span>
-                                            <i class="fa fa-arrow-down"/>
-                                        </span>
                                     </div>
-
                                 </div>
                                 <div class="col-6 row mx-0 mb-1 px-0">
-                                    <div t-ref="contacts_select_location" class="col-12 col-md-3 p-1 text-center d-none1 d-md-block">
-                                        <span>Location</span>
-                                        <br/>
-                                        <span>
-                                            <i class="fa fa-arrow-down"/>
-                                        </span>
-                                    </div>
+                                    <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block">Location</div>
                                     <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block">Phone</div>
                                     <div class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">Email</div>
 

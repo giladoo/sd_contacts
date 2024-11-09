@@ -6,6 +6,9 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+
 export class SdContactsDashboard extends Component {
 //    events:{
 //        "keyup .contacts_search": "_onContactsSearch",
@@ -21,7 +24,11 @@ export class SdContactsDashboard extends Component {
         this.contactsEmail = useRef('contacts_email')
         this.contactsCompanies = useRef('contacts_companies')
         this.contactsSelectLocation = useRef('contacts_select_location')
+        this.selectedLocation = useRef('selected_location')
         this.contactsSelectDepartment = useRef('contacts_select_department')
+        this.selectedDepartment = useRef('selected_department')
+        this.searchClear = useRef('search_clear')
+
 
 //        console.log('setup updateList', this.contactsList)
 
@@ -30,6 +37,8 @@ export class SdContactsDashboard extends Component {
             contacts_filtered: [],
             companies: [],
             search: [''],
+            selectedDepartment: _t('All'),
+            selectedLocation: _t('All'),
         })
 
 
@@ -41,8 +50,11 @@ export class SdContactsDashboard extends Component {
             browser.addEventListener('keyup', self._onContactsSearch);
             browser.addEventListener('click', self._copyToClipBoard)
             self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
-            self.contactsSelectLocation.el.addEventListener('click', self._onContactsSelectLocation)
-            self.contactsSelectDepartment.el.addEventListener('click', self._onContactsSelectDepartment)
+//            self.contactsSelectLocation.el.addEventListener('click', self._onContactsSelectLocation)
+//            self.contactsSelectDepartment.el.addEventListener('click', self._onContactsSelectDepartment)
+
+        this.selectedLocation.el.innerHTML = _t('Location')
+        this.selectedDepartment.el.innerHTML = _t('Department')
 
 //        await self.orm.searchRead('hr.employee',
 //                                [],
@@ -53,7 +65,8 @@ export class SdContactsDashboard extends Component {
             self.state.employees = data['contact_list'];
             self.state.contacts_filtered = data['contact_list'];
             self.state.companies = data['company_list'];
-//            console.log('E:', this.state.employees)
+            self.state.locations = data['location_list'];
+            self.state.departments = data['department_list'];
             self.updateList(self.state.employees)
             if (self.state.companies.length > 1){
                 self.contactsCompanies.el.classList.remove('d-none')
@@ -70,8 +83,8 @@ export class SdContactsDashboard extends Component {
             browser.removeEventListener('keyup', self._onContactsSearch);
             browser.removeEventListener('click', self._copyToClipBoard)
             self.contactsCompanies.el.removeEventListener('click', self._onContactsCompanies)
-            self.contactsSelectLocation.el.removeEventListener('click', self._onContactsSelectLocation)
-            self.contactsSelectDepartment.el.removeEventListener('click', self._onContactsSelectDepartment)
+//            self.contactsSelectLocation.el.removeEventListener('click', self._onContactsSelectLocation)
+//            self.contactsSelectDepartment.el.removeEventListener('click', self._onContactsSelectDepartment)
 
         });
         this._onContactsSearch = this._onContactsSearch.bind(this);
@@ -80,6 +93,50 @@ export class SdContactsDashboard extends Component {
         this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
         this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
     }
+    selectLocation(location){
+        this.state.selectedLocation = location
+        this.selectFilterItems()
+    }
+    selectDepartment(department){
+        this.state.selectedDepartment = department
+        this.selectFilterItems()
+    }
+    selectFilterItems(search_clear = false){
+        let location = this.state.selectedLocation
+        let department = this.state.selectedDepartment
+        if (search_clear){
+            location = _t('All')
+            department = _t('All')
+            this.state.search = ['']
+            this.contactsSearch.el.value = ''
+
+        }
+
+        if (location != _t('All')){
+            this.selectedLocation.el.innerHTML =  `${location}`
+            this.state.contacts_filtered = this.state.employees.filter(rec => rec.work_location == location)
+        } else {
+            this.selectedLocation.el.innerHTML = _t('Location')
+            this.state.selectedLocation = _t('All')
+            this.state.contacts_filtered = this.state.employees
+
+        }
+        if (department != _t('All')){
+            this.selectedDepartment.el.innerHTML =  `${department}`
+            this.state.contacts_filtered = this.state.contacts_filtered.filter(rec => rec.department == department)
+
+        } else {
+            this.selectedDepartment.el.innerHTML = _t('Department')
+            this.state.selectedDepartment = _t('All')
+            this.state.contacts_filtered = this.state.contacts_filtered
+        }
+
+
+        this._onContactsSearch('')
+    }
+
+
+
     _onContactsSelectLocation(e){
         console.log('_onContactsSelectLocation:', e)
     }
@@ -247,4 +304,6 @@ export class SdContactsDashboard extends Component {
 }
 
 SdContactsDashboard.template = "sd_contacts.contacts_template";
+SdContactsDashboard.components = { Dropdown, DropdownItem };
+
 registry.category("actions").add("sd_contacts.contacts_dashboard", SdContactsDashboard);
