@@ -2,7 +2,7 @@
 from odoo import http, _
 from odoo.http import request
 from odoo.modules.module import get_module_resource
-from odoo.addons.http_routing.models.ir_http import url_for
+# from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.tools import ustr
 from datetime import datetime, timedelta
 # import datetime

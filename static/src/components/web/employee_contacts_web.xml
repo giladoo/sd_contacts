@@ -12,28 +12,40 @@
                                      t-ref="search_clear" t-on-click="() => this.selectFilterItems(true)">
                                 </div>
                                 <div class="col-10">
-                                    <input type="text" t-ref="contacts_search" class="contacts_search form-control shadow-lg"/>
+                                    <input type="text" t-ref="contacts_search"
+                                           class="contacts_search form-control shadow-lg"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"  t-ref="contacts_select_location" >
+
+                        <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"
+                             t-ref="contacts_select_location">
+
                             <Dropdown togglerClass="'btn btn-secondary  m-0 px-2 py-1'">
-                                <t t-set-slot="toggler">
-                                        <div class="" t-ref="selected_location"></div>
-                                </t>
-                                <t t-foreach="this.state.locations" t-as="layout" t-key="layout">
+                                <button class="btn btn-outline-primary" type="button" t-ref="selected_location">
+                                </button>
+<!--                                <t t-set-slot="toggler">-->
+<!--&lt;!&ndash;                                        <div class="" t-ref="selected_location"></div>&ndash;&gt;-->
+<!--                                </t>-->
+                                <t t-foreach="this.state.locations" t-as="layout" t-key="layout" t-set-slot="content">
                                     <DropdownItem onSelected="() => this.selectLocation(layout)">
                                         <t t-esc="layout"></t>
                                     </DropdownItem>
                                 </t>
                             </Dropdown>
+
                         </div>
-                        <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"  t-ref="contacts_select_department" >
+<!--                                                            <div t-ref="selected_department"></div>-->
+
+                        <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"
+                             t-ref="contacts_select_department">
                             <Dropdown togglerClass="'btn btn-secondary  m-0 px-2 py-1'">
-                                <t t-set-slot="toggler">
-                                    <div t-ref="selected_department"></div>
-                                </t>
-                                <t t-foreach="this.state.departments" t-as="layout" t-key="layout">
+                                <button class="btn btn-outline-primary" type="button" t-ref="selected_department">
+                                </button>
+<!--                                <t t-set-slot="toggler">-->
+<!--&lt;!&ndash;                                    <div t-ref="selected_department"></div>&ndash;&gt;-->
+<!--                                </t>-->
+                                <t t-foreach="this.state.departments" t-as="layout" t-key="layout" t-set-slot="content">
                                     <DropdownItem onSelected="() => this.selectDepartment(layout)">
                                         <t t-esc="layout"></t>
                                     </DropdownItem>
@@ -44,23 +56,25 @@
                     <div class="row">
                         <div class="col-4  contacts_search_keys1"></div>
                     </div>
-                    <div t-ref="contacts_companies" class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-4 p-1 p-md-3 "></div>
+                    <div t-ref="contacts_companies"
+                         class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-4 p-1 p-md-3 "></div>
 
                     <div class="mt-4 shadow-lg">
 <!--                        <div class="row contacts_list_header bg-primary rounded-top shadow-sm mx-0 py-1">-->
-<!--                            <div class="col-2 col-md-2 p-1 text-center"></div>-->
-<!--                            <div class="col-6 col-md-2 p-1 text-center">Name</div>-->
-<!--                            <div class="col-1 col-md-3 p-1 text-center d-none d-md-block">Dep/Job</div>-->
-<!--                            <div class="col-1 col-md-1 border p-1 text-center d-none d-md-block">Location</div>-->
-<!--                            <div class="col-1 col-md-2 border p-1 text-center d-none d-md-block">Phone</div>-->
-<!--                            <div class="col-1 col-md-2 border p-1 text-center d-none d-md-block">Email</div>-->
-<!--                        </div>-->
+                        <!--                            <div class="col-2 col-md-2 p-1 text-center"></div>-->
+                        <!--                            <div class="col-6 col-md-2 p-1 text-center">Name</div>-->
+                        <!--                            <div class="col-1 col-md-3 p-1 text-center d-none d-md-block">Dep/Job</div>-->
+                        <!--                            <div class="col-1 col-md-1 border p-1 text-center d-none d-md-block">Location</div>-->
+                        <!--                            <div class="col-1 col-md-2 border p-1 text-center d-none d-md-block">Phone</div>-->
+                        <!--                            <div class="col-1 col-md-2 border p-1 text-center d-none d-md-block">Email</div>-->
+                        <!--                        </div>-->
                         <div class="row contacts_list_header bg-primary rounded-top shadow-sm mx-0 py-1">
                             <div class="col-2 col-md-2 p-1 text-center"></div>
                             <div class="col-10 row p-3 p-md-0">
                                 <div class="col-6 row mx-0 mb-1 px-0">
                                     <div class="col-12 col-md-6 p-1 text-center">Name</div>
-                                    <div t-ref="contacts_select_department" class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">
+                                    <div t-ref="contacts_select_department"
+                                         class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">
                                         Dep/Job
                                     </div>
                                 </div>

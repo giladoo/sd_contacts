@@ -3,10 +3,15 @@
 from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 import json
+from icecream import ic
+
 class HrEmployeeSdContacts(models.Model):
     _inherit = 'hr.employee'
 
     show_contact = fields.Boolean(default=True)
+    sequence = fields.Integer(default=10000)
+
+
     def contact_web(self):
         # company_id = self.env.user.company_id
         # company_ids = self.env.user.company_ids
@@ -54,6 +59,7 @@ class HrEmployeeSdContacts(models.Model):
             rec.name
             for rec in company_ids
         ])
+        ic(contact_list, company_list, location_list, department_list)
         return json.dumps({'contact_list': contact_list,
                            'company_list': company_list,
                            'location_list': location_list,

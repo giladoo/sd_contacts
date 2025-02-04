@@ -5,15 +5,15 @@ import { Component, useState, useRef, onMounted, onWillUnmount } from "@odoo/owl
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { Tooltip } from "@web/core/tooltip/tooltip";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class SdContactsDashboard extends Component {
-//    events:{
-//        "keyup .contacts_search": "_onContactsSearch",
-//        "click .copy_to_clip_board": "_copyToClipBoard",
-//    }
+    static template = "sd_contacts.contacts_template";
+    static components = { Dropdown, DropdownItem };
     setup(){
 //        super.setup();
         let self = this;
@@ -28,34 +28,32 @@ export class SdContactsDashboard extends Component {
         this.contactsSelectDepartment = useRef('contacts_select_department')
         this.selectedDepartment = useRef('selected_department')
         this.searchClear = useRef('search_clear')
-
-
-//        console.log('setup updateList', this.contactsList)
-
+        this.popover = usePopover(Tooltip);
+//        console.log('setup updateList', this)
         this.state = useState({
             employees: [],
             contacts_filtered: [],
+            departments: ['q'],
+            locations: ['w'],
             companies: [],
             search: [''],
             selectedDepartment: _t('All'),
             selectedLocation: _t('All'),
         })
-
-
-
 //        console.log('SdContactsDashboard:', this, this.contactsSearch.el)
-
         onMounted(async () => {
-//            console.log('con onMounted')
+            console.log('con onMounted 1')
             browser.addEventListener('keyup', self._onContactsSearch);
             browser.addEventListener('click', self._copyToClipBoard)
             self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
 //            self.contactsSelectLocation.el.addEventListener('click', self._onContactsSelectLocation)
 //            self.contactsSelectDepartment.el.addEventListener('click', self._onContactsSelectDepartment)
 
+            console.log('con onMounted 2')
         this.selectedLocation.el.innerHTML = _t('Location')
         this.selectedDepartment.el.innerHTML = _t('Department')
 
+            console.log('con onMounted 3')
 //        await self.orm.searchRead('hr.employee',
 //                                [],
 //                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],{order: 'sequence'})
@@ -134,9 +132,6 @@ export class SdContactsDashboard extends Component {
 
         this._onContactsSearch('')
     }
-
-
-
     _onContactsSelectLocation(e){
         console.log('_onContactsSelectLocation:', e)
     }
@@ -269,24 +264,19 @@ export class SdContactsDashboard extends Component {
 
 
     }
+    showTooltip(target) {
+        this.popover.open(target, { tooltip: _t("Copied") });
+        browser.setTimeout(this.popover.close, 800);
+    }
     _copyToClipBoard(e){
         let copyText = e.target.innerText;
         let target = e.target
         if (target.classList.contains('copy_to_clip_board')){
             navigator.clipboard.writeText(target.innerText);
-            $(e.target).tooltip({
-                title: _t('Copied'),
-                trigger: 'manual',
-                container: target,
-                placement: 'top',
-                delay: {"show": 500, "hide": 100},
-            }).tooltip('show');
-            setTimeout(e=> $(target).tooltip('hide'), 1000)
-        }
-//      copyText.select();
-//      copyText.setSelectionRange(0, 99999); // For mobile devices
+            this.showTooltip(target)
 
-       // Copy the text inside the text field
+        }
+
     }
     _isInclude(ar, st){
 //        console.log(ar.filter(rec => {
@@ -302,8 +292,5 @@ export class SdContactsDashboard extends Component {
         })
     }
 }
-
-SdContactsDashboard.template = "sd_contacts.contacts_template";
-SdContactsDashboard.components = { Dropdown, DropdownItem };
 
 registry.category("actions").add("sd_contacts.contacts_dashboard", SdContactsDashboard);
