@@ -13,7 +13,7 @@
                                 </div>
                                 <div class="col-10">
                                     <input type="text" t-ref="contacts_search"
-                                           class="contacts_search form-control shadow-lg border border-primary"/>
+                                           class="contacts_search form-control shadow-lg border border-primary-subtle"/>
                                 </div>
                             </div>
                         </div>
