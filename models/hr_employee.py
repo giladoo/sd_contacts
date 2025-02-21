@@ -39,6 +39,8 @@ class HrEmployeeSdContacts(models.Model):
                 'work_email' : rec.work_email,
                 'work_location' : rec.work_location_id.name,
                 'department' : rec.department_id.name,
+                'parent_department_1' : rec.department_id.parent_id.name,
+                'parent_department_2' : rec.department_id.parent_id.parent_id.name,
                 'job_title' : rec.job_title,
                 'company' : rec.company_id.name,
                 'present' : rec.hr_presence_state,

@@ -39,8 +39,8 @@ export class SdContactsContactList extends Component {
                 },
             employees: [],
             contacts_filtered: [],
-            departments: ['q'],
-            locations: ['w'],
+            departments: ['Deps...'],
+            locations: ['Locs...'],
             companies: [],
             search: [''],
             selectedDepartment: _t('All'),
@@ -114,7 +114,8 @@ export class SdContactsContactList extends Component {
         }
         if (department != _t('All')){
             this.selectedDepartment.el.innerHTML =  `${department}`
-            this.state.contacts_filtered = this.state.contacts_filtered.filter(rec => rec.department == department)
+            this.state.contacts_filtered = this.state.contacts_filtered
+                .filter(rec => rec.department == department || rec.parent_department_1 == department )
 
         } else {
             this.selectedDepartment.el.innerHTML = _t('Department')
