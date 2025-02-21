@@ -54,6 +54,7 @@ export class SdContactsContactList extends Component {
         await rpc('/employee/contactdata', {})
             .then(data => JSON.parse(data))
             .then(data=> {
+                console.log('data:', data)
                 self.state.employees = data['contact_list'];
                 self.state.contacts_filtered = data['contact_list'];
                 self.state.companies = data['company_list'];

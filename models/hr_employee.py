@@ -32,6 +32,7 @@ class HrEmployeeSdContacts(models.Model):
 # ''')
         contact_list = list([
             {
+                'sequence' : rec.sequence,
                 'id' : rec.id,
                 'name' : rec.name,
                 'work_phone' : rec.work_phone,

@@ -11,4 +11,15 @@
             </xpath>
         </field>
     </record>
+        <record id="sd_hr_view_employee_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.view.tree.inherit.employee.relatives.expiry</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <field name="sequence" widget="handle"/>
+            </xpath>
+        </field>
+
+    </record>
 </odoo>
