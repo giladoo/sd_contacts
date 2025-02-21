@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <template xml:space="preserve">
-    <t t-name="sd_contacts.contacts_template" owl="1">
+    <t t-name="sd_contacts.contacts_template_website_new" owl="1">
         <div class="vh-100 overflow-auto bg-muted">
             <div class="container h-100 my-4 px-1 ">
                 <div class="sd_employee_contacts  ">
@@ -53,13 +53,12 @@
                             </Dropdown>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-4  contacts_search_keys1"></div>
                     </div>
-
                     <div t-ref="contacts_companies"
                          class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-4 p-1 p-md-3 "></div>
+
                     <div class="mt-4 shadow-lg">
 <!--                        <div class="row contacts_list_header bg-primary rounded-top shadow-sm mx-0 py-1">-->
                         <!--                            <div class="col-2 col-md-2 p-1 text-center"></div>-->
@@ -90,7 +89,6 @@
                         </div>
                         <div t-ref="contacts_list" class="contacts_list mx-0 h-100"></div>
                     </div>
-
                 </div>
             </div>
 

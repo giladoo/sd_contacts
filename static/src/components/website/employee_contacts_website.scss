@@ -1,0 +1,46 @@
+.sd_employee_contacts .table_header{
+    background: #2ec4b6;
+    color: #fff;
+}
+div .img_div{
+    max-width: 70px;
+    max-height: 70px;
+    min-height: 70px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.border-gray{
+    border-color: #6c757d !important;
+}
+
+.copy_to_clip_board{
+    cursor: pointer;
+}
+
+.contacts_list_header{
+    background: #2ec4b6;
+    color: white;
+
+}
+.contacts_list{
+    min-height: 500px;
+    background: #fff;
+}
+.contacts_companies_selected{
+//     color: black;
+    background: #2ec4b6;
+    font-size: 1.3rem;
+}
+.contacts_companies_selected:hover{
+    background: #2ec4b6;
+    font-size: 1.3rem;
+}
+
+.border-2 {
+    border-width:2px !important;
+}
+.border-3 {
+    border-width:3px !important;
+}

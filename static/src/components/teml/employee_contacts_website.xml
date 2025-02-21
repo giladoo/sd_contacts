@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template xml:space="preserve">
+    <t t-name="sd_contacts.website_contacts_template" owl="1">
+        <div class="vh-100 overflow-auto1 bg-muted">
+            <div class="container h-100 my-4 px-1 ">
+                <div class="website_sd_employee_contacts  ">
+                    <div class="row mx-0">
+
+                        <div class="col-12 col-md-4">
+                            <div class="row">
+                                <div class="col-1 btn btn-outline-primary btn-close px-2"
+                                     ref="search_clear" t-on-click="() => this.selectFilterItems(true)">
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" ref="contacts_search"
+                                           class="contacts_search form-control shadow-lg border border-primary-subtle"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block contacts_select_location"
+                             ref="contacts_select_location">
+
+<!--                            <Dropdown togglerClass="'btn btn-secondary  m-0 px-2 py-1'">-->
+<!--                                <button class="btn btn-outline-primary selected_location" type="button" ref="selected_location">-->
+<!--                                </button>-->
+<!--&lt;!&ndash;                                <t t-set-slot="toggler">&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <div class="" ref="selected_location"></div>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                </t>&ndash;&gt;-->
+<!--                                <t t-foreach="this.state.locations" t-as="layout" t-key="layout" t-set-slot="content">-->
+<!--                                    <DropdownItem onSelected="() => this.selectLocation(layout)">-->
+<!--                                        <t t-esc="layout"></t>-->
+<!--                                    </DropdownItem>-->
+<!--                                </t>-->
+<!--                            </Dropdown>-->
+
+                        </div>
+<!--&lt;!&ndash;                                                            <div ref="selected_department"></div>&ndash;&gt;-->
+
+                        <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block contacts_select_department"
+                             ref="contacts_select_department">
+<!--                            <Dropdown togglerClass="'btn btn-secondary  m-0 px-2 py-1'">-->
+<!--                                <button class="btn btn-outline-primary" type="button" ref="selected_department">-->
+<!--                                </button>-->
+<!--&lt;!&ndash;                                <t t-set-slot="toggler">&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <div ref="selected_department"></div>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                </t>&ndash;&gt;-->
+<!--                                <t t-foreach="this.state.departments" t-as="layout" t-key="layout" t-set-slot="content">-->
+<!--                                    <DropdownItem onSelected="() => this.selectDepartment(layout)">-->
+<!--                                        <t t-esc="layout"></t>-->
+<!--                                    </DropdownItem>-->
+<!--                                </t>-->
+<!--                            </Dropdown>-->
+<!--                        </div>-->
+                    </div>
+                    <div class="row">
+                        <div class="col-4  contacts_search_keys1"></div>
+                    </div>
+
+                    <div ref="contacts_companies"
+                         class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-4 p-1 p-md-3 "></div>
+
+                    <div class="mt-4 shadow-lg">
+<!--                        <div class="row contacts_list_header bg-primary rounded-top shadow-sm mx-0 py-1">-->
+<!--                                                    <div class="col-2 col-md-2 p-1 text-center"></div>-->
+<!--                                                    <div class="col-6 col-md-2 p-1 text-center">Name</div>-->
+<!--                                                    <div class="col-1 col-md-3 p-1 text-center d-none d-md-block">Dep/Job</div>-->
+<!--                                                    <div class="col-1 col-md-1 border p-1 text-center d-none d-md-block">Location</div>-->
+<!--                                                    <div class="col-1 col-md-2 border p-1 text-center d-none d-md-block">Phone</div>-->
+<!--                                                    <div class="col-1 col-md-2 border p-1 text-center d-none d-md-block">Email</div>-->
+<!--                                                </div>-->
+                        <div class="row contacts_list_header bg-primary rounded-top shadow-sm mx-0 py-1">
+                            <div class="col-2 col-md-2 p-1 text-center"></div>
+                            <div class="col-10 row p-3 p-md-0">
+                                <div class="col-6 row mx-0 mb-1 px-0">
+                                    <div class="col-12 col-md-6 p-1 text-center">Name</div>
+                                    <div ref="contacts_select_department"
+                                         class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">
+                                        Dep/Job
+                                    </div>
+                                </div>
+                                <div class="col-6 row mx-0 mb-1 px-0">
+                                    <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block">Location</div>
+                                    <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block">Phone</div>
+                                    <div class="col-12 col-md-6 p-1 text-center d-none1 d-md-block">Email</div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div ref="contacts_list" class="contacts_list mx-0 h-100"></div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    </t>
+</template>

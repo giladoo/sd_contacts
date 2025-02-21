@@ -2,30 +2,7 @@
 <odoo>
     <template id="employee_contacts">
         <t t-call="website.layout">
-            <div class="container h-100 my-4 px-1 ">
-                <div class="sd_employee_contacts  ">
-                    <div class="mx-4">
-                        <input type="text" class="contacts_search form-control shadow-sm w-lg-25 w-md-50"/>
-                    </div>
-                    <div>
-                        <div class="contacts_search_keys"></div>
-                    </div>
-                    <div class="mt-4 shadow-lg">
-                        <div class="row table_header rounded-top shadow-sm mx-0 py-1">
-                            <div class="col-2 col-md-2 p-1 text-center"></div>
-                            <div class="col-6 col-md-3 p-1 text-center h6">Neme</div>
-                            <div class="col-1 col-md-3 p-1 text-center h6 d-none d-md-block">Dep/Job</div>
-                            <div class="col-1 col-md-1 p-1 text-center h6 d-none d-md-block">Phone</div>
-                            <div class="col-1 col-md-3 p-1 text-center h6 d-none d-md-block">Email</div>
-                        </div>
-                        <div class="contacts_list mx-0 h-100"></div>
-                    </div>
-                </div>
-            </div>
-
-
-        </t>
-
+            <owl-component name="sd_contacts.contact_list_component" />
+       </t>
     </template>
-
 </odoo>

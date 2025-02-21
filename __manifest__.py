@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 {
     'name': "sd_contacts",
 
@@ -16,10 +17,10 @@
     # for the full list
     'category': 'Service Desk/Service Desk',
     'application': True,
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'web', 'hr',],
+    'depends': ['base', 'web', 'website', 'hr',],
 
     # always loaded
     'data': [
@@ -28,6 +29,7 @@
         'views/views.xml',
         'views/res_users.xml',
         'views/hr_employee.xml',
+        'views/employee_contacts.xml',
         ],
     'assets': {
         'web._assets_common_scripts': [
@@ -35,6 +37,7 @@
         'web._assets_common_styles': [
         ],
         'web.assets_qweb': [
+
         ],
         'web.assets_backend': [
             'sd_contacts/static/src/components/web/**/*.xml',
@@ -42,11 +45,17 @@
             'sd_contacts/static/src/components/web/**/*.js',
         ],
         'web.assets_frontend': [
-            'sd_contacts/static/src/components/website/**/*.scss',
             'sd_contacts/static/src/components/website/**/*.js',
+            'sd_contacts/static/src/components/website/**/*.scss',
+            'sd_contacts/static/src/components/website/**/*.xml',
         ],
         'web.report_assets_common': [
+
         ],
         },
+    'images': [
+        'static/src/img/user_avatar_100.png',
+    ],
     'license': 'LGPL-3',
 }
+
