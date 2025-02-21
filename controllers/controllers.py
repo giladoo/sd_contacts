@@ -65,10 +65,10 @@ class SdContactsController(http.Controller):
     @http.route('/employee/contactsimage/<int:employee_id>', type='http', auth='public', website=True)
     def get_employee_avatar(self, employee_id, **kw):
         employee = request.env['hr.employee'].sudo().browse(employee_id) # Use sudo() for unauthenticated access
-        ic(employee)
+        # ic(employee)
         if not employee or not employee.avatar_128:
             placeholder_path = request.env['ir.module.module']._get_static_file_path('sd_contacts', 'img/im.jpg') # Get the absolute path
-            ic(placeholder_path)
+            # ic(placeholder_path)
             if placeholder_path:
                 with open(placeholder_path, 'rb') as f:  # Open in binary mode
                     image_data = f.read()
@@ -106,7 +106,7 @@ class SdContactsController(http.Controller):
         # todo: sudo() is added as a workaround
         #   It is needed to make sure this would not be as a security hole
         #   1- auth is changed from public to user to limit access to log in users
-        ic(id)
+        # ic(id)
 
         return request.env['ir.http'].sudo()._content_image(xmlid=xmlid, model=model, res_id=id, field=field,
             filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,

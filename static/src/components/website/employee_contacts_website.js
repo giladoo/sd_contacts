@@ -29,6 +29,14 @@ export class SdContactsContactList extends Component {
         this.searchClear = useRef('search_clear')
         this.popover = usePopover(Tooltip);
         this.state = useState({
+            labels: {
+                title: _t('Employees Contact Information'),
+                name: _t('Name'),
+                location: _t('Location'),
+                depjob: _t('Dep/Job'),
+                phone: _t('Phone'),
+                email: _t('Email'),
+                },
             employees: [],
             contacts_filtered: [],
             departments: ['q'],

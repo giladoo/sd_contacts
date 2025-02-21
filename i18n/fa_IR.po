@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-09 11:42+0000\n"
-"PO-Revision-Date: 2024-11-09 15:34+0330\n"
+"POT-Creation-Date: 2025-02-21 18:38+0000\n"
+"PO-Revision-Date: 2025-02-21 22:09+0330\n"
 "Last-Translator: Arash Homayounfar <homayounfar@msn.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,44 +18,60 @@ msgstr ""
 "X-Generator: Poedit 2.2\n"
 
 #. module: sd_contacts
+#. odoo-javascript
 #. odoo-python
-#: code:addons/custom/addons/sd_contacts/models/hr_employee.py:0
+#: code:addons/custom/addons-kpe/sd_contacts/models/hr_employee.py:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website.js:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 #: code:addons/sd_contacts/models/hr_employee.py:0
-#, python-format
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website.js:0
+#: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 msgid "All"
 msgstr "همه"
 
 #. module: sd_contacts
 #. odoo-javascript
-#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
-#: code:addons/custom/addons/sd_contacts/static/src/components/website/employee_contaxts.js:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
-#: code:addons/sd_contacts/static/src/components/website/employee_contaxts.js:0
-#, python-format
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 msgid "Copied"
 msgstr "کپی شد"
 
 #. module: sd_contacts
 #. odoo-javascript
-#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
-#, python-format
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 msgid "Dep/Job"
 msgstr "واحد سازمانی/عنوان شغلی"
 
 #. module: sd_contacts
 #. odoo-javascript
-#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
-#, python-format
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 msgid "Department"
 msgstr "واحد سازمانی"
 
 #. module: sd_contacts
 #. odoo-javascript
-#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
-#, python-format
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 msgid "Email"
 msgstr "ایمیل"
 
@@ -72,33 +88,60 @@ msgstr "تماس کارکنان"
 
 #. module: sd_contacts
 #. odoo-javascript
-#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
-#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
+msgid "Employees Contact Information"
+msgstr "اطلاعات تماس کارکنان"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.js:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
-#, python-format
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 msgid "Location"
 msgstr "محل کار"
 
 #. module: sd_contacts
 #. odoo-javascript
-#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
-#, python-format
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 msgid "Name"
 msgstr "نام"
 
 #. module: sd_contacts
 #. odoo-javascript
-#: code:addons/custom/addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/custom/addons-kpe/sd_contacts/static/src/components/website/employee_contacts_website.js:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
+#: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
-#, python-format
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 msgid "Phone"
 msgstr "تلفن"
 
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_res_users__sd_contacts_companies
 msgid "Sd Contacts Companies"
+msgstr ""
+
+#. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_hr_employee__sequence
+msgid "Sequence"
 msgstr ""
 
 #. module: sd_contacts

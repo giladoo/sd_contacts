@@ -13,7 +13,7 @@ class HrEmployeeSdContacts(models.Model):
 
 
     def contact_web(self):
-        ic('contact_web')
+        # ic('contact_web')
         # company_id = self.env.user.company_id
         # company_ids = self.env.user.company_ids
         if self.env.is_admin():
@@ -61,7 +61,7 @@ class HrEmployeeSdContacts(models.Model):
             rec.name
             for rec in company_ids
         ])
-        ic(contact_list, company_list, location_list, department_list)
+        # ic(contact_list, company_list, location_list, department_list)
         return json.dumps({'contact_list': contact_list,
                            'company_list': company_list,
                            'location_list': location_list,
