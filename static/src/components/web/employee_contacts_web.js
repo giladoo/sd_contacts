@@ -259,7 +259,9 @@ export class SdContactsDashboard extends Component {
         else if (target.classList.contains('employee_location_name')){
             this.selectLocation(target.innerText)
         }
-
+        else if (target.classList.contains('employee_project_name')){
+            this.selectProject(target.innerText)
+        }
     }
     _isInclude(ar, st){
 //        console.log(ar.filter(rec => {

@@ -38,6 +38,7 @@ class HrEmployeeSdContacts(models.Model):
                 'work_phone' : rec.work_phone,
                 'work_email' : rec.work_email,
                 'work_location' : rec.work_location_id.name,
+                'project' : rec.project_name.name,
                 'department' : rec.department_id.name,
                 'parent_department_1' : rec.department_id.parent_id.name,
                 'parent_department_2' : rec.department_id.parent_id.parent_id.name,
@@ -58,6 +59,10 @@ class HrEmployeeSdContacts(models.Model):
                     rec.department_id.name for rec in employee_list if rec.department_id
                     })
         department_list.insert(0, _('All'))
+        project_list = list({
+                    rec.project_name.name for rec in employee_list if rec.project_name
+                    })
+        project_list.insert(0, _('All'))
 
         company_list = list([
             rec.name
@@ -68,4 +73,5 @@ class HrEmployeeSdContacts(models.Model):
                            'company_list': company_list,
                            'location_list': location_list,
                            'department_list': department_list,
+                           'project_list': project_list,
                            })

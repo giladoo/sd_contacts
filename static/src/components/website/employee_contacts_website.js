@@ -17,6 +17,7 @@ export class SdContactsContactList extends Component {
     static components = { Dropdown, DropdownItem };
     setup(){
         let self = this;
+
         this.contactsSearch = useRef('contacts_search')
         this.contactsList = useRef('contacts_list')
         this.contactsPhone = useRef('contacts_phone')
@@ -26,14 +27,16 @@ export class SdContactsContactList extends Component {
         this.selectedLocation = useRef('selected_location')
         this.contactsSelectDepartment = useRef('contacts_select_department')
         this.selectedDepartment = useRef('selected_department')
+        this.selectedProject = useRef('selected_project')
         this.searchClear = useRef('search_clear')
         this.popover = usePopover(Tooltip);
         this.state = useState({
             labels: {
                 title: _t('Employees Contact Information'),
                 name: _t('Name'),
-                location: _t('Location'),
                 depjob: _t('Dep/Job'),
+                location: _t('Location'),
+                project: _t('Project'),
                 phone: _t('Phone'),
                 email: _t('Email'),
                 },
@@ -41,10 +44,12 @@ export class SdContactsContactList extends Component {
             contacts_filtered: [],
             departments: ['Deps...'],
             locations: ['Locs...'],
+            projects: ['Proj...'],
             companies: [],
             search: [''],
             selectedDepartment: _t('All'),
             selectedLocation: _t('All'),
+            selectedProject: _t('All'),
         })
         this.contacts_select_location = useRef('contacts_select_location')
         onMounted(async () => {
@@ -54,8 +59,9 @@ export class SdContactsContactList extends Component {
 //            self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
 
 //            console.log('con onMounted 2')
-            this.selectedLocation.el.innerHTML = _t('Location')
-            this.selectedDepartment.el.innerHTML = _t('Department')
+            this.selectedLocation.el.innerHTML = _t('Locations')
+            this.selectedDepartment.el.innerHTML = _t('Departments')
+            this.selectedProject.el.innerHTML = _t('Projects')
 
 //            console.log('con onMounted 3')
 
@@ -68,6 +74,7 @@ export class SdContactsContactList extends Component {
                 self.state.companies = data['company_list'];
                 self.state.locations = data['location_list'];
                 self.state.departments = data['department_list'];
+                self.state.projects = data['project_list'];
                 self.updateList(self.state.employees)
                 if (self.state.companies.length > 1){
                     self.contactsCompanies.el.classList.remove('d-none')
@@ -78,6 +85,7 @@ export class SdContactsContactList extends Component {
                 }
             })
         });
+        console.log('state', this.state)
         this._onContactsSearch = this._onContactsSearch.bind(this);
         this._copyToClipBoard = this._copyToClipBoard.bind(this);
         this._onContactsCompanies = this._onContactsCompanies.bind(this);
@@ -92,12 +100,18 @@ export class SdContactsContactList extends Component {
         this.state.selectedDepartment = department
         this.selectFilterItems()
     }
+    selectProject(project){
+        this.state.selectedProject = project
+        this.selectFilterItems()
+    }
     selectFilterItems(search_clear = false){
         let location = this.state.selectedLocation
         let department = this.state.selectedDepartment
+        let project = this.state.selectedProject
         if (search_clear){
             location = _t('All')
             department = _t('All')
+            project = _t('All')
             this.state.search = ['']
             this.contactsSearch.el.value = ''
 
@@ -107,7 +121,7 @@ export class SdContactsContactList extends Component {
             this.selectedLocation.el.innerHTML =  `${location}`
             this.state.contacts_filtered = this.state.employees.filter(rec => rec.work_location == location)
         } else {
-            this.selectedLocation.el.innerHTML = _t('Location')
+            this.selectedLocation.el.innerHTML = _t('Locations')
             this.state.selectedLocation = _t('All')
             this.state.contacts_filtered = this.state.employees
 
@@ -120,6 +134,17 @@ export class SdContactsContactList extends Component {
         } else {
             this.selectedDepartment.el.innerHTML = _t('Department')
             this.state.selectedDepartment = _t('All')
+            this.state.contacts_filtered = this.state.contacts_filtered
+        }
+
+        if (project != _t('All')){
+            this.selectedProject.el.innerHTML =  `${project}`
+            this.state.contacts_filtered = this.state.contacts_filtered
+                .filter(rec => rec.project == project )
+
+        } else {
+            this.selectedProject.el.innerHTML = _t('Projects')
+            this.state.selectedProject = _t('All')
             this.state.contacts_filtered = this.state.contacts_filtered
         }
 
@@ -175,13 +200,15 @@ export class SdContactsContactList extends Component {
             url = `/employee/contactsimage/${rec.id}/`
             contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
-                <div class="col-2 col-md-2 px-1 py-1">
+
+                <div class="col-2 col-md-1 px-1 py-1">
                     <div class="img_div rounded-circle border  p-1 ${statusBorder}"
                     style="background-image: url(${url})"></div>
                 </div>
-                <div class="row col-10 col-md-10 p-3 p-md-0">
 
-                    <div class="row col-6 col-md-6 mx-0 mb-1 px-0 ">
+                <div class="row col-11 col-md-11 mx-0 p-3 p-md-0 align-items-center">
+
+                    <div class="row col-5 col-md-6 mx-0 mb-1 px-0 align-items-center">
                         <div class="col-12 col-md-6 px-1 h6 text-center "> ${rec.name}</div>
                         <div class="col-12 col-md-6 px-1 text-center">
                             <div class="h6" >${rec.job_title|| ''}</div>
@@ -190,12 +217,14 @@ export class SdContactsContactList extends Component {
                         </div>
                     </div>
 
-                    <div class="row col-6 col-md-6 mx-0 mb-1 px-0">
-                        <div ref="contacts_location" class="col-12 col-md-3 px-1 h6 text-center  employee_location_name cursor-pointer"> ${rec.work_location || ''}</div>
+                    <div class="col-3 col-md-2 mx-0 mb-1 px-0">
+                        <div ref="contacts_location" class="col-12  px-1 h6 text-center  employee_location_name cursor-pointer"> ${rec.work_location || ''}</div>
+                        <div ref="contacts_project" class="col-12  px-1 h6 text-center  employee_project_name cursor-pointer"> ${rec.project || ''}</div>
+                    </div>
+                    <div class="row col-4 col-md-4 mx-0 mb-1 px-0">
                         <div ref="contacts_phone" class="copy_to_clip_board col-12 col-md-3 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
                         <div ref="contacts_email" class="copy_to_clip_board contact_email col-12 col-md-6 px-1  text-center small " >
-                           ${rec.work_email || ''}
-                        </div>
+                           ${rec.work_email || ''} </div>
                     </div>
 
                 </div>
@@ -256,6 +285,7 @@ export class SdContactsContactList extends Component {
         else if (target.classList.contains('employee_location_name')){
             this.selectLocation(target.innerText)
         }
+c
     }
     _isInclude(ar, st){
 //        console.log(ar.filter(rec => {
