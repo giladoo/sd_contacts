@@ -16,22 +16,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-2 p-1 text-center d-none1 d-md-block" t-ref="contacts_select_location">
-                        <Dropdown>
-                            <button class="btn btn-outline-primary" type="button" t-ref="selected_location"/>
-                            <t t-foreach="this.state.locations" t-as="layout" t-key="layout" t-set-slot="content">
-                                <DropdownItem onSelected="() => this.selectLocation(layout)">
-                                    <t t-esc="layout"></t>
-                                </DropdownItem>
-                            </t>
-                        </Dropdown>
-                    </div>
                     <div class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
                          t-ref="contacts_select_department">
                         <Dropdown>
                             <button class="btn btn-outline-primary" type="button" t-ref="selected_department"/>
                             <t t-foreach="this.state.departments" t-as="layout" t-key="layout" t-set-slot="content">
                                 <DropdownItem onSelected="() => this.selectDepartment(layout)">
+                                    <t t-esc="layout"></t>
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+                    </div>
+                    <div class="col-6 col-md-2 p-1 text-center d-none1 d-md-block" t-ref="contacts_select_location">
+                        <Dropdown>
+                            <button class="btn btn-outline-primary" type="button" t-ref="selected_location"/>
+                            <t t-foreach="this.state.locations" t-as="layout" t-key="layout" t-set-slot="content">
+                                <DropdownItem onSelected="() => this.selectLocation(layout)">
                                     <t t-esc="layout"></t>
                                 </DropdownItem>
                             </t>
