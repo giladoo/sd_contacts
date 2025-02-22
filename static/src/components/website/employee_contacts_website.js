@@ -34,9 +34,10 @@ export class SdContactsContactList extends Component {
             labels: {
                 title: _t('Employees Contact Information'),
                 name: _t('Name'),
-                depjob: _t('Dep/Job'),
-                location: _t('Location'),
-                project: _t('Project'),
+                depjob: `${_t('Job')} ${_t('Department')}`,
+                location_project: `${_t('Location')} ${_t('Project')}`,
+//                location: _t('Location'),
+//                project: _t('Project'),
                 phone: _t('Phone'),
                 email: _t('Email'),
                 },
@@ -285,8 +286,9 @@ export class SdContactsContactList extends Component {
         else if (target.classList.contains('employee_location_name')){
             this.selectLocation(target.innerText)
         }
-c
-    }
+        else if (target.classList.contains('employee_project_name')){
+            this.selectProject(target.innerText)
+        }    }
     _isInclude(ar, st){
 //        console.log(ar.filter(rec => {
 //        return rec.name ? rec.name.includes(st) : false

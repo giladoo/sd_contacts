@@ -64,9 +64,9 @@
                     </div>
                             <div class="col-6 row mx-0 mb-1 px-0">
                             <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"
-                                 t-esc="this.state.labels.location"></div>
-                            <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"
-                                 t-esc="this.state.labels.project"></div>
+                                 t-out="this.state.labels.location_project"></div>
+<!--                            <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"-->
+<!--                                 t-esc="this.state.labels.project"></div>-->
                                 <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"
                                      t-esc="this.state.labels.phone"></div>
                                 <div class="col-12 col-md-6 p-1 text-center d-none1 d-md-block"
