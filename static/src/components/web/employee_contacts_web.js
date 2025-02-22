@@ -176,29 +176,6 @@ export class SdContactsDashboard extends Component {
                 statusBorder = ''
             }
 
-//            contactsListHtml += `
-//            <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
-//                <div class="col-3 col-md-2 py-1">
-//                    <div class="img_div rounded-circle border  p-1 ${statusBorder}" style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
-//                </div>
-//                <div class="row col-9 col-md-10 p-3 p-md-0">
-//                    <div class="row col-12 col-md-7 mx-0 mb-1 px-0 ">
-//                        <div class="col-6  px-1 h6 text-center "> ${rec.name}</div>
-//                        <div class="col-6 px-1 text-center">
-//                            <div class="h6" >${rec.job_title|| ''}</div>
-//                            <div class="small">${rec.department || ''}</div>
-//                            <div class="small">${this.state.companies.length > 1 ? rec.company : ''}</div>
-//                        </div>
-//                    </div>
-//                    <div class="row col-12 col-md-5 mx-0 mb-1 px-0">
-//                        <div ref="contacts_phone" class="copy_to_clip_board  col-6 col-md-4 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
-//                        <div ref="contacts_email" class="copy_to_clip_board  contact_email col-6 col-md-8 px-1  text-center small " >
-//                           ${rec.work_email || ''}
-//                        </div>
-//                    </div>
-//                </div>
-//            </div>
-//            `
             contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
                 <div class="col-2 col-md-2 px-1 py-1">
@@ -211,13 +188,13 @@ export class SdContactsDashboard extends Component {
                         <div class="col-12 col-md-6 px-1 h6 text-center "> ${rec.name}</div>
                         <div class="col-12 col-md-6 px-1 text-center">
                             <div class="h6" >${rec.job_title|| ''}</div>
-                            <div class="small">${rec.department || ''}</div>
+                            <div class="small  employee_department_name cursor-pointer">${rec.department || ''}</div>
                             <div class="small">${this.state.companies.length > 1 ? rec.company : ''}</div>
                         </div>
                     </div>
 
                     <div class="row col-6 col-md-6 mx-0 mb-1 px-0">
-                        <div ref="contacts_location" class="col-12 col-md-3 px-1 h6 text-center"> ${rec.work_location || ''}</div>
+                        <div ref="contacts_location" class="col-12 col-md-3 px-1 h6 text-center  employee_location_name cursor-pointer"> ${rec.work_location || ''}</div>
                         <div ref="contacts_phone" class="copy_to_clip_board col-12 col-md-3 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
                         <div ref="contacts_email" class="copy_to_clip_board contact_email col-12 col-md-6 px-1  text-center small " >
                            ${rec.work_email || ''}
@@ -275,6 +252,12 @@ export class SdContactsDashboard extends Component {
             navigator.clipboard.writeText(target.innerText);
             this.showTooltip(target)
 
+        }
+        else if (target.classList.contains('employee_department_name')){
+            this.selectDepartment(target.innerText)
+        }
+        else if (target.classList.contains('employee_location_name')){
+            this.selectLocation(target.innerText)
         }
 
     }
