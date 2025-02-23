@@ -18,21 +18,7 @@ export class SdContactsContactList extends Component {
     static components = { Dropdown, DropdownItem };
     setup(){
         let self = this;
-
-        this.contactsSearch = useRef('contacts_search')
-        this.contactsList = useRef('contacts_list')
-        this.contactsPhone = useRef('contacts_phone')
-        this.contactsEmail = useRef('contacts_email')
-        this.contactsCompanies = useRef('contacts_companies')
-        this.contactsSelectLocation = useRef('contacts_select_location')
-        this.selectedLocation = useRef('selected_location')
-        this.contactsSelectDepartment = useRef('contacts_select_department')
-        this.selectedDepartment = useRef('selected_department')
-        this.selectedProject = useRef('selected_project')
-        this.searchClear = useRef('search_clear')
-        this.popover = usePopover(Tooltip);
-
-        this.state = useState({
+                this.state = useState({
             employees: [],
             contacts_filtered: [],
             departments: ['Deps...'],
@@ -47,8 +33,26 @@ export class SdContactsContactList extends Component {
                 name: '',
                 department: '',
                 phone: '',
-            }
+            },
+            show: {show_locations: true, show_projects: true},
         })
+//        console.log('start:', this.state.show)
+        this.contactsSearch = useRef('contacts_search')
+        this.contactsList = useRef('contacts_list')
+        this.contactsPhone = useRef('contacts_phone')
+        this.contactsEmail = useRef('contacts_email')
+        this.contactsCompanies = useRef('contacts_companies')
+
+        this.contactsSelectDepartment = useRef('contacts_select_department')
+        this.selectedDepartment = useRef('selected_department')
+
+        this.selectedLocation = this.state.show.show_locations ? useRef('selected_location') : false
+        this.contactsSelectLocation = this.state.show.show_locations ? useRef('contacts_select_location') : false
+        this.selectedProject = this.state.show.show_projects ? useRef('selected_project') : false
+
+        this.searchClear = useRef('search_clear')
+        this.popover = usePopover(Tooltip);
+
 
         const labelsFa = {
                 title: _t('اطلاعات تماس کارکنان'),
@@ -86,23 +90,23 @@ export class SdContactsContactList extends Component {
 //            self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
 
 //            console.log('con onMounted 2')
-            this.selectedLocation.el.innerHTML = this.state.labels.locations
-            this.selectedDepartment.el.innerHTML = this.state.labels.departments
-            this.selectedProject.el.innerHTML = this.state.labels.projects
+            this.selectedDepartment ? this.selectedDepartment.el.innerHTML = this.state.labels.departments : ''
+            this.state.show.show_locations ? this.selectedLocation.el.innerHTML = this.state.labels.locations : ''
+             this.state.show.show_projects ? this.selectedProject.el.innerHTML = this.state.labels.projects : ''
 
 //            console.log('con onMounted 3')
 
         await rpc('/employee/contactdata', {})
             .then(data => JSON.parse(data))
             .then(data=> {
-                console.log('data:', data, session)
+//                console.log('data:', data, session)
                 self.state.employees = data['contact_list'];
                 self.state.contacts_filtered = data['contact_list'];
                 self.state.companies = data['company_list'];
                 self.state.locations = data['location_list'];
                 self.state.departments = data['department_list'];
                 self.state.projects = data['project_list'];
-//                self.state.labels = data['labels'];
+                self.state.show = data['show'];
                 self.updateList(self.state.employees)
                 if (self.state.companies.length > 1){
                     self.contactsCompanies.el.classList.remove('d-none')
@@ -112,8 +116,10 @@ export class SdContactsContactList extends Component {
                     self._onContactsCompanies(e)
                 }
             })
+
         });
 //        console.log('state', this.state)
+
         this._onContactsSearch = this._onContactsSearch.bind(this);
         this._copyToClipBoard = this._copyToClipBoard.bind(this);
         this._onContactsCompanies = this._onContactsCompanies.bind(this);
@@ -148,32 +154,32 @@ export class SdContactsContactList extends Component {
 
 
         if (location != _t('All')){
-            this.selectedLocation.el.innerHTML =  `${location}`
+            this.state.show.show_locations ? this.selectedLocation.el.innerHTML =  `${location}` : ''
             this.state.contacts_filtered = this.state.employees.filter(rec => rec.work_location == location)
         } else {
-            this.selectedLocation.el.innerHTML = this.state.labels.locations
+            this.state.show.show_locations ? this.selectedLocation.el.innerHTML = this.state.labels.locations : ''
             this.state.selectedLocation = _t('All')
             this.state.contacts_filtered = this.state.employees
 
         }
         if (department != _t('All')){
-            this.selectedDepartment.el.innerHTML =  `${department}`
+            this.selectedDepartment ? this.selectedDepartment.el.innerHTML =  `${department}` : ''
             this.state.contacts_filtered = this.state.contacts_filtered
                 .filter(rec => rec.department == department || rec.parent_department_1 == department )
 
         } else {
-            this.selectedDepartment.el.innerHTML = this.state.labels.departments
+            this.selectedDepartment ? this.selectedDepartment.el.innerHTML = this.state.labels.departments : ''
             this.state.selectedDepartment = _t('All')
             this.state.contacts_filtered = this.state.contacts_filtered
         }
 
         if (project != _t('All')){
-            this.selectedProject.el.innerHTML =  `${project}`
+            this.state.show.show_projects ? this.selectedProject.el.innerHTML =  `${project}` : ''
             this.state.contacts_filtered = this.state.contacts_filtered
                 .filter(rec => rec.project == project )
 
         } else {
-            this.selectedProject.el.innerHTML = this.state.labels.projects
+            this.state.show.show_projects ? this.selectedProject.el.innerHTML = this.state.labels.projects : ''
             this.state.selectedProject = _t('All')
             this.state.contacts_filtered = this.state.contacts_filtered
         }
@@ -201,9 +207,7 @@ export class SdContactsContactList extends Component {
             return
         }
         let statusBorder = 'border-gray';
-//        console.log('updateList', data)
         this.contactsList.el.innerHTML = '';
-//                        <div class="col-2 px-1 img_div "><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
         let contactsListHtml = ''
         data.forEach(rec => {
             let url = '';
@@ -213,6 +217,28 @@ export class SdContactsContactList extends Component {
                 statusBorder = 'border-warning border-2'
             } else {
                 statusBorder = ''
+            }
+            let locationProject = ''
+            let jobDepCol = 'col-5 col-md-6'
+            let locProjCol = 'col-5 col-md-6'
+            if (this.state.show.show_locations && this.state.show.show_projects){
+
+                locationProject = `<div class="col-3 col-md-3 mx-0 mb-1 px-0">
+                    <div ref="contacts_location" class="col-12  px-1 h6 text-center  employee_location_name cursor-pointer"> ${rec.work_location || ''}</div>
+                    <div ref="contacts_project" class="col-12  px-1 h6 text-center  employee_project_name cursor-pointer"> ${rec.project || ''}</div>
+                </div>`
+            } else if (this.state.show.show_locations ){
+                locationProject = `<div class="col-3 col-md-3 mx-0 mb-1 px-0">
+                    <div ref="contacts_location" class="col-12  px-1 h6 text-center  employee_location_name cursor-pointer"> ${rec.work_location || ''}</div>
+                </div>`
+            } else if (this.state.show.show_projects ){
+                locationProject = `<div class="col-3 col-md-3 mx-0 mb-1 px-0">
+                    <div ref="contacts_project" class="col-12  px-1 h6 text-center  employee_project_name cursor-pointer"> ${rec.project || ''}</div>
+                </div>`
+            } else{
+                jobDepCol = 'col-8 col-md-8'
+                locProjCol = 'col-4 col-md-4'
+
             }
 
 //            url = `/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128`
@@ -225,9 +251,9 @@ export class SdContactsContactList extends Component {
                     style="background-image: url(${url})"></div>
                 </div>
 
-                <div class="row col-11 col-md-11 mx-0 p-3 p-md-0 align-items-center">
+                <div class="row col-10 col-md-11 mx-0 p-3 p-md-0 align-items-center">
 
-                    <div class="row col-5 col-md-6 mx-0 mb-1 px-0 align-items-center">
+                    <div class="row ${jobDepCol} mx-0 mb-1 px-0 align-items-center">
                         <div class="col-12 col-md-6 px-1 h6 text-center "> ${rec.name}</div>
                         <div class="col-12 col-md-6 px-1 text-center">
                             <div class="h6" >${rec.job_title|| ''}</div>
@@ -235,12 +261,8 @@ export class SdContactsContactList extends Component {
                             <div class="small">${this.state.companies.length > 1 ? rec.company : ''}</div>
                         </div>
                     </div>
-
-                    <div class="col-3 col-md-2 mx-0 mb-1 px-0">
-                        <div ref="contacts_location" class="col-12  px-1 h6 text-center  employee_location_name cursor-pointer"> ${rec.work_location || ''}</div>
-                        <div ref="contacts_project" class="col-12  px-1 h6 text-center  employee_project_name cursor-pointer"> ${rec.project || ''}</div>
-                    </div>
-                    <div class="row col-4 col-md-4 mx-0 mb-1 px-0">
+                    <div class="row ${locProjCol} mx-0 mb-1 px-0">
+                        ${locationProject}
                         <div ref="contacts_phone" class="copy_to_clip_board col-12 col-md-3 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
                         <div ref="contacts_email" class="copy_to_clip_board contact_email col-12 col-md-6 px-1  text-center small " >
                            ${rec.work_email || ''} </div>

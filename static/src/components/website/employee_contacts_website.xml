@@ -27,7 +27,8 @@
                             </t>
                         </Dropdown>
                     </div>
-                    <div class="col-6 col-md-2 p-1 text-center d-none1 d-md-block" t-ref="contacts_select_location">
+                    <div  t-if="this.state.show.show_locations" class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
+                          t-ref="contacts_select_location">
                         <Dropdown>
                             <button class="btn btn-outline-primary" type="button" t-ref="selected_location"/>
                             <t t-foreach="this.state.locations" t-as="layout" t-key="layout" t-set-slot="content">
@@ -37,7 +38,7 @@
                             </t>
                         </Dropdown>
                     </div>
-                    <div class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
+                    <div t-if="this.state.show.show_projects" class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
                          t-ref="contacts_select_project">
                         <Dropdown>
                             <button class="btn btn-outline-primary" type="button" t-ref="selected_project"/>
@@ -52,37 +53,48 @@
                 <div t-ref="contacts_companies"
                      class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-4 p-1 p-md-3 "></div>
                 <div class="mt-4 shadow-lg">
-                    <div class="row contacts_list_header bg-primary rounded-top shadow-sm mx-0 py-1">
-                <div class="col-2 col-md-2 p-1 text-center"></div>
-                        <div class="col-10 row p-3 p-md-0">
-                    <div class="col-6 row mx-0 mb-1 px-0">
-                        <div class="row1 row-cols-auto1 align-content-around col-12 col-md-6 p-1 text-center down sortable sort_employee_name cursor-pointer">
-                            <div class=" " t-esc="this.state.labels.name"></div>
-                            <div t-att-class="'px-0 fa fa-chevron-' + this.state.dir.name"></div>
-                        </div>
-                        <div t-ref="contacts_select_department1"
-                             class="row row-cols-auto col-12 col-md-6 p-1 text-center d-none1 d-md-block sortable sort_department">
-                            <div class=" " t-esc="this.state.labels.depjob"></div>
-                            <div t-att-class="'px-0 fa fa-chevron-' + this.state.dir.department"></div>
-                        </div>
-                    </div>
-                            <div class="col-6 row mx-0 mb-1 px-0">
-                            <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"
-                                 t-out="this.state.labels.location_project"></div>
-<!--                            <div class="col-12 col-md-3 p-1 text-center d-none1 d-md-block"-->
-<!--                                 t-esc="this.state.labels.project"></div>-->
-                                <div class="row row-cols-auto col-12 col-md-3 p-1 text-center d-none1 d-md-block sortable sort_phone">
-                                    <div class=" " t-esc="this.state.labels.phone"></div>
-                                    <div t-att-class="'px-0 fa fa-chevron-' + this.state.dir.phone"></div>
+                    <div class="row row-cols-auto col-12 contacts_list_header bg-primary rounded-top shadow-sm mx-0 py-1">
+                        <div class="col-2 col-md-1 p-1 text-center"> </div>
+                        <div class="col-10 col-md-11 mx-0 px-0">
+                            <div class="row py-3 p-md-0 mx-0">
+                                <t t-set="locproj" t-value="this.state.show.show_locations or this.state.show.show_projects"/>
+
+                                <t  t-set="jobdepcol"  t-value="'col-8'"/>
+                                <t t-if="locproj" t-set="jobdepcol" t-value="'col-6'"/>
+
+                                <t t-set="locprojcol"  t-value="'col-4'"/>
+                                <t t-if="locproj" t-set="locprojcol"  t-value="'col-6'"/>
+
+                                <div t-att-class="jobdepcol + ' row row-cols-auto  mx-0 mb-1 px-0'">
+                                    <div class="row1 row-cols-auto1 align-content-around col-12 col-md-6 p-1 text-center down sortable sort_employee_name cursor-pointer">
+                                        <div class=" " t-esc="this.state.labels.name"></div>
+                                        <div t-att-class="'px-0 fa fa-chevron-' + this.state.dir.name"></div>
+                                    </div>
+                                    <div t-ref="contacts_select_department1"
+                                         class="row row-cols-auto col-12 col-md-6 p-1 text-center d-none1 d-md-block sortable sort_department">
+                                        <div class=" " t-esc="this.state.labels.depjob"></div>
+                                        <div t-att-class="'px-0 fa fa-chevron-' + this.state.dir.department"></div>
+                                    </div>
+                                    <div class="col-2"></div>
                                 </div>
+                                <div  t-att-class="locprojcol + '  row row-cols-auto mx-0 mb-1 px-0'">
+                                    <div   t-if="locproj"  class="col-12  -danger col-md-3 p-1 text-center d-none d-md-block">
+                                        <div t-out="this.state.labels.location_project"></div>
+                                    </div>
 
-                                <div class="col-12 col-md-6 p-1 text-center d-none1 d-md-block"
-                                     t-esc="this.state.labels.email"></div>
+                                    <div class="row row-cols-auto mx-0 col-12 col-md-3 p-1 text-center d-none1 d-md-block sortable sort_phone">
+                                        <div class=" " t-esc="this.state.labels.phone"></div>
+                                        <div t-att-class="'px-0 fa fa-chevron-' + this.state.dir.phone"></div>
+                                    </div>
+                                    <div class="col-12 col-md-6 p-1 text-center d-none1 d-md-block"
+                                         t-esc="this.state.labels.email">
+                                    </div>
 
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-
-                </div>
-            </div>
                     <div t-ref="contacts_list" class="contacts_list mx-0 h-100"></div>
         </div>
         </div>

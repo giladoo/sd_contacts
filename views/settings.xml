@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+         <data>
+<record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.sd_payaneh_nafti</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="90"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/app[@name='hr']" position="inside">
+                    <block title="Contact List" name="employees_setting_container">
+                        <setting id="contact_list_setting" title="Contact List" string="Contact List">
+                            <div class="content-group" name="hr_presence_options">
+                                <div class="d-flex">
+                                    <field name="show_projects" class="ml16"/>
+                                    <label for="show_projects" class="o_light_label"/>
+                                </div>
+                                <div class="d-flex">
+                                    <field name="show_locations" class="ml16"/>
+                                    <label for="show_locations" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+
+<!--        <record model="ir.actions.act_window" id="sd_payaneh_nafti_settings_action">-->
+<!--            <field name="name">Settings</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">res.config.settings</field>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            <field name="target">inline</field>-->
+<!--            <field name="context">{'module': 'sd_payaneh_nafti', 'bin size': False}</field>-->
+<!--        </record>-->
+
+<!--        <menuitem name="Parameters"-->
+<!--                  id="sd_payaneh_nafti.parameters_settings"-->
+<!--                  sequence="1000"-->
+<!--                  parent="settings_menu"-->
+<!--                  groups="sd_payaneh_nafti.group_sd_payaneh_nafti_admins"-->
+<!--                  action="sd_payaneh_nafti_settings_action"/>-->
+
+    </data>
+</odoo>

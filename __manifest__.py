@@ -30,6 +30,7 @@
         'views/res_users.xml',
         'views/hr_employee.xml',
         'views/employee_contacts.xml',
+        'views/settings.xml',
         ],
     'assets': {
         'web._assets_common_scripts': [

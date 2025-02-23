@@ -22,6 +22,9 @@ class HrEmployeeSdContacts(models.Model):
             # todo: error psycopg2.errors.UndefinedTable: relation "res_company_res_users_rel" does not exist
             # company_ids = self.env.user.sd_contacts_companies
             company_ids = self.env['res.company'].sudo().search([])
+        show_projects = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_projects')
+        show_locations = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_locations')
+
         employee_list = self.sudo().search([('company_id', 'in', company_ids.ids), ('show_contact', '=', True)], order='sequence')
 #         print(f'''
 #
@@ -83,4 +86,5 @@ class HrEmployeeSdContacts(models.Model):
                            'department_list': department_list,
                            'project_list': project_list,
                            'labels': labels,
+                           'show': {'show_locations': show_locations,'show_projects': show_projects, }
                            })
