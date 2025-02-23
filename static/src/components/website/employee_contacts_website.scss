@@ -22,6 +22,13 @@ div .img_div{
 .contacts_list_header{
     background: #2ec4b6;
     color: white;
+    min-height: 4rem;
+
+}
+.contacts_list_header .sortable:hover{
+        font-size: .9rem;
+        color: #56d5a2 !important;
+        font-weight: bold;
 
 }
 .contacts_list{

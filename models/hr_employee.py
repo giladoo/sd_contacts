@@ -68,10 +68,19 @@ class HrEmployeeSdContacts(models.Model):
             rec.name
             for rec in company_ids
         ])
+        labels = {
+            'title': _('Employees Contact Information'),
+            'name': _('Name'),
+            'depjob': f"{_('Job')} {_('Department')}",
+            'location_project': f"{_('Location')} {_('Project')}",
+            'phone': _('Phone'),
+            'email': _('Email'),
+            }
         # ic(contact_list, company_list, location_list, department_list)
         return json.dumps({'contact_list': contact_list,
                            'company_list': company_list,
                            'location_list': location_list,
                            'department_list': department_list,
                            'project_list': project_list,
+                           'labels': labels,
                            })

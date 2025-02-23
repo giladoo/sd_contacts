@@ -10,6 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { rpc } from "@web/core/network/rpc";
+import { session } from "@web/session";
 
 export class SdContactsContactList extends Component {
     static template = "sd_contacts.contact_list_template";
@@ -30,17 +31,8 @@ export class SdContactsContactList extends Component {
         this.selectedProject = useRef('selected_project')
         this.searchClear = useRef('search_clear')
         this.popover = usePopover(Tooltip);
+
         this.state = useState({
-            labels: {
-                title: _t('Employees Contact Information'),
-                name: _t('Name'),
-                depjob: `${_t('Job')} ${_t('Department')}`,
-                location_project: `${_t('Location')} ${_t('Project')}`,
-//                location: _t('Location'),
-//                project: _t('Project'),
-                phone: _t('Phone'),
-                email: _t('Email'),
-                },
             employees: [],
             contacts_filtered: [],
             departments: ['Deps...'],
@@ -51,7 +43,41 @@ export class SdContactsContactList extends Component {
             selectedDepartment: _t('All'),
             selectedLocation: _t('All'),
             selectedProject: _t('All'),
+            dir: {
+                name: '',
+                department: '',
+                phone: '',
+            }
         })
+
+        const labelsFa = {
+                title: _t('اطلاعات تماس کارکنان'),
+                name: _t('نام'),
+                depjob: `${_t('شغل')} / ${_t('واحد سازمانی')}`,
+                location_project: `${_t('محل کار')} / ${_t('پروژه')}`,
+//                location: _t('Location'),
+//                project: _t('Project'),
+                phone: _t('تلفن'),
+                email: _t('ایمیل'),
+                projects: 'پروژه',
+                departments: 'واحد سازمانی',
+                locations: 'محل کار',
+                }
+        const labelsEn = {
+                title: _t('Employees Contact Information 1'),
+                name: _t('Name'),
+                depjob: `${_t('Job')} ${_t('Department')}`,
+                location_project: `${_t('Location')} ${_t('Project')}`,
+//                location: _t('Location'),
+//                project: _t('Project'),
+                phone: _t('Phone'),
+                email: _t('Email'),
+                projects: 'Projects',
+                departments: 'Departments',
+                locations: 'Locations',
+                }
+
+        this.state.labels = session.lang_url_code == 'fa' ? labelsFa : labelsEn
         this.contacts_select_location = useRef('contacts_select_location')
         onMounted(async () => {
 //            console.log('con onMounted 1')
@@ -60,22 +86,23 @@ export class SdContactsContactList extends Component {
 //            self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
 
 //            console.log('con onMounted 2')
-            this.selectedLocation.el.innerHTML = _t('Locations')
-            this.selectedDepartment.el.innerHTML = _t('Departments')
-            this.selectedProject.el.innerHTML = _t('Projects')
+            this.selectedLocation.el.innerHTML = this.state.labels.locations
+            this.selectedDepartment.el.innerHTML = this.state.labels.departments
+            this.selectedProject.el.innerHTML = this.state.labels.projects
 
 //            console.log('con onMounted 3')
 
         await rpc('/employee/contactdata', {})
             .then(data => JSON.parse(data))
             .then(data=> {
-                console.log('data:', data)
+                console.log('data:', data, session)
                 self.state.employees = data['contact_list'];
                 self.state.contacts_filtered = data['contact_list'];
                 self.state.companies = data['company_list'];
                 self.state.locations = data['location_list'];
                 self.state.departments = data['department_list'];
                 self.state.projects = data['project_list'];
+//                self.state.labels = data['labels'];
                 self.updateList(self.state.employees)
                 if (self.state.companies.length > 1){
                     self.contactsCompanies.el.classList.remove('d-none')
@@ -86,12 +113,12 @@ export class SdContactsContactList extends Component {
                 }
             })
         });
-        console.log('state', this.state)
+//        console.log('state', this.state)
         this._onContactsSearch = this._onContactsSearch.bind(this);
         this._copyToClipBoard = this._copyToClipBoard.bind(this);
         this._onContactsCompanies = this._onContactsCompanies.bind(this);
-        this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
-        this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
+//        this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
+//        this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
     }
     selectLocation(location){
         this.state.selectedLocation = location
@@ -115,14 +142,16 @@ export class SdContactsContactList extends Component {
             project = _t('All')
             this.state.search = ['']
             this.contactsSearch.el.value = ''
+            this.state.dir.name = ''
 
         }
+
 
         if (location != _t('All')){
             this.selectedLocation.el.innerHTML =  `${location}`
             this.state.contacts_filtered = this.state.employees.filter(rec => rec.work_location == location)
         } else {
-            this.selectedLocation.el.innerHTML = _t('Locations')
+            this.selectedLocation.el.innerHTML = this.state.labels.locations
             this.state.selectedLocation = _t('All')
             this.state.contacts_filtered = this.state.employees
 
@@ -133,7 +162,7 @@ export class SdContactsContactList extends Component {
                 .filter(rec => rec.department == department || rec.parent_department_1 == department )
 
         } else {
-            this.selectedDepartment.el.innerHTML = _t('Department')
+            this.selectedDepartment.el.innerHTML = this.state.labels.departments
             this.state.selectedDepartment = _t('All')
             this.state.contacts_filtered = this.state.contacts_filtered
         }
@@ -144,23 +173,13 @@ export class SdContactsContactList extends Component {
                 .filter(rec => rec.project == project )
 
         } else {
-            this.selectedProject.el.innerHTML = _t('Projects')
+            this.selectedProject.el.innerHTML = this.state.labels.projects
             this.state.selectedProject = _t('All')
             this.state.contacts_filtered = this.state.contacts_filtered
         }
-
-
         this._onContactsSearch('')
     }
-    _onContactsSelectLocation(e){
-        console.log('_onContactsSelectLocation:', e)
-    }
-    _onContactsSelectDepartment(e){
-        console.log('_onContactsSelectDepartment:', e)
-    }
     _onContactsSearch(e){
-//        console.log('con _onContactsSearch', e, this.contactsSearch)
-//        return
         let contacts_search_value = this.contactsSearch.el.value
         if( e.keyCode == 13){
             this.updateList(this.state.contacts_filtered)
@@ -169,16 +188,15 @@ export class SdContactsContactList extends Component {
             this.contactsSearch.el.value = ''
         } else{
             this.state.search = contacts_search_value.toLowerCase().split(' ')
-//            console.log('_onContactsSearch:', this.state.contacts_filtered)
-//            console.log('search', this.state.search)
             let the_list = this._isInclude(this.state.contacts_filtered, this.state.search[0])
             the_list = this.state.search[1] ? this._isInclude(the_list,this.state.search[1]) : the_list
             the_list = this.state.search[2] ? this._isInclude(the_list,this.state.search[2]) : the_list
             the_list.length > 0 ? this.updateList(the_list) : this.updateList([])
         }
-
     }
-    updateList(data){
+    updateList(data, sort='sequence', dir='down'){
+        data = this.sortByKey(data, sort, dir)
+        this.state.data = data
         if(!data || !this.contactsList){
             return
         }
@@ -275,6 +293,7 @@ export class SdContactsContactList extends Component {
     _copyToClipBoard(e){
         let copyText = e.target.innerText;
         let target = e.target
+        let parent = e.target.parentElement
         if (target.classList.contains('copy_to_clip_board')){
             navigator.clipboard.writeText(target.innerText);
             this.showTooltip(target)
@@ -288,7 +307,21 @@ export class SdContactsContactList extends Component {
         }
         else if (target.classList.contains('employee_project_name')){
             this.selectProject(target.innerText)
-        }    }
+        }
+        else if (target.classList.contains('sort_employee_name') || parent.classList.contains('sort_employee_name') ){
+            this.state.dir.name = this.state.dir.name == 'down' ? 'up' : 'down'
+            this.updateList(this.state.data, 'name', this.state.dir.name)
+        }
+        else if (target.classList.contains('sort_department') || parent.classList.contains('sort_department') ){
+            this.state.dir.department = this.state.dir.department == 'down' ? 'up' : 'down'
+            this.updateList(this.state.data, 'department', this.state.dir.department)
+        }
+        else if (target.classList.contains('sort_phone') || parent.classList.contains('sort_phone') ){
+            this.state.dir.phone = this.state.dir.phone == 'down' ? 'up' : 'down'
+            this.updateList(this.state.data, 'work_phone', this.state.dir.phone)
+        }
+
+        }
     _isInclude(ar, st){
 //        console.log(ar.filter(rec => {
 //        return rec.name ? rec.name.includes(st) : false
@@ -302,6 +335,18 @@ export class SdContactsContactList extends Component {
             || (rec.work_email ? rec.work_email.includes(st) : false))
         })
     }
+    sortByKey(array, key, dir) {
+        return array.sort((a, b) => {
+            if (a[key] < b[key]) {
+                return dir == 'up' ? 1 : -1;
+            }
+            if (a[key] > b[key]) {
+                return dir == 'up' ? -1 : 1;
+            }
+            return 0; // a and b are equal
+        });
+}
+
 
 }
 
