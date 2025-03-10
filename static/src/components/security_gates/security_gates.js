@@ -17,29 +17,68 @@ export class SdContactsSecurityGates extends Component {
     static template = "sd_contacts.security_gates_template";
     static components = {SdContactsDashboard };
     setup(){
+        let self = this;
         console.log('security_gates')
         this.orm = useService('orm')
         this.employeeAttendanceData = useRef('employee_attendance_data')
+        this.lastAttendanceListViewRef = useRef('last_attendance_list_view')
         this.onEmployeeListClick = this.onEmployeeListClick.bind(this)
+        this.onInOutClick = this.onInOutClick.bind(this)
+        this.lastAttendanceListViewUpdate = this.lastAttendanceListViewUpdate.bind(this)
+        onMounted(async () => {
+            self.lastAttendanceListViewUpdate()
+        })
     }
-    async onEmployeeListClick(e){
-    let employee_id = 0;
-        if (e.target.classList.contains('employee_image_id')){
+    async onEmployeeListClick(e, employee_id=0){
+        console.log('onEmployeeListClick 1:',employee_id )
+
+        if (employee_id == 0 && e.target.classList.contains('employee_image_id')){
             employee_id = e.target.id
-        }else if (e.target.parentElement.classList.contains('employee_image_id')){
+        }else if (employee_id == 0 && e.target.parentElement.classList.contains('employee_image_id')){
             employee_id = e.target.parentElement.id
         }
         if(employee_id){
             let data = await this.orm.call('hr.attendance', 'get_attendance', [false, employee_id])
             data = JSON.parse(data)
-            console.log('onEmployeeListClick:',employee_id,data )
+            console.log('onEmployeeListClick 2:',employee_id,data )
             const bannerElement = renderToElement("sd_contacts.attendance_template", {
-                props: { data },
+                props: { data, }, this: this
             });
             this.employeeAttendanceData.el.innerHTML = ''
             this.employeeAttendanceData.el.appendChild(bannerElement)
-        }
 
+        }
+        this.updatePresenceState()
+        this.lastAttendanceListViewUpdate()
+
+    }
+    async onInOutClick(employee_id){
+        let data = await this.orm.call('hr.attendance', 'set_attendance', [false, employee_id])
+        this.onEmployeeListClick(false, employee_id)
+    }
+    updatePresenceState(){
+        let imageStatus = document.querySelectorAll('div.img_div.employee_image_id')
+       console.log(imageStatus)
+       //todo: if employee is present, add border-success class
+
+//        let employees = await this.orm.call('hr.employees', 'get_attendance', [false, employee_id])
+
+    }
+    async lastAttendanceListViewUpdate(){
+//                let lastAttendances = await this.orm.searchRead('hr.attendance', [], ['id', 'employee_id', 'check_in', 'check_out'], {limit: 10, order: 'write_date desc'})
+//                console.log('lastAttendances 1', )
+                let lastAttendancesData = await this.orm.call('hr.attendance', 'get_last_attendances', [false] )
+                lastAttendancesData = JSON.parse(lastAttendancesData)
+                let lastAttendances = lastAttendancesData.last_attendances_time
+                let presents = lastAttendancesData.presents
+                let absence = lastAttendancesData.absence
+
+//                console.log('lastAttendances 2', lastAttendances)
+            const lastAttendanceElement = renderToElement("sd_contacts.last_attendance_template", {
+                props: { lastAttendances, presents, absence }, this: this
+            });
+            this.lastAttendanceListViewRef.el.innerHTML = ''
+            this.lastAttendanceListViewRef.el.appendChild(lastAttendanceElement)
     }
 
 }
