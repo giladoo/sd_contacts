@@ -52,7 +52,7 @@
 
     <t t-name="sd_contacts.last_attendance_template" owl="1">
         <div class="row row-cols-auto justify-content-center  mx-0 p-2 ">
-            <div class="col-1 me-5 align-content-around">
+            <div class="col me-5 align-content-around">
                 <div class="row mb-3 p-1 rounded bg-success-light">
                     <div class="col-6">
                         Presents
