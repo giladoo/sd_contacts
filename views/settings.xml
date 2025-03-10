@@ -12,6 +12,10 @@
                         <setting id="contact_list_setting" title="Contact List" string="Contact List">
                             <div class="content-group" name="hr_presence_options">
                                 <div class="d-flex">
+                                    <field name="show_job_title" class="ml16"/>
+                                    <label for="show_job_title" class="o_light_label"/>
+                                </div>
+                                <div class="d-flex">
                                     <field name="show_projects" class="ml16"/>
                                     <label for="show_projects" class="o_light_label"/>
                                 </div>

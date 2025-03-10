@@ -165,21 +165,21 @@ export class SdContactsDashboard extends Component {
         let statusBorder = 'border-gray';
 //        console.log('updateList', data)
         this.contactsList.el.innerHTML = '';
-//                        <div class="col-2 px-1 img_div "><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
+//                        <div class="col-2 px-1 img_div employee_image_id " id="${rec.id}"><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
         let contactsListHtml = ''
         data.forEach(rec => {
-            if (rec.im_status == 'online'){
+            if (rec.hr_icon_display == "presence_present"){
                 statusBorder = 'border-success border-2'
-            } else if (rec.im_status == 'away'){
+            } else if (rec.hr_icon_display == 'away'){
                 statusBorder = 'border-warning border-2'
             } else {
-                statusBorder = ''
+                statusBorder = 'border-gray'
             }
 
             contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
-                <div class="col-2 col-md-2 px-1 py-1">
-                    <div class="img_div rounded-circle border  p-1 ${statusBorder}" style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
+                <div class="col-2 col-md-2 px-1 py-1 employee_image_id" id="${rec.id}">
+                    <div class="img_div rounded-circle border  p-1 ${statusBorder} employee_image_id" id="${rec.id}" style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
 
                 <div class="row col-10 col-md-10 p-3 p-md-0">

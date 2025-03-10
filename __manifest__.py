@@ -17,15 +17,15 @@
     # for the full list
     'category': 'Service Desk/Service Desk',
     'application': True,
-    'version': '18.0.1.0.1',
+    'version': '18.0.1.0.2',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'web', 'website', 'hr',],
+    'depends': ['base', 'web', 'website', 'hr', 'hr_attendance'],
 
     # always loaded
     'data': [
-        # 'security/security.xml',
-        # 'security/ir.model.access.csv',
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'views/views.xml',
         'views/res_users.xml',
         'views/hr_employee.xml',
@@ -41,14 +41,13 @@
 
         ],
         'web.assets_backend': [
-            'sd_contacts/static/src/components/web/**/*.xml',
-            'sd_contacts/static/src/components/web/**/*.scss',
-            'sd_contacts/static/src/components/web/**/*.js',
+            'sd_contacts/static/src/components/web/**/*.*',
+            'sd_contacts/static/src/components/security_gates/**/*.*',
+
         ],
         'web.assets_frontend': [
-            'sd_contacts/static/src/components/website/**/*.js',
-            'sd_contacts/static/src/components/website/**/*.scss',
-            'sd_contacts/static/src/components/website/**/*.xml',
+            'sd_contacts/static/src/components/website/**/*.*',
+
         ],
         'web.report_assets_common': [
 

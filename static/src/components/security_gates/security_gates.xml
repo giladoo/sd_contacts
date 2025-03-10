@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template xml:space="preserve">
+    <t t-name="sd_contacts.security_gates_template" owl="1">
+        <div class="vh-100 overflow-auto bg-muted">
+            <div class="border">
+                latest Attendances
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="col-12 border rounded" style="height: 100px;">
+                        <div class="" t-ref="employee_attendance_data"></div>
+
+                    </div>
+                    <SdContactsDashboard t-on-click="onEmployeeListClick"/>
+                </div>
+
+            </div>
+        </div>
+    </t>
+    <t t-name="sd_contacts.attendance_template" owl="1">
+        <div class="">
+            <div class="border" t-esc="props.data.employee.name"></div>
+            <div class="border" t-esc="props.data.attendances[0]"></div>
+        </div>
+    </t>
+
+
+
+</template>

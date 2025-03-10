@@ -24,6 +24,7 @@ class HrEmployeeSdContacts(models.Model):
             company_ids = self.env['res.company'].sudo().search([])
         show_projects = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_projects')
         show_locations = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_locations')
+        show_job_title = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_job_title')
 
         employee_list = self.sudo().search([('company_id', 'in', company_ids.ids), ('show_contact', '=', True)], order='sequence')
 #         print(f'''
@@ -41,11 +42,12 @@ class HrEmployeeSdContacts(models.Model):
                 'work_phone' : rec.work_phone,
                 'work_email' : rec.work_email,
                 'work_location' : rec.work_location_id.name,
+                'hr_icon_display' : rec.hr_icon_display,
                 'project' : rec.project_name.name,
                 'department' : rec.department_id.name,
                 'parent_department_1' : rec.department_id.parent_id.name,
                 'parent_department_2' : rec.department_id.parent_id.parent_id.name,
-                'job_title' : rec.job_title,
+                'job_title' : rec.job_title if show_job_title else '',
                 'company' : rec.company_id.name,
                 'present' : rec.hr_presence_state,
                 'im_status' : rec.user_id.im_status,

@@ -5,11 +5,19 @@
     <record id="sd_contacts_main_act" model="ir.actions.client">
             <field name="name">Employee Contacts</field>
             <field name="tag">sd_contacts.contacts_dashboard</field>
+        </record>
+
+    <record id="sd_contacts_security_gates_action" model="ir.actions.client">
+            <field name="name">Security Gates</field>
+            <field name="tag">sd_contacts.security_gates</field>
 
         </record>
         <menuitem name="Employee Contacts"
                   id="sd_contacts_main_menu"
                 parent="hr.menu_human_resources_configuration"
                   action="sd_contacts_main_act" />
+        <menuitem name="Gates"
+                  id="sd_contacts_security_gates_menu"
+                  action="sd_contacts_security_gates_action" />
 
 </odoo>

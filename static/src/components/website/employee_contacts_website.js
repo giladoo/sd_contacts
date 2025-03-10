@@ -34,7 +34,7 @@ export class SdContactsContactList extends Component {
                 department: '',
                 phone: '',
             },
-            show: {show_locations: true, show_projects: true},
+            show: {show_locations: true, show_projects: true, show_job_title: true},
         })
 //        console.log('start:', this.state.show)
         this.contactsSearch = useRef('contacts_search')
