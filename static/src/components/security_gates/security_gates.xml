@@ -53,6 +53,7 @@
     <t t-name="sd_contacts.last_attendance_template" owl="1">
         <div class="row row-cols-auto justify-content-center  mx-0 p-2 ">
             <div class="col me-5 align-content-around">
+                <div class="h3 text-center" t-esc="props.today"></div>
                 <div class="row mb-3 p-1 rounded bg-success-light">
                     <div class="col-6">
                         Presents
@@ -79,8 +80,14 @@
                              t-att-style="'background-image: url(/web/image?model=hr.employee.public&amp;id='+ last_att.employee_id[0] +'&amp;field=avatar_128)'"></div>
                     </div>
                     <div class="" t-esc="last_att.employee_id[1]"></div>
-                    <div t-if="last_att.dir == 'in'" class="bg-success-light rounded" t-esc="last_att.time"></div>
-                    <div t-if="last_att.dir == 'out'" class="bg-danger-light rounded" t-esc="last_att.time"></div>
+                    <div t-if="last_att.dir == 'in'" class="bg-success-light rounded" >
+                        <div class="" t-esc="last_att.time[0]"></div>
+                        <div class="" t-esc="last_att.time[1]"></div>
+                    </div>
+                    <div t-if="last_att.dir == 'out'" class="bg-danger-light rounded">
+                        <div class="" t-esc="last_att.time[0]"></div>
+                        <div class="" t-esc="last_att.time[1]"></div>
+                    </div>
                 </div>
 
             </div>

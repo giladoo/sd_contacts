@@ -69,13 +69,14 @@ export class SdContactsSecurityGates extends Component {
 //                console.log('lastAttendances 1', )
                 let lastAttendancesData = await this.orm.call('hr.attendance', 'get_last_attendances', [false] )
                 lastAttendancesData = JSON.parse(lastAttendancesData)
-                let lastAttendances = lastAttendancesData.last_attendances_time
-                let presents = lastAttendancesData.presents
-                let absence = lastAttendancesData.absence
+                const lastAttendances = lastAttendancesData.last_attendances_time
+                const presents = lastAttendancesData.presents
+                const absence = lastAttendancesData.absence
+                const today = lastAttendancesData.today
 
 //                console.log('lastAttendances 2', lastAttendances)
             const lastAttendanceElement = renderToElement("sd_contacts.last_attendance_template", {
-                props: { lastAttendances, presents, absence }, this: this
+                props: { lastAttendances, presents, absence, today }, this: this
             });
             this.lastAttendanceListViewRef.el.innerHTML = ''
             this.lastAttendanceListViewRef.el.appendChild(lastAttendanceElement)

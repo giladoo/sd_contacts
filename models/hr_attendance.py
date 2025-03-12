@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 import json
 from datetime import datetime
+import jdatetime
 from jdatetimext import jdatejs
 from icecream import ic
 import pytz
@@ -14,6 +15,7 @@ class SdContactsHrAttendance(models.Model):
 
 
     def get_last_attendances(self):
+        user_tz = self.env.context.get('tz', 'Asia/Tehran')
         last_attendances = self.sudo().search_read([], [ 'employee_id', 'check_in', 'check_out'], limit=10, order='write_date desc')
         last_attendance_check_in = list([{k if k != 'check_in' else 'time': v for k, v in rec.items() if k != "check_out" } for rec in last_attendances])
         last_attendance_check_in = list([{**rec, 'dir': 'in'} for rec in last_attendance_check_in])
@@ -28,6 +30,7 @@ class SdContactsHrAttendance(models.Model):
         employees = self.env['hr.employee'].sudo().search_read([], ['hr_icon_display'])
         presents = len(list([rec for rec in employees if rec['hr_icon_display'] == 'presence_present']))
         absence = len(list([rec for rec in employees if rec['hr_icon_display'] != 'presence_present']))
+        today = jdatejs(datetime.now().astimezone(pytz.timezone(user_tz)), '%Y/%m/%d')
 
         # ic(employees)
 
@@ -40,6 +43,7 @@ class SdContactsHrAttendance(models.Model):
                            'presents': presents,
                            'absence': absence,
                            'all_emps': all_emps,
+                           'today': today,
                            })
 
 
@@ -70,11 +74,20 @@ class SdContactsHrAttendance(models.Model):
         employee_att = employee._attendance_action_change()
         # ic(employee_id, employee_att)
 
-    def get_time(self, date_time, user_tz='Asia/Tehran'):
+    def get_time(self, date_time, user_tz='Asia/Tehran', month=False):
         if isinstance(date_time, datetime):
-            return date_time.astimezone(pytz.timezone(user_tz)).strftime("%H:%M")
+            dtime = date_time.astimezone(pytz.timezone(user_tz)).strftime("%H:%M")
+            # todo : gregorian needed
+            if month:
+                jdatetime.set_locale(jdatetime.FA_LOCALE)
+                ddate = jdatetime.date.fromgregorian(date=date_time.astimezone(pytz.timezone(user_tz))).strftime("%b %d")
+                res =  (ddate, dtime)
+            else:
+                res = dtime
         else:
-            return ''
+            res =  ''
+
+        return res
 
     def get_record_checkin_checkout_time(self, rec):
         rec['check_in'] = self.get_time(rec['check_in'])
@@ -83,5 +96,5 @@ class SdContactsHrAttendance(models.Model):
 
 
     def get_record_time(self, rec):
-        rec['time'] = self.get_time(rec['time'])
+        rec['time'] = self.get_time(rec['time'], 'Asia/Tehran', True)
         return rec
