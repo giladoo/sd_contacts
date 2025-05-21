@@ -8,7 +8,7 @@ from icecream import ic
 class HrEmployeeSdContacts(models.Model):
     _inherit = 'hr.employee'
 
-    show_contact = fields.Boolean(default=True)
+    show_in_contact_list = fields.Boolean(default=True)
     sequence = fields.Integer(default=10000)
 
 
@@ -26,7 +26,7 @@ class HrEmployeeSdContacts(models.Model):
         show_locations = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_locations')
         show_job_title = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_job_title')
 
-        employee_list = self.sudo().search([('company_id', 'in', company_ids.ids), ('show_contact', '=', True)], order='sequence')
+        employee_list = self.sudo().search([('company_id', 'in', company_ids.ids), ('show_in_contact_list', '=', True)], order='sequence')
 #         print(f'''
 #
 #                 {self.env.user.name}  is admin: {self.env.is_admin()}

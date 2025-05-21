@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-        <record id="hr_view_employee_form_inherit_hr_extend2" model="ir.ui.view">
+    <record id="hr_view_employee_form_inherit_hr_extend2" model="ir.ui.view">
         <field name="name">hr.employee.form</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-
-            <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="show_contact" widget="boolean_toggle"  />
+            <xpath expr="//field[@name='category_ids']" position="after">
+                <field name="show_in_contact_list" widget="boolean_toggle"  />
             </xpath>
         </field>
     </record>
-        <record id="sd_hr_view_employee_tree_inherit" model="ir.ui.view">
+
+    <record id="sd_hr_view_employee_tree_inherit" model="ir.ui.view">
         <field name="name">hr.employee.view.tree.inherit.employee.relatives.expiry</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_tree"/>
