@@ -25,26 +25,42 @@
 
     <t t-name="sd_contacts.attendance_template" owl="1">
         <div class="row mx-0 p-3 shadow">
-            <div class="col-4 align-content-around">
-                <div class="px-1 py-1">
-                    <div class="img_div rounded-circle border  p-1 ${statusBorder} employee_image_id" t-att-id="props.data.employee.id"
-                         t-att-style="'background-image: url(/web/image?model=hr.employee.public&amp;id='+ props.data.employee.id +'&amp;field=avatar_128)'"></div>
+            <div class="col-3 text-center align-content-start">
+                <div class="h-75 ">
+                    <div class="px-1 py-1">
+                        <div class="img_div rounded-circle border  p-1 ${statusBorder} employee_image_id mx-auto" t-att-id="props.data.employee.id"
+                             t-att-style="'background-image: url(/web/image?model=hr.employee.public&amp;id='+ props.data.employee.id +'&amp;field=avatar_128)'"></div>
+                    </div>
+                        <div class="" t-esc="props.data.employee.name"></div>
+
                 </div>
-                <div class="" t-esc="props.data.employee.name"></div>
+                <div class="btn btn-primary mt-2" t-on-click="() => this.onInOutClick(props.data.employee.id)">
+                    In/Out
+                </div>
             </div>
-            <div class="col-4">
+            <div class="col-3">
                 <t t-foreach="props.data.attendances" t-as="attendance" t-key="attendance.id">
-                    <div class="row ">
-                        <div class="col-6 bg-success-light border-bottom rounded" t-esc="attendance.check_in"></div>
-                        <div t-if="attendance.check_out" class="col-6 bg-danger-light border-bottom rounded" t-esc="attendance.check_out"></div>
+                    <div class="row text-center ">
+                        <div class="col-6 bg-success-light border-bottom rounded-start" t-esc="attendance.check_in"></div>
+                        <div t-if="attendance.check_out" class="col-6 bg-danger-light border-bottom rounded-end" t-esc="attendance.check_out"></div>
 
                     </div>
                 </t>
             </div>
-            <div class="col-4 text-center align-content-end">
-                <div class="btn btn-primary" t-on-click="() => this.onInOutClick(props.data.employee.id)">
-                    In/Out
+            <div class="col-6  text-center align-content-start">
+                <div class="h-100 ">
+                    <div class="h5  my-0 py-1 bg-300 rounded">Requests</div>
+                    <t t-foreach="props.data.leaves" t-as="leave" t-key="leave">
+                        <div t-att-class="'row mx-0 border-bottom ' + (leave.state_icon == 'fa-check' ? 'text-success' : '')">
+                            <div class="col-1 p-1  " ><i t-att-class="'fa ' + leave.state_icon"></i></div>
+                            <div class="col-7 p-1  " t-esc="leave.leave_type"></div>
+                            <div class="col-2 p-1 " t-esc="leave.start"></div>
+                            <div class="col-2 p-1 " t-esc="leave.end"></div>
+                        </div>
+
+                    </t>
                 </div>
+
             </div>
 
         </div>
@@ -54,7 +70,7 @@
         <div class="row row-cols-auto justify-content-center  mx-0 p-2 ">
             <div class="col me-5 align-content-around">
                 <div class="h3 text-center" t-esc="props.today"></div>
-                <div class="row mb-3 p-1 rounded bg-success-light">
+                <div class="row mb-3 p-1 rounded bg-success-light cursor-pointer" t-on-click="() => this.onCounterClick('presents')">
                     <div class="col-6">
                         Presents
                     </div>

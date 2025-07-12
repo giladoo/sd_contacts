@@ -20,10 +20,13 @@ export class SdContactsSecurityGates extends Component {
         let self = this;
         console.log('security_gates')
         this.orm = useService('orm')
+        this.action = useService("action");
+
         this.employeeAttendanceData = useRef('employee_attendance_data')
         this.lastAttendanceListViewRef = useRef('last_attendance_list_view')
         this.onEmployeeListClick = this.onEmployeeListClick.bind(this)
         this.onInOutClick = this.onInOutClick.bind(this)
+        this.onCounterClick = this.onCounterClick.bind(this)
         this.lastAttendanceListViewUpdate = this.lastAttendanceListViewUpdate.bind(this)
         onMounted(async () => {
             self.lastAttendanceListViewUpdate()
@@ -52,13 +55,39 @@ export class SdContactsSecurityGates extends Component {
         this.lastAttendanceListViewUpdate()
 
     }
+    onCounterClick(e){
+        console.log('onCounterClick:\n', e)
+        let res_model, domain, context, action_name;
+        if(e == 'presents'){
+            action_name = _t("Action List")
+//            domain.push(['state', 'not in', ['stop_card', 'dismiss']])
+//            console.log('domain:', domain)
+            res_model = "hr.attendance"
+            context = {search_default_present: 1}
+        } else {
+            return
+        }
+        this.action.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: action_name,
+                res_model: res_model,
+                views: [[false, "list"],],
+                view_mode: "list",
+                target: "current",
+//                res_id: res_id,
+//                domain: domain,
+                context: context,
+
+            })
+    }
     async onInOutClick(employee_id){
         let data = await this.orm.call('hr.attendance', 'set_attendance', [false, employee_id])
         this.onEmployeeListClick(false, employee_id)
     }
     updatePresenceState(){
         let imageStatus = document.querySelectorAll('div.img_div.employee_image_id')
-       console.log(imageStatus)
+//       console.log(imageStatus)
        //todo: if employee is present, add border-success class
 
 //        let employees = await this.orm.call('hr.employees', 'get_attendance', [false, employee_id])
@@ -67,7 +96,7 @@ export class SdContactsSecurityGates extends Component {
     async lastAttendanceListViewUpdate(){
 //                let lastAttendances = await this.orm.searchRead('hr.attendance', [], ['id', 'employee_id', 'check_in', 'check_out'], {limit: 10, order: 'write_date desc'})
 //                console.log('lastAttendances 1', )
-                let lastAttendancesData = await this.orm.call('hr.attendance', 'get_last_attendances', [false] )
+                let lastAttendancesData = await this.orm.call('hr.attendance', 'get_last_attendances', [false, 12] )
                 lastAttendancesData = JSON.parse(lastAttendancesData)
                 const lastAttendances = lastAttendancesData.last_attendances_time
                 const presents = lastAttendancesData.presents

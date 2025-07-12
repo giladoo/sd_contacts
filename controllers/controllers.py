@@ -64,15 +64,15 @@ class SdContactsController(http.Controller):
 
     @http.route('/employee/contactsimage/<int:employee_id>', type='http', auth='public', website=True)
     def get_employee_avatar(self, employee_id, **kw):
-        employee = request.env['hr.employee'].sudo().browse(employee_id) # Use sudo() for unauthenticated access
-        # ic(employee)
-        if not employee or not employee.avatar_128:
-            placeholder_path = request.env['ir.module.module']._get_static_file_path('sd_contacts', 'img/im.jpg') # Get the absolute path
-            # ic(placeholder_path)
-            if placeholder_path:
-                with open(placeholder_path, 'rb') as f:  # Open in binary mode
-                    image_data = f.read()
-                return Response(image_data, content_type='image/jpeg')
+        employee = request.env['hr.employee'].sudo().search([('id', '=', employee_id)])
+        ic(employee, len(employee.image_256))
+        # if not employee or len(employee.avatar_128) < 500:
+        #     placeholder_path = request.env['ir.module.module']._get_static_file_path('sd_contacts', 'img/im.jpg') # Get the absolute path
+        #     # ic(placeholder_path)
+        #     if placeholder_path:
+        #         with open(placeholder_path, 'rb') as f:  # Open in binary mode
+        #             image_data = f.read()
+        #         return Response(image_data, content_type='image/jpeg')
 
         # For employee avatars, use direct_passthrough and Content-Length
         content_type = 'image/png'  # Or image/jpeg, etc. (check your avatars)

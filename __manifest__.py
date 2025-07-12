@@ -30,6 +30,8 @@
         'views/res_users.xml',
         'views/hr_employee.xml',
         'views/employee_contacts.xml',
+        'views/attendance.xml',
+        'views/hr_leave.xml',
         'views/settings.xml',
         ],
     'assets': {

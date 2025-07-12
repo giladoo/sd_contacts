@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="gate_attendance_list" model="ir.ui.view">
+        <field name="name">Gate Attendance</field>
+        <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <list create="0">
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                </list>
+            </field>
+    </record>
+
+    <record id="gate_attendance_search" model="ir.ui.view">
+        <field name="name">Gate Attendance</field>
+        <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                    <filter name="employees" string="Employees" context="{'group_by': 'employee_id'}"/>
+                    <filter name="present" string="Present" domain="[('check_out', '=', False)]"/>
+                    <filter name="today" string="Today"
+                            domain="[('check_in', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"
+                    />
+                    <filter name="yesterday" string="Yesterday"
+                            domain="[
+                            ('check_in', '&gt;=', datetime.datetime.combine(context_today() - relativedelta(days=1), datetime.time(0,0,0))),
+                            ('check_in', '&lt;', datetime.datetime.combine(context_today() , datetime.time(0,0,0)))
+                            ]"
+                    />
+                    <filter name="2_days_ago" string="2 days ago"
+                            domain="[
+                            ('check_in', '&gt;=', datetime.datetime.combine(context_today() - relativedelta(days=2), datetime.time(0,0,0))),
+                            ('check_in', '&lt;', datetime.datetime.combine(context_today() - relativedelta(days=1) , datetime.time(0,0,0)))
+                            ]"
+                    />
+
+
+                </search>
+            </field>
+    </record>
+
+
+    <record id="attendance_action" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="sd_contacts.gate_attendance_list"/>
+        <field name="search_view_id" ref="sd_contacts.gate_attendance_search"/>
+        <field name="context">{'search_default_today': 1}</field>
+
+    </record>
+
+        <menuitem name="Attendances"
+                  id="attendances_menu"
+                  parent="sd_contacts_security_gates_menu"
+                  groups="sd_contacts.group_sd_contacts_users"
+                  action="attendance_action" />
+
+</odoo>
