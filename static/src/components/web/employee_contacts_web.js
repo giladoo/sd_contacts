@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry"
-import { Component, useState, useRef, onMounted, onWillUnmount, xml } from "@odoo/owl";
+import { Component, useState, useRef, onMounted, onWillUnmount, onWillUpdateProps, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -29,7 +29,6 @@ export class SdContactsDashboard extends Component {
         this.selectedDepartment = useRef('selected_department')
         this.searchClear = useRef('search_clear')
         this.popover = usePopover(Tooltip);
-        console.log('setup updateList', this)
         this.state = useState({
             employees: [],
             contacts_filtered: [],
@@ -38,22 +37,40 @@ export class SdContactsDashboard extends Component {
             companies: [],
             search: [''],
             selectedDepartment: _t('All'),
-            selectedLocation: _t('All'),
+            attendances: [],
         })
-//        console.log('SdContactsDashboard:', this, this.contactsSearch.el)
+        onWillUpdateProps(async (nextProps) => {
+            let images
+            images = self.contactsList.el.querySelectorAll('.img_div')
+//            console.log('nextProps', self, images)
+            await self.orm.call('hr.employee', 'contact_web', [[]], {})
+                .then(data => JSON.parse(data))
+                .then(data=> {
+                    self.state.employees = data['contact_list'];
+                    self.state.attendances = data['attendances'];
+                })
+            console.log('aaaa', self.state.employees[10])
+            images.forEach(r => {
+                r.classList.remove('border-success', 'border-warning', 'border-gray', 'border-3')
+                const rec = self.state.employees.find(i => i.id == r.id)
+                const words = self.setImageClass(rec).split(' ')
+
+
+                r.id == 4 ? console.log('bbb', words) : ''
+//                console.log('bbb', self.setImageClass(quoted))
+                r.classList.add(...words)
+            })
+
+        });
         onMounted(async () => {
-            console.log('con onMounted 1')
             browser.addEventListener('keyup', self._onContactsSearch);
             browser.addEventListener('click', self._copyToClipBoard)
             self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
 //            self.contactsSelectLocation.el.addEventListener('click', self._onContactsSelectLocation)
 //            self.contactsSelectDepartment.el.addEventListener('click', self._onContactsSelectDepartment)
 
-            console.log('con onMounted 2')
             this.selectedLocation.el.innerHTML = _t('Location')
             this.selectedDepartment.el.innerHTML = _t('Department')
-
-            console.log('con onMounted 3')
 //        await self.orm.searchRead('hr.employee',
 //                                [],
 //                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],{order: 'sequence'})
@@ -61,10 +78,12 @@ export class SdContactsDashboard extends Component {
                 .then(data => JSON.parse(data))
                 .then(data=> {
                     self.state.employees = data['contact_list'];
+//                    console.log('employees\n', self.state.employees)
                     self.state.contacts_filtered = data['contact_list'];
                     self.state.companies = data['company_list'];
                     self.state.locations = data['location_list'];
                     self.state.departments = data['department_list'];
+                    self.state.attendances = data['attendances'];
                     self.updateList(self.state.employees)
                     if (self.state.companies.length > 1){
                         self.contactsCompanies.el.classList.remove('d-none')
@@ -90,6 +109,9 @@ export class SdContactsDashboard extends Component {
         this._onContactsCompanies = this._onContactsCompanies.bind(this);
         this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
         this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
+    }
+    sendUpdates(){
+        console.log('getUpdates')
     }
     selectLocation(location){
         this.state.selectedLocation = location
@@ -158,6 +180,18 @@ export class SdContactsDashboard extends Component {
         }
 
     }
+    setImageClass(rec){
+        let res;
+//        if (["presence_present", "presence_out_of_working_hour"].includes(rec.hr_icon_display)){
+        if (["presence_present",].includes(rec.hr_icon_display)){
+            res = 'border-success border-3'
+        } else if (rec.hr_icon_display == 'away' || this.state.attendances.includes(rec.id)){
+            res = 'border-warning border-3'
+        } else {
+            res = 'border-gray'
+        }
+        return res
+    }
     updateList(data){
         if(!data || !this.contactsList){
             return
@@ -168,18 +202,13 @@ export class SdContactsDashboard extends Component {
 //                        <div class="col-2 px-1 img_div employee_image_id " id="${rec.id}"><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
         let contactsListHtml = ''
         data.forEach(rec => {
-            if (rec.hr_icon_display == "presence_present"){
-                statusBorder = 'border-success border-2'
-            } else if (rec.hr_icon_display == 'away'){
-                statusBorder = 'border-warning border-2'
-            } else {
-                statusBorder = 'border-gray'
-            }
+            statusBorder = this.setImageClass(rec)
 
             contactsListHtml += `
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
                 <div class="col-2 col-md-2 px-1 py-1 employee_image_id" id="${rec.id}">
-                    <div class="img_div rounded-circle border  p-1 ${statusBorder} employee_image_id" id="${rec.id}" style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
+                    <div class="img_div rounded-circle border  p-1 ${statusBorder} employee_image_id" id="${rec.id}"
+                    style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)"></div>
                 </div>
 
                 <div class="row col-10 col-md-10 p-3 p-md-0">
@@ -194,8 +223,12 @@ export class SdContactsDashboard extends Component {
                     </div>
 
                     <div class="row col-6 col-md-6 mx-0 mb-1 px-0">
-                        <div ref="contacts_location" class="col-12 col-md-3 px-1 h6 text-center  employee_location_name cursor-pointer"> ${rec.work_location || ''}</div>
-                        <div ref="contacts_phone" class="copy_to_clip_board col-12 col-md-3 px-1 h6 text-center"> ${rec.work_phone || ''}</div>
+                        <div ref="contacts_location" class="col-12 col-md-3 px-1 h6 text-center  employee_location_name cursor-pointer">
+                            ${rec.work_location || ''}
+                        </div>
+                        <div ref="contacts_phone" class="copy_to_clip_board col-12 col-md-3 px-1 h6 text-center">
+                            ${rec.work_phone || ''}
+                         </div>
                         <div ref="contacts_email" class="copy_to_clip_board contact_email col-12 col-md-6 px-1  text-center small " >
                            ${rec.work_email || ''}
                         </div>

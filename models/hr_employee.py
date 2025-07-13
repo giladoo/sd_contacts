@@ -4,6 +4,9 @@ from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 import json
 from icecream import ic
+from datetime import datetime
+import pytz
+
 
 class HrEmployeeSdContacts(models.Model):
     _inherit = 'hr.employee'
@@ -16,6 +19,7 @@ class HrEmployeeSdContacts(models.Model):
         # ic('contact_web')
         # company_id = self.env.user.company_id
         # company_ids = self.env.user.company_ids
+        today = datetime.now(pytz.timezone(self.env.context.get('tz', 'Asia/Tehran'))).date()
         if self.env.is_admin():
             company_ids = self.env['res.company'].search([])
         else:
@@ -27,6 +31,9 @@ class HrEmployeeSdContacts(models.Model):
         show_job_title = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_job_title')
 
         employee_list = self.sudo().search([('company_id', 'in', company_ids.ids), ('show_in_contact_list', '=', True)], order='sequence')
+        attendances = self.env['hr.attendance'].sudo().search_read([('check_in', '>=', today )], [ 'employee_id',])
+        attendances = list({rec['employee_id'][0] for rec in attendances})
+
 #         print(f'''
 #
 #                 {self.env.user.name}  is admin: {self.env.is_admin()}
@@ -88,5 +95,6 @@ class HrEmployeeSdContacts(models.Model):
                            'department_list': department_list,
                            'project_list': project_list,
                            'labels': labels,
+                           'attendances': attendances,
                            'show': {'show_locations': show_locations,'show_projects': show_projects, }
                            })

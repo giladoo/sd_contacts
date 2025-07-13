@@ -17,7 +17,7 @@ class SdContactsHrAttendance(models.Model):
     def get_last_attendances(self, last_attendances_items_count=10):
         user_tz = self.env.context.get('tz', 'Asia/Tehran')
         # TODO: last_attendances_items_count can be setby user
-        last_attendances = self.sudo().search_read([], [ 'employee_id', 'check_in', 'check_out'], limit=10, order='write_date desc')
+        last_attendances = self.sudo().search_read([], [ 'employee_id', 'check_in', 'check_out'], limit=last_attendances_items_count, order='write_date desc')
         last_attendance_check_in = list([{k if k != 'check_in' else 'time': v for k, v in rec.items() if k != "check_out" } for rec in last_attendances])
         last_attendance_check_in = list([{**rec, 'dir': 'in'} for rec in last_attendance_check_in])
         last_attendance_check_out = list([{k if k != 'check_out' else 'time': v for k, v in rec.items() if k != "check_in"} for rec in last_attendances])
@@ -57,7 +57,8 @@ class SdContactsHrAttendance(models.Model):
 
         employee_id =  int(employee_id)
 
-        employee = self.env['hr.employee'].sudo().search_read([('id', '=', employee_id)], ['name', 'hr_icon_display'])
+        employee = self.env['hr.employee'].sudo().search_read([('id', '=', employee_id)],
+                                                              ['name', 'hr_icon_display'])
         today = fields.Datetime.today()
         # today = today.astimezone(pytz.timezone(user_tz))
 

@@ -12,7 +12,7 @@
 
                     </div>
                     <div class="mt-3 border rounded shadow" style="height: 400px;">
-                        <SdContactsDashboard t-on-click="onEmployeeListClick"/>
+                        <SdContactsDashboard t-on-click="onEmployeeListClick" sendUpdates="this.state.sendUpdates"/>
 
                     </div>
                 </div>

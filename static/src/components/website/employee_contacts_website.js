@@ -29,6 +29,7 @@ export class SdContactsContactList extends Component {
             selectedDepartment: _t('All'),
             selectedLocation: _t('All'),
             selectedProject: _t('All'),
+            attendances: [],
             dir: {
                 name: '',
                 department: '',
@@ -106,6 +107,7 @@ export class SdContactsContactList extends Component {
                 self.state.locations = data['location_list'];
                 self.state.departments = data['department_list'];
                 self.state.projects = data['project_list'];
+                self.state.attendances = data['attendances'];
                 self.state.show = data['show'];
                 self.updateList(self.state.employees)
                 if (self.state.companies.length > 1){
@@ -200,6 +202,18 @@ export class SdContactsContactList extends Component {
             the_list.length > 0 ? this.updateList(the_list) : this.updateList([])
         }
     }
+    setImageClass(rec){
+        let res;
+//        if (["presence_present", "presence_out_of_working_hour"].includes(rec.hr_icon_display)){
+        if (["presence_present",].includes(rec.hr_icon_display)){
+            res = 'border-success border-3'
+        } else if (rec.hr_icon_display == 'away' || this.state.attendances.includes(rec.id)){
+            res = 'border-warning border-3'
+        } else {
+            res = 'border-gray'
+        }
+        return res
+    }
     updateList(data, sort='sequence', dir='down'){
         data = this.sortByKey(data, sort, dir)
         this.state.data = data
@@ -211,13 +225,14 @@ export class SdContactsContactList extends Component {
         let contactsListHtml = ''
         data.forEach(rec => {
             let url = '';
-            if (rec.im_status == 'online'){
-                statusBorder = 'border-success border-2'
-            } else if (rec.im_status == 'away'){
-                statusBorder = 'border-warning border-2'
-            } else {
-                statusBorder = ''
-            }
+//            if (rec.im_status == 'online'){
+//                statusBorder = 'border-success border-2'
+//            } else if (rec.im_status == 'away'){
+//                statusBorder = 'border-warning border-2'
+//            } else {
+//                statusBorder = ''
+//            }
+            statusBorder = this.setImageClass(rec)
             let locationProject = ''
             let jobDepCol = 'col-5 col-md-6'
             let locProjCol = 'col-5 col-md-6'

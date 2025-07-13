@@ -21,8 +21,12 @@ export class SdContactsSecurityGates extends Component {
         console.log('security_gates')
         this.orm = useService('orm')
         this.action = useService("action");
+        this.state = useState({
+            sendUpdates: 1,
+        })
 
         this.employeeAttendanceData = useRef('employee_attendance_data')
+        this.SdContactsDashboardRef = useRef('sd_contacts_dashboard')
         this.lastAttendanceListViewRef = useRef('last_attendance_list_view')
         this.onEmployeeListClick = this.onEmployeeListClick.bind(this)
         this.onInOutClick = this.onInOutClick.bind(this)
@@ -31,6 +35,8 @@ export class SdContactsSecurityGates extends Component {
         onMounted(async () => {
             self.lastAttendanceListViewUpdate()
         })
+        console.log('SEC:', this)
+
     }
     async onEmployeeListClick(e, employee_id=0){
         console.log('onEmployeeListClick 1:',employee_id )
@@ -53,6 +59,7 @@ export class SdContactsSecurityGates extends Component {
         }
         this.updatePresenceState()
         this.lastAttendanceListViewUpdate()
+
 
     }
     onCounterClick(e){
@@ -84,6 +91,10 @@ export class SdContactsSecurityGates extends Component {
     async onInOutClick(employee_id){
         let data = await this.orm.call('hr.attendance', 'set_attendance', [false, employee_id])
         this.onEmployeeListClick(false, employee_id)
+        this.state.sendUpdates = [{id: 4, hr_icon_display: this.state.sendUpdates.hr_icon_display == 'presence_present' ? 'presence_absence' : 'presence_present'}]
+    }
+    sendUpdates(){
+        console.log('sendUpdates')
     }
     updatePresenceState(){
         let imageStatus = document.querySelectorAll('div.img_div.employee_image_id')
