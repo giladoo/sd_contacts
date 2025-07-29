@@ -98,3 +98,10 @@ class HrEmployeeSdContacts(models.Model):
                            'attendances': attendances,
                            'show': {'show_locations': show_locations,'show_projects': show_projects, }
                            })
+
+
+class HrEmployeePublicSdContacts(models.Model):
+    _inherit = 'hr.employee.public'
+
+    show_in_contact_list = fields.Boolean(default=True)
+    sequence = fields.Integer(default=10000)
