@@ -306,7 +306,8 @@ export class SdContactsDashboard extends Component {
         return ((rec.name ? rec.name.includes(st) : false)
             || (rec.work_phone ? rec.work_phone.includes(st) : false)
             || (rec.work_location ? rec.work_location.includes(st) : false)
-            || (rec.work_email ? rec.work_email.includes(st) : false))
+            || (rec.work_email ? rec.work_email.includes(st) : false)
+            || (rec.barcode ? rec.barcode.includes(st) : false))
         })
     }
 }

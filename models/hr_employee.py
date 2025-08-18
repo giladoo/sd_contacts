@@ -46,6 +46,7 @@ class HrEmployeeSdContacts(models.Model):
                 'sequence' : rec.sequence,
                 'id' : rec.id,
                 'name' : rec.name,
+                'barcode' : rec.barcode,
                 'work_phone' : rec.work_phone,
                 'work_email' : rec.work_email,
                 'work_location' : rec.work_location_id.name if show_locations else '',
