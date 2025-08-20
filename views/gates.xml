@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="gate_info_list" model="ir.ui.view">
+        <field name="name">Gate Info</field>
+        <field name="model">sd_contacts.gate_info</field>
+            <field name="arch" type="xml">
+                <list editable="bottom">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="location"/>
+                </list>
+            </field>
+    </record>
+
+    <record id="gate_info_search" model="ir.ui.view">
+        <field name="name">Gate Info</field>
+        <field name="model">sd_contacts.gate_info</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="location"/>
+                </search>
+            </field>
+    </record>
+
+    <record id="gate_info_action" model="ir.actions.act_window">
+        <field name="name">Gate Info</field>
+        <field name="res_model">sd_contacts.gate_info</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem name="Gate Info"
+              id="gate_info_menu"
+              parent="configuration_menu"
+              groups="sd_contacts.group_sd_contacts_admins"
+              action="gate_info_action" />
+
+</odoo>

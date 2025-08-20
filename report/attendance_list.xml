@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="attendance_list_report" model="ir.actions.report">
+        <field name="name">Attendance List</field>
+        <field name="model">hr.attendance</field>
+<!--        <field name="report_type">xlsx</field>-->
+        <field name="report_type">qweb-html</field>
+<!--        <field name="report_type">qweb-pdf</field>-->
+        <field name="report_name">sd_contacts.attendance_list_template</field>
+        <field name="report_file">sd_contacts.attendance_list_template</field>
+        <field name="print_report_name">'attendance-%s' % object.name </field>
+<!--        <field name="paperformat_id" ref="resume_en_a4"/>-->
+<!--        <field name="binding_model_id" ref="model_hr_attendance"/>-->
+<!--        <field name="binding_type">report</field>-->
+    </record>
+
+
+</odoo>

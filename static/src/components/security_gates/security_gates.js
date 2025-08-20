@@ -15,31 +15,51 @@ import { SdContactsDashboard } from "../web/employee_contacts_web";
 
 export class SdContactsSecurityGates extends Component {
     static template = "sd_contacts.security_gates_template";
-    static components = {SdContactsDashboard };
+    static components = {SdContactsDashboard, Dropdown, DropdownItem, };
     setup(){
         let self = this;
-        console.log('security_gates')
+//        console.log('security_gates')
         this.orm = useService('orm')
         this.action = useService("action");
         this.state = useState({
             sendUpdates: 1,
+            gate: {name: 'main', id: 1},
+            gates: [{name: 'main', id: 1}]
         })
 
         this.employeeAttendanceData = useRef('employee_attendance_data')
         this.SdContactsDashboardRef = useRef('sd_contacts_dashboard')
+        this.selectedGate = useRef('selected_gate')
         this.lastAttendanceListViewRef = useRef('last_attendance_list_view')
+        onMounted(async () => {
+                let gates = await this.orm.call('hr.attendance', 'get_gates', [false] )
+                gates = JSON.parse(gates)
+                this.state.gates = gates.gates
+                const savedValue = localStorage.getItem('selectedGate');
+                const exists = this.state.gates.some(item => item.id == savedValue)
+//                console.log('gate:',savedValue, exists)
+
+                if (exists ){
+                    this.state.gate = this.state.gates.filter(item => item.id == savedValue)[0]
+                } else {
+                    this.state.gate = this.state.gates[0]
+                }
+//                console.log('gate:', this.state.gate)
+
+//              todo: get the gate from local or session. if user opens several panel each for one of gates, it needed to be saved separately.
+            self.lastAttendanceListViewUpdate()
+            this.selectedGate.el.innerHTML = this.state.gate.name + " / " + this.state.gate.code
+        })
         this.onEmployeeListClick = this.onEmployeeListClick.bind(this)
         this.onInOutClick = this.onInOutClick.bind(this)
         this.onCounterClick = this.onCounterClick.bind(this)
         this.lastAttendanceListViewUpdate = this.lastAttendanceListViewUpdate.bind(this)
-        onMounted(async () => {
-            self.lastAttendanceListViewUpdate()
-        })
-        console.log('SEC:', this)
+        this.selectGate = this.selectGate.bind(this)
+//        console.log('SEC:', this)
 
     }
     async onEmployeeListClick(e, employee_id=0){
-        console.log('onEmployeeListClick 1:',employee_id )
+//        console.log('onEmployeeListClick 1:',employee_id )
 
         if (employee_id == 0 && e.target.classList.contains('employee_image_id')){
             employee_id = e.target.id
@@ -49,7 +69,7 @@ export class SdContactsSecurityGates extends Component {
         if(employee_id){
             let data = await this.orm.call('hr.attendance', 'get_attendance', [false, employee_id])
             data = JSON.parse(data)
-            console.log('onEmployeeListClick 2:',employee_id,data )
+//            console.log('onEmployeeListClick 2:',employee_id,data )
             const bannerElement = renderToElement("sd_contacts.attendance_template", {
                 props: { data, }, this: this
             });
@@ -63,7 +83,7 @@ export class SdContactsSecurityGates extends Component {
 
     }
     onCounterClick(e){
-        console.log('onCounterClick:\n', e)
+//        console.log('onCounterClick:\n', e)
         let res_model, domain, context, action_name;
         if(e == 'presents'){
             action_name = _t("Action List")
@@ -85,11 +105,10 @@ export class SdContactsSecurityGates extends Component {
 //                res_id: res_id,
 //                domain: domain,
                 context: context,
-
             })
     }
     async onInOutClick(employee_id){
-        let data = await this.orm.call('hr.attendance', 'set_attendance', [false, employee_id])
+        let data = await this.orm.call('hr.attendance', 'set_attendance', [false, employee_id, this.state.gate.id])
         this.onEmployeeListClick(false, employee_id)
         this.state.sendUpdates = [{id: 4, hr_icon_display: this.state.sendUpdates.hr_icon_display == 'presence_present' ? 'presence_absence' : 'presence_present'}]
     }
@@ -120,6 +139,27 @@ export class SdContactsSecurityGates extends Component {
             });
             this.lastAttendanceListViewRef.el.innerHTML = ''
             this.lastAttendanceListViewRef.el.appendChild(lastAttendanceElement)
+    }
+        async selectGate(gate){
+            console.log('gate:', gate)
+            this.state.gate = gate
+            this.selectedGate.el.innerHTML = this.state.gate.name + " / " + this.state.gate.code
+            localStorage.setItem('selectedGate', gate.id);
+
+
+
+
+//        this.updateProjectButton()
+//        let project_id = this.state.selectedProject ? this.state.selectedProject.id : 0
+//        if(project_id){
+//            let getChartData = {}
+//            getChartData = await this.orm.call('sd_hse.daily_records', 'get_charts_data', [false, [project_id], 'ltif'],)
+//            getChartData = JSON.parse(getChartData)
+//            this.renderChart(getChartData)
+//        }else{
+//            this.renderChartAll(this.getDailyRecords(project.id))
+//        }
+
     }
 
 }

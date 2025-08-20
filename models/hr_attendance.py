@@ -13,18 +13,35 @@ import pytz
 class SdContactsHrAttendance(models.Model):
     _inherit = "hr.attendance"
 
+    in_gate = fields.Many2one('sd_contacts.gate_info')
+    out_gate = fields.Many2one('sd_contacts.gate_info')
+
+
 
     def get_last_attendances(self, last_attendances_items_count=10):
         user_tz = self.env.context.get('tz', 'Asia/Tehran')
+        gates = self.env['sd_contacts.gate_info'].search_read([], ['name', 'code'])
         # TODO: last_attendances_items_count can be setby user
-        last_attendances = self.sudo().search_read([], [ 'employee_id', 'check_in', 'check_out'], limit=last_attendances_items_count, order='write_date desc')
+        last_attendances = self.sudo().search_read([], [ 'employee_id', 'check_in', 'check_out', 'in_gate', 'out_gate'], limit=last_attendances_items_count, order='write_date desc')
         last_attendance_check_in = list([{k if k != 'check_in' else 'time': v for k, v in rec.items() if k != "check_out" } for rec in last_attendances])
-        last_attendance_check_in = list([{**rec, 'dir': 'in'} for rec in last_attendance_check_in])
+        last_attendance_check_in = list([{**rec, 'dir': 'in', 'gate': rec['in_gate'] and list(filter(lambda x : x['id'] == rec['in_gate'][0], gates))[0]['name']}
+                                         for rec in last_attendance_check_in])
         last_attendance_check_out = list([{k if k != 'check_out' else 'time': v for k, v in rec.items() if k != "check_in"} for rec in last_attendances])
-        last_attendance_check_out = list([{**rec, 'dir': 'out'} for rec in last_attendance_check_out if rec['time']])
+        last_attendance_check_out = list([{**rec, 'dir': 'out', 'gate': rec['out_gate'] and list(filter(lambda x : x['id'] == rec['out_gate'][0], gates))[0]['name'] }
+                                          for rec in last_attendance_check_out if rec['time']])
         last_attendances_time = last_attendance_check_in + last_attendance_check_out
+        for d in last_attendances_time:
+            d.pop('in_gate', None)
+            d.pop('out_gate', None)
         last_attendances_time.sort(key=lambda item: item['time'], reverse=True)
         last_attendances_time = list([self.get_record_time(rec) for rec in last_attendances_time[:last_attendances_items_count]])
+        ic(last_attendances_time[:3])
+        # {'dir': 'out',
+        #  'employee_id': (93, 'افسانه آتش افروز'),
+        #  'id': 33,
+        #  'in_gate': (2, 'درب دوم'),
+        #  'out_gate': (2, 'درب دوم'),
+        #  'time': ('مرداد 29', '16:29')},
 
         # presents = self.env['hr.employee'].sudo().search_count([('hr_icon_display', '=', "presence_present")])
         # absence = self.env['hr.employee'].sudo().search_count([('hr_icon_display', '!=', "presence_present")])
@@ -33,12 +50,6 @@ class SdContactsHrAttendance(models.Model):
         absence = len(list([rec for rec in employees if rec['hr_icon_display'] != 'presence_present']))
         today = jdatejs(datetime.now().astimezone(pytz.timezone(user_tz)), '%Y/%m/%d')
 
-        # ic(employees)
-
-
-
-
-
         all_emps = presents + absence
         return json.dumps({'last_attendances_time': last_attendances_time,
                            'presents': presents,
@@ -46,6 +57,12 @@ class SdContactsHrAttendance(models.Model):
                            'all_emps': all_emps,
                            'today': today,
                            })
+
+    def get_gates(self):
+        # todo: you need to restrict users to have access to their own gates only
+        gates = self.env['sd_contacts.gate_info'].search_read([], ['name', 'code'])
+        return json.dumps({'gates': gates, })
+
 
 
     def remove_key(self, rec, key):
@@ -102,12 +119,17 @@ class SdContactsHrAttendance(models.Model):
         data = {'attendances': attendance_times, 'employee': employee[0], 'leaves': leaves}
         return json.dumps(data)
 
-    def set_attendance(self, employee_id):
+    def set_attendance(self, employee_id, gate_id):
         employee_id =  int(employee_id)
 
         employee = self.env['hr.employee'].sudo().browse(employee_id)
         employee_att = employee._attendance_action_change()
-        # ic(employee_id, employee_att)
+        ic(employee_id, employee_att)
+        if employee_att.check_out:
+            employee_att.out_gate = gate_id
+        else:
+            employee_att.in_gate = gate_id
+        ic(employee_att.out_gate, employee_att.in_gate)
 
     def get_time(self, date_time, user_tz='Asia/Tehran', month=False):
         if isinstance(date_time, datetime):

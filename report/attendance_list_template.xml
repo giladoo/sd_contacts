@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="attendance_list_report_template">
+            attendance_list_report_template
+        </template>
+
+        <template id="attendance_list_template">
+            <div class="">
+                Attendance
+            </div>
+<!--            <t t-foreach="docs" t-as="o">-->
+<!--                <t t-call="web.basic_layout" t-lang="lang">-->
+<!--                        <t t-set="lang" t-value="o.env.context.get('lang')"/>-->
+<!--                        <t t-call="sd_contacts.attendance_list_report_template" t-lang="lang"/>-->
+<!--                </t>-->
+<!--            </t>-->
+        </template>
+
+    </data>
+</odoo>

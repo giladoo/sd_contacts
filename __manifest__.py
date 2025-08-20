@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 {
     'name': "sd_contacts",
 
@@ -27,6 +26,11 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/views.xml',
+        'views/gates.xml',
+        'report/attendance_list.xml',
+        'report/attendance_list_template.xml',
+        'wizard/attendance_report.xml',
+        'wizard/attendance_report_template.xml',
         'views/res_users.xml',
         'views/hr_employee.xml',
         'views/employee_contacts.xml',
@@ -60,4 +64,10 @@
     ],
     'license': 'LGPL-3',
 }
+
+
+
+
+
+
 

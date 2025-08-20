@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template  id="attendance_report_template">
+        <t>
+            <div class="border border-danger">
+                Attendance Report
+            </div>
+
+        </t>
+    </template>
+</odoo>

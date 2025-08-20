@@ -17,9 +17,20 @@
                 parent="hr.menu_human_resources_configuration"
                   action="sd_contacts_main_act" />
 
-        <menuitem name="Gates"
+
+    <menuitem name="Gates"
                   id="sd_contacts_security_gates_menu"
                   groups="sd_contacts.group_sd_contacts_users"
                   action="sd_contacts_security_gates_action" />
+
+    <menuitem name="Reports"
+              id="reports_menu"
+              parent="sd_contacts_security_gates_menu"
+              groups="sd_contacts.group_sd_contacts_users"/>
+
+    <menuitem name="Configuration"
+              id="configuration_menu"
+              parent="sd_contacts_security_gates_menu"
+              groups="sd_contacts.group_sd_contacts_users"/>
 
 </odoo>
