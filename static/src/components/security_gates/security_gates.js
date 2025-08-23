@@ -18,82 +18,113 @@ export class SdContactsSecurityGates extends Component {
     static components = {SdContactsDashboard, Dropdown, DropdownItem, };
     setup(){
         let self = this;
-//        console.log('security_gates')
         this.orm = useService('orm')
         this.action = useService("action");
         this.state = useState({
             sendUpdates: 1,
             gate: {name: 'main', id: 1},
-            gates: [{name: 'main', id: 1}]
+            gates: [{name: 'main', id: 1}],
+            today: ''
         })
 
         this.employeeAttendanceData = useRef('employee_attendance_data')
         this.SdContactsDashboardRef = useRef('sd_contacts_dashboard')
+        this.todayDate = useRef('today_date')
         this.selectedGate = useRef('selected_gate')
+        this.gateLocation = useRef('gate_location')
         this.lastAttendanceListViewRef = useRef('last_attendance_list_view')
+
         onMounted(async () => {
-                let gates = await this.orm.call('hr.attendance', 'get_gates', [false] )
-                gates = JSON.parse(gates)
-                this.state.gates = gates.gates
-                const savedValue = localStorage.getItem('selectedGate');
-                const exists = this.state.gates.some(item => item.id == savedValue)
-//                console.log('gate:',savedValue, exists)
-
-                if (exists ){
-                    this.state.gate = this.state.gates.filter(item => item.id == savedValue)[0]
-                } else {
-                    this.state.gate = this.state.gates[0]
-                }
-//                console.log('gate:', this.state.gate)
-
-//              todo: get the gate from local or session. if user opens several panel each for one of gates, it needed to be saved separately.
-            self.lastAttendanceListViewUpdate()
-            this.selectedGate.el.innerHTML = this.state.gate.name + " / " + this.state.gate.code
+            let gates = await this.orm.call('hr.attendance', 'get_gates', [false] )
+            gates = JSON.parse(gates)
+            this.state.gates = gates.gates
+            const savedValue = localStorage.getItem('selectedGate');
+            const exists = this.state.gates.some(item => item.id == savedValue)
+            if (exists ){
+                this.state.gate = this.state.gates.filter(item => item.id == savedValue)[0]
+            } else {
+                this.state.gate = this.state.gates[0]
+            }
+            // todo: get the gate from local or session. if user opens several panel each for one of gates,
+            //      it needed to be saved separately.
+            await self.lastAttendanceListViewUpdate()
+            this.selectedGate.el.innerHTML = this.state.gate.name
+            this.gateLocation.el.innerHTML = this.state.gate.location[1]
+            this.todayDate.el.innerHTML = this.state.today
         })
         this.onEmployeeListClick = this.onEmployeeListClick.bind(this)
         this.onInOutClick = this.onInOutClick.bind(this)
         this.onCounterClick = this.onCounterClick.bind(this)
         this.lastAttendanceListViewUpdate = this.lastAttendanceListViewUpdate.bind(this)
         this.selectGate = this.selectGate.bind(this)
-//        console.log('SEC:', this)
+        this.getAttendances = this.getAttendances.bind(this)
 
     }
     async onEmployeeListClick(e, employee_id=0){
-//        console.log('onEmployeeListClick 1:',employee_id )
-
         if (employee_id == 0 && e.target.classList.contains('employee_image_id')){
             employee_id = e.target.id
         }else if (employee_id == 0 && e.target.parentElement.classList.contains('employee_image_id')){
             employee_id = e.target.parentElement.id
         }
         if(employee_id){
-            let data = await this.orm.call('hr.attendance', 'get_attendance', [false, employee_id])
+            let data = await this.orm.call('hr.attendance', 'get_attendance', [false, employee_id,])
             data = JSON.parse(data)
-//            console.log('onEmployeeListClick 2:',employee_id,data )
             const bannerElement = renderToElement("sd_contacts.attendance_template", {
                 props: { data, }, this: this
             });
             this.employeeAttendanceData.el.innerHTML = ''
             this.employeeAttendanceData.el.appendChild(bannerElement)
-
         }
         this.updatePresenceState()
         this.lastAttendanceListViewUpdate()
-
-
     }
     onCounterClick(e){
-//        console.log('onCounterClick:\n', e)
         let res_model, domain, context, action_name;
-        if(e == 'presents'){
-            action_name = _t("Action List")
-//            domain.push(['state', 'not in', ['stop_card', 'dismiss']])
-//            console.log('domain:', domain)
-            res_model = "hr.attendance"
-            context = {search_default_present: 1}
+        res_model = "hr.attendance"
+        context = {gate_id: this.state.gate.id}
+
+        if(e == 'local_attendances'){
+            action_name = _t("Present employees")
+            domain = [
+                        ['in_gate.location', '=', this.state.gate.location[0]],
+                        ['employee_id.work_location_id', '=', this.state.gate.location[0]],
+                        ['check_out', '=', false],
+                    ]
+//            context = {search_default_present: 1}
+        } else if(e == 'site_attendances'){
+            action_name = _t("Present employees on sites")
+            domain = [
+                        ['in_gate.location', '!=', this.state.gate.location[0]],
+                        ['employee_id.work_location_id', '=', this.state.gate.location[0]],
+                        ['check_out', '=', false],
+                    ]
+//            context = {search_default_present: 1}
+        } else if(e == 'left_attendances'){
+            action_name = _t("Departed employees")
+            domain = [
+                        ['employee_id.work_location_id', '=', this.state.gate.location[0]],
+                        ['check_out', '!=', false],
+                    ]
+            context = {...context, search_default_today: 1}
+        } else if(e == 'present_guests'){
+            action_name = _t("Present guests")
+            domain = [
+                        ['in_gate.location', '=', this.state.gate.location[0]],
+                        ['employee_id.work_location_id', '!=', this.state.gate.location[0]],
+                        ['check_out', '=', false],
+                    ]
+        } else if(e == 'leave_guests'){
+            action_name = _t("Departed guests")
+            domain = [
+                        ['in_gate.location', '=', this.state.gate.location[0]],
+                        ['employee_id.work_location_id', '!=', this.state.gate.location[0]],
+                        ['check_out', '!=', false],
+                    ]
+            context = {...context, search_default_today: 1}
         } else {
             return
         }
+
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
@@ -103,8 +134,14 @@ export class SdContactsSecurityGates extends Component {
                 view_mode: "list",
                 target: "current",
 //                res_id: res_id,
-//                domain: domain,
+                domain: domain,
                 context: context,
+                target: 'new',
+            },
+            { onClose: () =>{
+            console.log('this:', this)
+            this.lastAttendanceListViewUpdate()
+            }
             })
     }
     async onInOutClick(employee_id){
@@ -117,49 +154,34 @@ export class SdContactsSecurityGates extends Component {
     }
     updatePresenceState(){
         let imageStatus = document.querySelectorAll('div.img_div.employee_image_id')
-//       console.log(imageStatus)
        //todo: if employee is present, add border-success class
-
-//        let employees = await this.orm.call('hr.employees', 'get_attendance', [false, employee_id])
+    }
+    async getAttendances(){
+        let lastAttendancesData = await this.orm.call('hr.attendance', 'get_last_attendances', [false, 12, this.state.gate.location[0]] )
+        lastAttendancesData = JSON.parse(lastAttendancesData)
+        this.state.today = lastAttendancesData.today
+        return lastAttendancesData
 
     }
     async lastAttendanceListViewUpdate(){
-//                let lastAttendances = await this.orm.searchRead('hr.attendance', [], ['id', 'employee_id', 'check_in', 'check_out'], {limit: 10, order: 'write_date desc'})
-//                console.log('lastAttendances 1', )
-                let lastAttendancesData = await this.orm.call('hr.attendance', 'get_last_attendances', [false, 12] )
-                lastAttendancesData = JSON.parse(lastAttendancesData)
-                const lastAttendances = lastAttendancesData.last_attendances_time
-                const presents = lastAttendancesData.presents
-                const absence = lastAttendancesData.absence
-                const today = lastAttendancesData.today
-
-//                console.log('lastAttendances 2', lastAttendances)
-            const lastAttendanceElement = renderToElement("sd_contacts.last_attendance_template", {
-                props: { lastAttendances, presents, absence, today }, this: this
-            });
-            this.lastAttendanceListViewRef.el.innerHTML = ''
-            this.lastAttendanceListViewRef.el.appendChild(lastAttendanceElement)
+        const LAD = await this.getAttendances()
+//        console.log('lad:', LAD)
+        const lastAttendances = LAD.last_attendances_time
+        const counts = LAD.counts
+        const lastAttendanceElement = renderToElement("sd_contacts.last_attendance_template", {
+            props: { lastAttendances, counts }, this: this, _t: _t
+        });
+        this.lastAttendanceListViewRef.el.innerHTML = ''
+        this.lastAttendanceListViewRef.el.appendChild(lastAttendanceElement)
     }
-        async selectGate(gate){
-            console.log('gate:', gate)
-            this.state.gate = gate
-            this.selectedGate.el.innerHTML = this.state.gate.name + " / " + this.state.gate.code
-            localStorage.setItem('selectedGate', gate.id);
+    async selectGate(gate){
+//        console.log('gate:', gate)
+        this.state.gate = gate
+        this.selectedGate.el.innerHTML = this.state.gate.name
+        this.gateLocation.el.innerHTML = this.state.gate.location[1]
 
-
-
-
-//        this.updateProjectButton()
-//        let project_id = this.state.selectedProject ? this.state.selectedProject.id : 0
-//        if(project_id){
-//            let getChartData = {}
-//            getChartData = await this.orm.call('sd_hse.daily_records', 'get_charts_data', [false, [project_id], 'ltif'],)
-//            getChartData = JSON.parse(getChartData)
-//            this.renderChart(getChartData)
-//        }else{
-//            this.renderChartAll(this.getDailyRecords(project.id))
-//        }
-
+        localStorage.setItem('selectedGate', gate.id);
+        this.lastAttendanceListViewUpdate()
     }
 
 }

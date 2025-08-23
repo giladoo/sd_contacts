@@ -3,19 +3,27 @@
     <t t-name="sd_contacts.security_gates_template" owl="1">
         <div class="vh-100 px-5  bg-muted">
 <!--            <t t-log="this.state.gates"></t>-->
-            <Dropdown menuClass="'btn btn-secondary m-2 px-2 py-1'">
-                <button class="btn btn-outline-primary mt-2 text-center" type="button">
-                    <div class="row row-cols-auto justify-content-center">
-                        <div class="" t-ref="selected_gate"/>
-                        <i class="fa fa-caret-down align-content-around"/>
-                    </div>
-                </button>
-                <t t-foreach="this.state.gates" t-as="gate" t-key="gate['id']" t-set-slot="content">
-                    <DropdownItem onSelected="() => this.selectGate(gate)">
-                        <t t-esc="gate['name'] + ' / ' + gate['code']"/>
-                    </DropdownItem>
-                </t>
-            </Dropdown>
+            <div class="row row-cols-auto m-2 ">
+                <div class="col">
+                    <Dropdown menuClass="'btn btn-secondary px-2 py-1'">
+                        <button class="btn btn-outline-primary  text-center" type="button">
+                            <div class="row row-cols-auto justify-content-center">
+                                <div class="" t-ref="selected_gate"/>
+                                <i class="fa fa-caret-down align-content-around"/>
+                            </div>
+                        </button>
+                        <t t-foreach="this.state.gates" t-as="gate" t-key="gate['id']" t-set-slot="content">
+                            <DropdownItem onSelected="() => this.selectGate(gate)">
+                                <t t-esc="gate['name']"/>
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+
+                </div>
+                <div class="col h4 py-2 text-primary" t-ref="gate_location"></div>
+                <div class="col h4 py-2 text-primary" t-ref="today_date"></div>
+
+            </div>
             <div class="border rounded my-2 shadow" t-ref="last_attendance_list_view" style="min-height: 100px;">
                 latest Attendances
             </div>
@@ -38,7 +46,7 @@
 
     <t t-name="sd_contacts.attendance_template" owl="1">
         <div class="row mx-0 p-3 shadow">
-            <div class="col-3 text-center align-content-start">
+            <div class="col-2 text-center align-content-start">
                 <div class="h-75 ">
                     <div class="px-1 py-1">
                         <div class="img_div rounded-circle border  p-1 ${statusBorder} employee_image_id mx-auto" t-att-id="props.data.employee.id"
@@ -51,11 +59,11 @@
                     In/Out
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-4 px-2">
                 <t t-foreach="props.data.attendances" t-as="attendance" t-key="attendance.id">
                     <div class="row text-center ">
-                        <div class="col-6 bg-success-light border-bottom rounded-start" t-esc="attendance.check_in"></div>
-                        <div t-if="attendance.check_out" class="col-6 bg-danger-light border-bottom rounded-end" t-esc="attendance.check_out"></div>
+                        <div class="col-6 bg-success-light border-bottom rounded-start" t-esc="attendance.check_in + ' / ' + attendance.in_gate"></div>
+                        <div t-if="attendance.check_out" class="col-6 bg-danger-light border-bottom rounded-end" t-esc="attendance.check_out + ' / ' +  attendance.out_gate"></div>
 
                     </div>
                 </t>
@@ -80,35 +88,83 @@
     </t>
 
     <t t-name="sd_contacts.last_attendance_template" owl="1">
-        <div class="row row-cols-auto justify-content-center  mx-0 p-2 ">
-            <div class="col me-5 align-content-around">
-                <div class="h3 text-center" t-esc="props.today"></div>
-                <div class="row mb-3 p-1 rounded bg-success-light cursor-pointer" t-on-click="() => this.onCounterClick('presents')">
-                    <div class="col-6">
+        <div class="row row-cols-auto   mx-0 p-2 last_attendance_panel">
+            <div class="col me-2 align-content-around">
+                <div class="h3 px-3 text-center" >Employees</div>
+                <div class="row mb-1 p-1 rounded bg-success-light cursor-pointer"
+                     t-on-click="() => this.onCounterClick('local_attendances')">
+                    <div class="col-8 px-2">
                         Presents
                     </div>
-                    <div class="col-6" t-esc="props.presents"></div>
+                    <div class="col-4 px-2" t-esc="props.counts.local_attendances"></div>
                 </div>
-                <div class="row mb-3 p-1  rounded bg-danger-light">
-                    <div class="col-6">
+                <div class="row mb-1 p-1 rounded bg-success-light cursor-pointer"
+                     t-on-click="() => this.onCounterClick('site_attendances')">
+                    <div class="col-8 px-2">
+                        Sites
+                    </div>
+                    <div class="col-4 px-2" t-esc="props.counts.site_attendances"></div>
+                </div>
+                <div class="row mb-1 p-1 rounded bg-warning-light cursor-pointer"
+                     t-on-click="() => this.onCounterClick('left_attendances')">
+                    <div class="col-8 px-2">
+                        Departed
+                    </div>
+                    <div class="col-4 px-2" t-esc="props.counts.left_attendances"></div>
+                </div>
+                <div class="row mb-1 p-1  rounded bg-danger-light cursor-pointer"
+                t-on-click="() => this.onCounterClick('absents')">
+                    <div class="col-8 px-2">
                         Absence
                     </div>
-                    <div class="col-6" t-esc="props.absence"></div>
+                    <div class="col-4 px-2" t-esc="props.counts.absence"></div>
                 </div>
                 <div class="row p-1  rounded bg-dark-light">
-                    <div class="col-6">
+                    <div class="col-8 px-2">
                         All
                     </div>
-                    <div class="col-6" t-esc="props.presents + props.absence"></div>
+                    <div class="col-4 px-2" t-esc="props.counts.all_emps"></div>
                 </div>
             </div>
-            <div t-foreach="props.lastAttendances" t-as="last_att" t-key="last_att.id" class="col text-center" t-on-click="">
+
+            <div class="col me-2 align-content-around">
+                <div class="h3 px-2 text-center" >Guests</div>
+                <div class="row mb-1 p-1 rounded bg-success-light cursor-pointer"
+                     t-on-click="() => this.onCounterClick('present_guests')">
+                    <div class="col-8 px-2">
+                        Presents
+                    </div>
+                    <div class="col-4 px-2" t-esc="props.counts.present_guests"></div>
+                </div>
+                <div class="row mb-1 p-1 text-white  rounded ">
+                    <div class="col-8 px-2">_ </div>
+                    <div class="col-4 px-2" ></div>
+                </div>
+                <div class="row mb-1 p-1  rounded bg-warning-light"
+                t-on-click="() => this.onCounterClick('leave_guests')">
+                    <div class="col-8 px-2">
+                        Departed
+                    </div>
+                    <div class="col-4 px-2" t-esc="props.counts.leave_guests"></div>
+                </div>
+                <div class="row mb-1 p-1 text-white rounded ">
+                    <div class="col-8 px-2">_ </div>
+                    <div class="col-4 px-2" ></div>
+                </div>
+                <div class="row p-1  rounded bg-dark-light">
+                    <div class="col-8 px-2">
+                        All
+                    </div>
+                    <div class="col-4 px-2" t-esc="props.counts.all_guest"></div>
+                </div>
+            </div>
+            <div t-foreach="props.lastAttendances" t-as="last_att" t-key="last_att.id" class="col text-center align-content-around" t-on-click="">
                 <t t-log="last_att"/>
                 <t t-if="last_att.dir == 'in'" t-set="bg_color" t-value="'bg-success-light rounded'" ></t>
                 <t t-if="last_att.dir == 'out'" t-set="bg_color" t-value="'bg-danger-light rounded'" ></t>
                 <t t-if="last_att.dir == 'in'" t-set="img_color" t-value="'border-success-subtle'" ></t>
                 <t t-if="last_att.dir == 'out'" t-set="img_color" t-value="'border-danger-subtle'" ></t>
-                <div class="col align-content-around">
+                <div class="col ">
                     <div class="px-1 py-1">
                         <div  t-att-class="img_color + ' img_div rounded-circle border border-3 p-1 ${statusBorder} mx-auto employee_image_id'"
                               t-att-id="last_att.employee_id[0]"

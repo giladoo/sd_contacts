@@ -6,9 +6,24 @@
         </template>
 
         <template id="attendance_list_template">
-            <div class="">
-                Attendance
-            </div>
+            <t t-call="web.basic_layout" t-lang="lang">
+                <div class="">
+                    Attendance
+                </div>
+                <div class="row">
+                    <div class="col-3" t-esc="data['gate']"></div>
+                    <div class="col-3" t-esc="data['start_date']"></div>
+                    <div class="col-3" t-esc="data['end_date']"></div>
+
+                </div>
+                <t t-foreach="attendances" t-as="attendance" t-key="attendance.id">
+                    <div class="row border">
+                        <div class="col-2" t-esc="attendance['name']"></div>
+                        <div class="col-2" t-esc="attendance['check_in']"></div>
+                        <div class="col-2" t-esc="attendance['check_out']"></div>
+                    </div>
+                </t>
+            </t>
 <!--            <t t-foreach="docs" t-as="o">-->
 <!--                <t t-call="web.basic_layout" t-lang="lang">-->
 <!--                        <t t-set="lang" t-value="o.env.context.get('lang')"/>-->
