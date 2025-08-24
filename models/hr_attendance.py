@@ -68,21 +68,29 @@ class SdContactsHrAttendance(models.Model):
         end_date_s = end_date.strftime(DATETIEM_FORMAT)
         gates = self.env['sd_contacts.gate_info'].search([('location', '=', location)])
         gates_loc = gates.ids if gates else []
-        local_attendances = self.env['hr.attendance'].search_count([
+        local_attendances = self.env['hr.attendance'].search_read([
             ('employee_id.work_location_id', '=', location),
             ('in_gate', 'in', gates_loc),
             ('check_out', '=', False),
-        ])
-        site_attendances = self.env['hr.attendance'].search_count([
+        ], ['employee_id'])
+        local_employee_ids = list([rec['employee_id'][0] for rec in local_attendances ])
+        local_attendances = len(local_attendances)
+
+        site_attendances = self.env['hr.attendance'].search_read([
             ('employee_id.work_location_id', '=', location),
             ('in_gate', 'not in', gates_loc),
             ('check_out', '=', False),
-        ])
-        left_attendances = self.env['hr.attendance'].search_count([
+        ], ['employee_id'])
+        site_employee_ids = list([rec['employee_id'][0] for rec in site_attendances ])
+        site_attendances = len(site_attendances)
+        left_attendances = self.env['hr.attendance'].search_read([
+            ('employee_id', 'not in', local_employee_ids + site_employee_ids ),
             ('employee_id.work_location_id', '=', location),
             ('check_out', '>=', start_date_s),
             ('check_out', '<', end_date_s),
-        ])
+        ], ['employee_id'])
+        left_attendances = len(list({rec['employee_id'][0] for rec in left_attendances}))
+
         # print(f"{start_date}\n{end_date} \n all_attendances:{local_attendances}\n site_attendances: {site_attendances}")
 
 

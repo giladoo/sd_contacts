@@ -21,12 +21,14 @@
     <record id="gate_attendance_search" model="ir.ui.view">
         <field name="name">Gate Attendance</field>
         <field name="model">hr.attendance</field>
+                <field name="priority" eval="80"/>
+
             <field name="arch" type="xml">
                 <search>
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
-                    <filter name="employees" string="Employees" context="{'group_by': 'employee_id'}"/>
+                    <filter name="employees" string="Employees1" context="{'group_by': 'employee_id'}"/>
                     <filter name="present" string="Present" domain="[('check_out', '=', False)]"/>
                     <filter name="today" string="Today"
                             domain="['|','|',
