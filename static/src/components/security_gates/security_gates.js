@@ -51,6 +51,11 @@ export class SdContactsSecurityGates extends Component {
             this.selectedGate.el.innerHTML = this.state.gate.name
             this.gateLocation.el.innerHTML = this.state.gate.location[1]
             this.todayDate.el.innerHTML = this.state.today
+//            this.viewId = await this.orm.call('ir.model.data', '_xmlid_to_res_id', [
+//                false,
+//                'sd_contacts.gate_attendance_list'
+//            ]);
+//            console.log('this.viewId', this.viewId)
         })
         this.onEmployeeListClick = this.onEmployeeListClick.bind(this)
         this.onInOutClick = this.onInOutClick.bind(this)
@@ -81,7 +86,9 @@ export class SdContactsSecurityGates extends Component {
     onCounterClick(e){
         let res_model, domain, context, action_name;
         res_model = "hr.attendance"
-        context = {gate_id: this.state.gate.id}
+        context = {gate_id: this.state.gate.id,
+                    list_view_ref: "sd_contacts.gate_attendance_list",
+                }
 
         if(e == 'local_attendances'){
             action_name = _t("Present employees")
@@ -125,6 +132,7 @@ export class SdContactsSecurityGates extends Component {
             return
         }
 
+
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
@@ -139,7 +147,7 @@ export class SdContactsSecurityGates extends Component {
                 target: 'new',
             },
             { onClose: () =>{
-            console.log('this:', this)
+//            console.log('this:', this)
             this.lastAttendanceListViewUpdate()
             }
             })
@@ -150,7 +158,7 @@ export class SdContactsSecurityGates extends Component {
         this.state.sendUpdates = [{id: 4, hr_icon_display: this.state.sendUpdates.hr_icon_display == 'presence_present' ? 'presence_absence' : 'presence_present'}]
     }
     sendUpdates(){
-        console.log('sendUpdates')
+//        console.log('sendUpdates')
     }
     updatePresenceState(){
         let imageStatus = document.querySelectorAll('div.img_div.employee_image_id')

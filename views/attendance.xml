@@ -4,6 +4,7 @@
     <record id="gate_attendance_list" model="ir.ui.view">
         <field name="name">Gate Attendance</field>
         <field name="model">hr.attendance</field>
+        <field name="priority" eval="80"/>
             <field name="arch" type="xml">
                 <list create="0">
                     <field name="employee_id" widget="many2one_avatar_employee"/>
