@@ -88,6 +88,7 @@ export class SdContactsSecurityGates extends Component {
         res_model = "hr.attendance"
         context = {gate_id: this.state.gate.id,
                     list_view_ref: "sd_contacts.gate_attendance_list",
+                    search_view_ref: "sd_contacts.gate_attendance_search",
                 }
 
         if(e == 'local_attendances'){
