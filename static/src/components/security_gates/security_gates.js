@@ -24,7 +24,8 @@ export class SdContactsSecurityGates extends Component {
             sendUpdates: 1,
             gate: {name: 'main', id: 1},
             gates: [{name: 'main', id: 1}],
-            today: ''
+            today: '',
+            is_operator: false,
         })
 
         this.employeeAttendanceData = useRef('employee_attendance_data')
@@ -112,6 +113,7 @@ export class SdContactsSecurityGates extends Component {
             domain = [
                         ['employee_id.work_location_id', '=', this.state.gate.location[0]],
                         ['check_out', '!=', false],
+                        ['employee_id.hr_icon_display', 'not in', ["presence_present", 'presence_home', 'presence_office', 'presence_other']],
                     ]
             context = {...context, search_default_today: 1}
         } else if(e == 'present_guests'){
@@ -169,6 +171,7 @@ export class SdContactsSecurityGates extends Component {
         let lastAttendancesData = await this.orm.call('hr.attendance', 'get_last_attendances', [false, 12, this.state.gate.location[0]] )
         lastAttendancesData = JSON.parse(lastAttendancesData)
         this.state.today = lastAttendancesData.today
+
         return lastAttendancesData
 
     }

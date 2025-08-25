@@ -10,19 +10,51 @@
                 <div class="">
                     Attendance
                 </div>
-                <div class="row">
-                    <div class="col-3" t-esc="data['gate']"></div>
-                    <div class="col-3" t-esc="data['start_date']"></div>
-                    <div class="col-3" t-esc="data['end_date']"></div>
+                <div class="row row-cols-auto my-3 p-2 border rounded rounded-3">
+                    <div class="col-4">Location:
+                        <span class=" mx-2" t-esc="location[1] if location else 'All Locations'"></span>
+
+                    </div>
+                    <div class="col-8">Gates:
+                        <t t-if="not len(gates)">
+                            <span class="col mx-2">All Gates</span>
+                        </t>
+                        <t t-foreach="gates"  t-as="gate" t-key="gate.id">
+                            <span class=" mx-2" t-esc="gate.name"></span>
+                        </t>
+
+                    </div>
+
+<!--                    <div class="col-3" t-esc="data['start_date']"></div>-->
+<!--                    <div class="col-3" t-esc="data['end_date']"></div>-->
 
                 </div>
-                <t t-foreach="attendances" t-as="attendance" t-key="attendance.id">
+                <t t-foreach="grouped" t-as="name" t-key="name">
                     <div class="row border">
-                        <div class="col-2" t-esc="attendance['name']"></div>
-                        <div class="col-2" t-esc="attendance['check_in']"></div>
-                        <div class="col-2" t-esc="attendance['check_out']"></div>
+                        <div class="col-2" t-esc="name"></div>
+<!--                        <div class="col-2" t-esc="grouped"></div>-->
+                        <div class="col-10">
+                            <t t-foreach="grouped['name']" t-as="attendance_list" t-key="attendance_list">
+                                <div class="col-2" t-esc="attendance_list['check_in']"></div>
+
+
+                            </t>
+
+                        </div>
                     </div>
                 </t>
+
+
+<!--                <t t-foreach="attendances" t-as="attendance" t-key="attendance.id">-->
+<!--                    <div class="row border">-->
+<!--                        <div class="col-2" t-esc="attendance['name']"></div>-->
+<!--                        <div class="col-2">-->
+<!--                            <div class="" t-esc="attendance['check_in']"></div>-->
+
+<!--                        </div>-->
+<!--                        <div class="col-2" t-esc="attendance['check_out']"></div>-->
+<!--                    </div>-->
+<!--                </t>-->
             </t>
 <!--            <t t-foreach="docs" t-as="o">-->
 <!--                <t t-call="web.basic_layout" t-lang="lang">-->

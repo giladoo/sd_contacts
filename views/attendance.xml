@@ -6,12 +6,14 @@
         <field name="model">hr.attendance</field>
         <field name="priority" eval="80"/>
             <field name="arch" type="xml">
-                <list create="0">
+                <list create="0" default_order="employee_id" decoration-success="employee_id.last_attendance_id == False">
                     <field name="employee_id" widget="many2one_avatar_employee"/>
                     <field name="work_location_id"/>
-                    <field name="in_gate"/>
+                    <field name="in_gate" decoration-success="employee_id.hr_presence_state == 'absent'"/>
                     <field name="check_in"/>
-                    <button name="set_attendance_btn" string=" " class="px-2 btn btn-fill-custom bg-danger-light fa fa-sign-out" type="object" context="{'employee_id': employee_id}" invisible="check_out" ></button>
+                    <button name="set_attendance_btn" string=" " class="px-2 btn btn-fill-custom bg-danger-light fa fa-sign-out"
+                            type="object" context="{'employee_id': employee_id}" invisible="check_out"
+                    groups="sd_contacts.group_sd_contacts_operators"></button>
                     <field name="out_gate"/>
                     <field name="check_out"/>
                 </list>
@@ -28,7 +30,7 @@
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
-                    <filter name="employees" string="Employees1" context="{'group_by': 'employee_id'}"/>
+                    <filter name="employees" string="Employees" context="{'group_by': 'employee_id'}"/>
                     <filter name="present" string="Present" domain="[('check_out', '=', False)]"/>
                     <filter name="today" string="Today"
                             domain="['|','|',

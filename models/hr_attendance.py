@@ -30,9 +30,11 @@ class SdContactsHrAttendance(models.Model):
         attendance_domain = ['|', ('in_gate', 'in', gates_location_ids),('out_gate', 'in', gates_location_ids), ]
         gates = self.env['sd_contacts.gate_info'].search_read([], ['name', 'code'])
         # TODO: last_attendances_items_count can be setby user
-        last_attendances = self.sudo().search_read(attendance_domain, [ 'employee_id', 'check_in', 'check_out', 'in_gate', 'out_gate'], limit=last_attendances_items_count, order='write_date desc')
+        last_attendances = self.sudo().search_read(attendance_domain, [ 'employee_id', 'check_in', 'check_out', 'in_gate', 'out_gate',], limit=last_attendances_items_count, order='write_date desc')
         last_attendance_check_in = list([{k if k != 'check_in' else 'time': v for k, v in rec.items() if k != "check_out" } for rec in last_attendances])
-        # ic(len(last_attendances))
+        lattendances = self.sudo().search(attendance_domain, limit=last_attendances_items_count, order='write_date desc')
+
+        # ic(lattendances[0].employee_id.hr_icon_display)
         # ic(len(last_attendance_check_in))
         last_attendance_check_in = list([{**rec, 'dir': 'in', 'gate': rec['in_gate'] and list(filter(lambda x : x['id'] == rec['in_gate'][0], gates))[0]['name']}
                                          for rec in last_attendance_check_in])
@@ -66,9 +68,9 @@ class SdContactsHrAttendance(models.Model):
         start_date_s = start_date.strftime(DATETIEM_FORMAT)
         end_date = start_date + timedelta(days=1)
         end_date_s = end_date.strftime(DATETIEM_FORMAT)
-        gates = self.env['sd_contacts.gate_info'].search([('location', '=', location)])
+        gates = self.env['sd_contacts.gate_info'].sudo().search([('location', '=', location)])
         gates_loc = gates.ids if gates else []
-        local_attendances = self.env['hr.attendance'].search_read([
+        local_attendances = self.env['hr.attendance'].sudo().search_read([
             ('employee_id.work_location_id', '=', location),
             ('in_gate', 'in', gates_loc),
             ('check_out', '=', False),
@@ -76,14 +78,14 @@ class SdContactsHrAttendance(models.Model):
         local_employee_ids = list([rec['employee_id'][0] for rec in local_attendances ])
         local_attendances = len(local_attendances)
 
-        site_attendances = self.env['hr.attendance'].search_read([
+        site_attendances = self.env['hr.attendance'].sudo().search_read([
             ('employee_id.work_location_id', '=', location),
             ('in_gate', 'not in', gates_loc),
             ('check_out', '=', False),
         ], ['employee_id'])
         site_employee_ids = list([rec['employee_id'][0] for rec in site_attendances ])
         site_attendances = len(site_attendances)
-        left_attendances = self.env['hr.attendance'].search_read([
+        left_attendances = self.env['hr.attendance'].sudo().search_read([
             ('employee_id', 'not in', local_employee_ids + site_employee_ids ),
             ('employee_id.work_location_id', '=', location),
             ('check_out', '>=', start_date_s),
@@ -95,7 +97,7 @@ class SdContactsHrAttendance(models.Model):
 
 
         # print(f"{start_date}\n{end_date} \n gates_loc:{gates_loc}")
-        guest_attendances = self.env['hr.attendance'].search_read([
+        guest_attendances = self.env['hr.attendance'].sudo().search_read([
             ('employee_id.work_location_id', '!=', location),
             ('in_gate', 'in', gates_loc),
             '|','|',
@@ -133,7 +135,7 @@ class SdContactsHrAttendance(models.Model):
 
     def get_gates(self):
         # todo: you need to restrict users to have access to their own gates only
-        gates = self.env['sd_contacts.gate_info'].search_read([], ['name', 'code', 'location'])
+        gates = self.env['sd_contacts.gate_info'].sudo().search_read([], ['name', 'code', 'location'])
         return json.dumps({'gates': gates, })
 
 
@@ -191,10 +193,13 @@ class SdContactsHrAttendance(models.Model):
             # print(f"{today}\n{leave.date_from} {leave_start} {time_of_date_from}\n{leave.date_to} {leave_end} {time_of_date_to}")
         # leaves = [{'leave_type': 'Leave 1', 'start': '8:00', 'end': '9:01'}]
 
-        data = {'attendances': attendance_times, 'employee': employee[0], 'leaves': leaves}
+        is_operator = self.env.user._has_group('sd_contacts.group_sd_contacts_operators')
+        data = {'attendances': attendance_times, 'employee': employee[0], 'leaves': leaves, 'is_operator': is_operator}
         return json.dumps(data)
 
     def set_attendance_btn(self):
+        if not self.env.user._has_group('sd_contacts.group_sd_contacts_operators'):
+            return
         context = self.env.context
         gate_id = context.get('gate_id', False)
         employee_id = context.get('employee_id', False)
@@ -204,6 +209,8 @@ class SdContactsHrAttendance(models.Model):
                 self.set_attendance(employee_id, gate_id)
 
     def set_attendance(self, employee_id, gate_id):
+        if not self.env.user._has_group('sd_contacts.group_sd_contacts_operators'):
+            return
         employee_id =  int(employee_id)
         gate = self.env['sd_contacts.gate_info'].browse(int(gate_id))
         last_emp_attendance = self.search([('employee_id', '=', employee_id), ('check_out', '=', False)])
