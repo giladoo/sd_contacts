@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from custom.PG.jdatetimext.jdatetimext.jdate_utils import DATETIME_FORMAT
 from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 import json
