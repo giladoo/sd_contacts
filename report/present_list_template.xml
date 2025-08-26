@@ -7,17 +7,17 @@
 
         <template id="present_list_template">
             <t t-call="web.basic_layout" t-lang="lang">
-                <div class="border rounded mb-3 p-3" style="font-family: IRANSansFN;">
+                <div class="border rounded p-3" style="font-family: IRANSansFN;">
+                    <div class=" h3" t-esc="date_now_s"></div>
                     <div class="row row-cols-auto">
-                        <div class=" h3" t-esc="date_now_s"></div>
                         <div class=" h6" t-esc="'Present employees:'"></div>
                         <div class=" h3" t-esc="str(count)"></div>
 
                     </div>
-                    <div class="row row-cols-auto my-3">
+                    <div class="row row-cols-auto ">
                         <div class="mx-1">Locations List</div>
                         <t t-foreach="locations" t-as="location" t-key="location">
-                            <div class="mx-1" t-esc="location"></div>
+                            <div class="mx-1 h3" t-esc="location"></div>
                         </t>
                     </div>
                 </div>
