@@ -206,9 +206,9 @@ export class SdContactsContactList extends Component {
         let res;
 //        if (["presence_present", "presence_out_of_working_hour"].includes(rec.hr_icon_display)){
         if (["presence_present",].includes(rec.hr_icon_display)){
-            res = 'border-success border-3'
+            res = 'border-success border-5'
         } else if (rec.hr_icon_display == 'away' || this.state.attendances.includes(rec.id)){
-            res = 'border-warning border-3'
+            res = 'border-warning border-5'
         } else {
             res = 'border-gray'
         }

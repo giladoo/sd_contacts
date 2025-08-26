@@ -166,7 +166,7 @@
                 <t t-if="last_att.dir == 'out'" t-set="img_color" t-value="'border-danger-subtle'" ></t>
                 <div class="col ">
                     <div class="px-1 py-1">
-                        <div  t-att-class="img_color + ' img_div rounded-circle border border-3 p-1 ${statusBorder} mx-auto employee_image_id'"
+                        <div  t-att-class="img_color + ' img_div rounded-circle border border-5 p-1 ${statusBorder} mx-auto employee_image_id'"
                               t-att-id="last_att.employee_id[0]"
                               t-on-click="this.onEmployeeListClick"
                               t-att-style="'background-image: url(/web/image?model=hr.employee.public&amp;id='+ last_att.employee_id[0] +'&amp;field=avatar_128)'">

@@ -51,7 +51,7 @@ export class SdContactsDashboard extends Component {
                 })
             console.log('aaaa', self.state.employees[10])
             images.forEach(r => {
-                r.classList.remove('border-success', 'border-warning', 'border-gray', 'border-3')
+                r.classList.remove('border-success', 'border-warning', 'border-gray', 'border-5')
                 const rec = self.state.employees.find(i => i.id == r.id)
                 const words = self.setImageClass(rec).split(' ')
 
@@ -184,9 +184,9 @@ export class SdContactsDashboard extends Component {
         let res;
 //        if (["presence_present", "presence_out_of_working_hour"].includes(rec.hr_icon_display)){
         if (["presence_present",].includes(rec.hr_icon_display)){
-            res = 'border-success border-3'
+            res = 'border-success border-5'
         } else if (rec.hr_icon_display == 'away' || this.state.attendances.includes(rec.id)){
-            res = 'border-warning border-3'
+            res = 'border-warning border-5'
         } else {
             res = 'border-gray'
         }
