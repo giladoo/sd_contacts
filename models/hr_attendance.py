@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from custom.PG.jdatetimext.jdatetimext.jdate_utils import DATETIME_FORMAT
 from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 import json
@@ -9,7 +9,7 @@ from jdatetimext import jdatejs
 from icecream import ic
 import pytz
 from odoo.exceptions import ValidationError
-
+import base64
 
 class SdContactsHrAttendance(models.Model):
     _inherit = "hr.attendance"
@@ -250,3 +250,40 @@ class SdContactsHrAttendance(models.Model):
     def get_record_time(self, rec):
         rec['time'] = self.get_time(rec['time'], 'Asia/Tehran', True)
         return rec
+
+    def send_emergency(self, location):
+        # ic(location)
+        DATETIME_FORMAT = "%Y%m%d_%H%M%S"
+        is_fa = self.env.user.lang == 'fa_IR'
+        tz = pytz.timezone(self._context.get('tz') or 'UTC')
+        file_datetime = fields.Datetime.now().astimezone(tz)
+        # ic(file_datetime)
+        file_datetime_s = f'{jdatejs(file_datetime, "%Y%m%d")}_{file_datetime.strftime("%H%M%S")}' \
+            if is_fa else file_datetime.strftime(DATETIME_FORMAT)
+        location = self.env['hr.work.location'].browse(location)
+        email_recipients = location.emergency_emails
+        recipients = list([rec.private_email for rec in email_recipients if rec.private_email])
+        # ic(recipients)
+        # TODO: create pdf file list
+        report_obj = self.env['ir.actions.report']
+        pdf_content, _ = report_obj._render_qweb_pdf('sd_contacts.present_list_report', [location.id])
+
+        attachment = self.env['ir.attachment'].create({
+            'name': f'kpe_{file_datetime_s}_[{location.name}].pdf',
+            'type': 'binary',
+            'datas': base64.b64encode(pdf_content),
+            'mimetype': 'application/pdf',
+            'res_model': 'hr.attachment',
+        })
+
+        mail_values = {
+            'subject': f'KPE Emergency EXIT {file_datetime_s} [{location.name}]',
+            'body_html': f'<p>KPE Emergency EXIT {file_datetime_s} [{location.name}]</p>',
+            'email_to': ','.join(recipients),
+            'email_from': 'portal@kpe.ir',
+            'attachment_ids': [(6, 0, [attachment.id])],
+
+        }
+        send_result = self.env['mail.mail'].create(mail_values).send()
+        ic(send_result)
+

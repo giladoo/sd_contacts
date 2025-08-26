@@ -27,6 +27,8 @@
         'security/ir.model.access.csv',
         'views/views.xml',
         'views/gates.xml',
+        'report/present_list.xml',
+        'report/present_list_template.xml',
         'report/attendance_list.xml',
         'report/attendance_list_template.xml',
         'wizard/attendance_report.xml',
@@ -37,6 +39,7 @@
         'views/attendance.xml',
         'views/hr_leave.xml',
         'views/settings.xml',
+        'views/hr_work_location.xml',
         ],
     'assets': {
         'web._assets_common_scripts': [
@@ -55,7 +58,9 @@
             'sd_contacts/static/src/components/website/**/*.*',
 
         ],
-        'web.report_assets_common': [
+        'web.report_assets_pdf': [
+            'sd_contacts/static/src/css/report_style.scss',
+            # 'sd_contacts/static/src/components/security_gates/**/*.scss',
 
         ],
         },

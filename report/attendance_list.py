@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from odoo import models, fields, api , _
+from odoo import models, fields, api , tools, _
 from odoo.exceptions import ValidationError, UserError
 from datetime import datetime, date, timedelta
 import pytz

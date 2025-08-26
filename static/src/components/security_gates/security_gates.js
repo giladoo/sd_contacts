@@ -64,6 +64,7 @@ export class SdContactsSecurityGates extends Component {
         this.lastAttendanceListViewUpdate = this.lastAttendanceListViewUpdate.bind(this)
         this.selectGate = this.selectGate.bind(this)
         this.getAttendances = this.getAttendances.bind(this)
+        this.sendEmergency = this.sendEmergency.bind(this)
 
     }
     async onEmployeeListClick(e, employee_id=0){
@@ -194,6 +195,11 @@ export class SdContactsSecurityGates extends Component {
 
         localStorage.setItem('selectedGate', gate.id);
         this.lastAttendanceListViewUpdate()
+    }
+    async sendEmergency(location){
+//        console.log('sendEmergency',this.state.gate, this)
+        await this.orm.call('hr.attendance', 'send_emergency', [false, this.state.gate.location[0]] )
+
     }
 
 }

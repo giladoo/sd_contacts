@@ -20,8 +20,10 @@
                     </Dropdown>
 
                 </div>
-                <div class="col h4 py-2 text-primary" t-ref="gate_location"></div>
+                <div class="col h4 py-2 border text-primary" t-ref="gate_location"></div>
                 <div class="col h4 py-2 text-primary" t-ref="today_date"></div>
+                <div class="col"></div>
+                <div class="col h4 py-2 ms-5 btn btn-danger" t-on-click="() => this.sendEmergency()">Send List</div>
 
             </div>
             <div class="border rounded my-2 shadow" t-ref="last_attendance_list_view" style="min-height: 100px;">
