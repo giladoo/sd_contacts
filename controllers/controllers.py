@@ -38,7 +38,7 @@ class SdContactsController(http.Controller):
 
     @http.route('/employee/sendlist', type='json', auth="user", website=True)
     def sd_employee_send_list(self, location, **kwargs):
-        print(f"\n >>>>>>>>>>>>>>>>>>>>>>\n {location}")
+        # print(f"\n >>>>>>>>>>>>>>>>>>>>>>\n {location}")
         return request.env['hr.attendance'].sudo().send_emergency(location)
 
 

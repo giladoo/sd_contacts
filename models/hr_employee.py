@@ -84,7 +84,7 @@ class HrEmployeeSdContacts(models.Model):
         employee = self.env.user.employee_id
         send_list = self.env['sd_contacts.send_list'].search_read([('employee_id', 'in', employee.id)],
                                                                   ['location',])
-        print(f"\n >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n{employee.id} {employee.name}\n{send_list}\n")
+        # print(f"\n >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n{employee.id} {employee.name}\n{send_list}\n")
 
         labels = {
             'title': _('Employees Contact Information'),

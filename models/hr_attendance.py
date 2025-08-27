@@ -250,20 +250,28 @@ class SdContactsHrAttendance(models.Model):
         rec['time'] = self.get_time(rec['time'], 'Asia/Tehran', True)
         return rec
 
-    def send_emergency(self, location):
-        # ic(location)
+    def send_emergency(self, location_id):
         DATETIME_FORMAT = "%Y%m%d_%H%M%S"
         is_fa = self.env.user.lang == 'fa_IR'
         tz = pytz.timezone(self._context.get('tz') or 'UTC')
         file_datetime = fields.Datetime.now().astimezone(tz)
-        # ic(file_datetime)
         file_datetime_s = f'{jdatejs(file_datetime, "%Y%m%d")}_{file_datetime.strftime("%H%M%S")}' \
             if is_fa else file_datetime.strftime(DATETIME_FORMAT)
-        location = self.env['hr.work.location'].browse(location)
+
+        # INFO: get recipients from work location
+        location = self.env['hr.work.location'].browse(location_id)
         email_recipients = location.emergency_emails
         recipients = list([rec.private_email for rec in email_recipients if rec.private_email])
+
+        # INFO: get recipients from work send_list
+        send_list = self.env['sd_contacts.send_list'].search([('location', '=', location_id)])
+        if send_list:
+            send_list = send_list.employee_id
+            recipients_2 = list([rec.private_email for rec in send_list if rec.private_email])
+            recipients = list(set(recipients + recipients_2))
         # ic(recipients)
-        # TODO: create pdf file list
+
+        # INFO: create pdf report as attachment
         report_obj = self.env['ir.actions.report']
         pdf_content, _ = report_obj._render_qweb_pdf('sd_contacts.present_list_report', [location.id])
 
@@ -275,6 +283,7 @@ class SdContactsHrAttendance(models.Model):
             'res_model': 'hr.attachment',
         })
 
+        # INFO: send email
         mail_values = {
             'subject': f'KPE Emergency EXIT {file_datetime_s} [{location.name}]',
             'body_html': f'<p>KPE Emergency EXIT {file_datetime_s} [{location.name}]</p><p>sender:</p><p>{self.env.user.name}</p>',
@@ -284,5 +293,5 @@ class SdContactsHrAttendance(models.Model):
 
         }
         send_result = self.env['mail.mail'].create(mail_values).send()
-        ic(send_result)
+        attachment.unlink()
 
