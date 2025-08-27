@@ -10,7 +10,7 @@
                     </t>
                 </div>
                 <div class="row  mx-0 ">
-                    <div class="col mx-0 border">
+                    <div class="col mx-0">
                         <div class="h3 text-center mt-2 mb-4" t-esc="this.state.labels.title"></div>
                         <div class="row mx-0">
                             <div class="col-12 col-md-4">
