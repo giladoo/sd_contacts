@@ -3,52 +3,65 @@
     <t t-name="sd_contacts.contact_list_template">
         <div class="vh-1001 overflow-auto1 bg-muted">
             <div class="container h-100 my-4 px-1 ">
-                <div class="h3 text-center mt-2 mb-4" t-esc="this.state.labels.title"></div>
-                <div class="row mx-0">
-                    <div class="col-12 col-md-4">
-                        <div class="row">
-                            <div class="col-1 btn btn-outline-primary btn-close px-2"
-                                 t-ref="search_clear" t-on-click="() => this.selectFilterItems(true)">
+                <div t-if="this.state.send_list.length" class=" mb-2 text-end">
+                    <t t-foreach="this.state.send_list" t-as="send" t-key="send.id">
+                        <div class="btn btn-danger" t-esc="send.location[1]" t-on-click="()=>onSendListClick(send.location[0])"></div>
+
+                    </t>
+                </div>
+                <div class="row  mx-0 ">
+                    <div class="col mx-0 border">
+                        <div class="h3 text-center mt-2 mb-4" t-esc="this.state.labels.title"></div>
+                        <div class="row mx-0">
+                            <div class="col-12 col-md-4">
+                                <div class="row">
+                                    <div class="col-1 btn btn-outline-primary btn-close px-2"
+                                         t-ref="search_clear" t-on-click="() => this.selectFilterItems(true)">
+                                    </div>
+                                    <div class="col-10">
+                                        <input type="text" t-ref="contacts_search"
+                                               class="contacts_search form-control shadow-lg border border-primary-subtle"/>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-10">
-                                <input type="text" t-ref="contacts_search"
-                                       class="contacts_search form-control shadow-lg border border-primary-subtle"/>
+                            <div class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
+                                 t-ref="contacts_select_department">
+                                <Dropdown>
+                                    <button class="btn btn-outline-primary" type="button" t-ref="selected_department"/>
+                                    <t t-foreach="this.state.departments" t-as="layout" t-key="layout" t-set-slot="content">
+                                        <DropdownItem onSelected="() => this.selectDepartment(layout)">
+                                            <t t-esc="layout"></t>
+                                        </DropdownItem>
+                                    </t>
+                                </Dropdown>
+                            </div>
+                            <div  t-if="this.state.show.show_locations" class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
+                                  t-ref="contacts_select_location">
+                                <Dropdown>
+                                    <button class="btn btn-outline-primary" type="button" t-ref="selected_location"/>
+                                    <t t-foreach="this.state.locations" t-as="layout" t-key="layout" t-set-slot="content">
+                                        <DropdownItem onSelected="() => this.selectLocation(layout)">
+                                            <t t-esc="layout"></t>
+                                        </DropdownItem>
+                                    </t>
+                                </Dropdown>
+                            </div>
+                            <div t-if="this.state.show.show_projects" class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
+                                 t-ref="contacts_select_project">
+                                <Dropdown>
+                                    <button class="btn btn-outline-primary" type="button" t-ref="selected_project"/>
+                                    <t t-foreach="this.state.projects" t-as="layout" t-key="layout" t-set-slot="content">
+                                        <DropdownItem onSelected="() => this.selectProject(layout)">
+                                            <t t-esc="layout"></t>
+                                        </DropdownItem>
+                                    </t>
+                                </Dropdown>
                             </div>
                         </div>
+
                     </div>
-                    <div class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
-                         t-ref="contacts_select_department">
-                        <Dropdown>
-                            <button class="btn btn-outline-primary" type="button" t-ref="selected_department"/>
-                            <t t-foreach="this.state.departments" t-as="layout" t-key="layout" t-set-slot="content">
-                                <DropdownItem onSelected="() => this.selectDepartment(layout)">
-                                    <t t-esc="layout"></t>
-                                </DropdownItem>
-                            </t>
-                        </Dropdown>
-                    </div>
-                    <div  t-if="this.state.show.show_locations" class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
-                          t-ref="contacts_select_location">
-                        <Dropdown>
-                            <button class="btn btn-outline-primary" type="button" t-ref="selected_location"/>
-                            <t t-foreach="this.state.locations" t-as="layout" t-key="layout" t-set-slot="content">
-                                <DropdownItem onSelected="() => this.selectLocation(layout)">
-                                    <t t-esc="layout"></t>
-                                </DropdownItem>
-                            </t>
-                        </Dropdown>
-                    </div>
-                    <div t-if="this.state.show.show_projects" class="col-6 col-md-2 p-1 text-center d-none1 d-md-block"
-                         t-ref="contacts_select_project">
-                        <Dropdown>
-                            <button class="btn btn-outline-primary" type="button" t-ref="selected_project"/>
-                            <t t-foreach="this.state.projects" t-as="layout" t-key="layout" t-set-slot="content">
-                                <DropdownItem onSelected="() => this.selectProject(layout)">
-                                    <t t-esc="layout"></t>
-                                </DropdownItem>
-                            </t>
-                        </Dropdown>
-                    </div>
+
+
                 </div>
                 <div t-ref="contacts_companies"
                      class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-4 p-1 p-md-3 "></div>

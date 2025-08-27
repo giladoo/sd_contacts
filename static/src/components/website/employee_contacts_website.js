@@ -30,6 +30,7 @@ export class SdContactsContactList extends Component {
             selectedLocation: _t('All'),
             selectedProject: _t('All'),
             attendances: [],
+            send_list: [],
             dir: {
                 name: '',
                 department: '',
@@ -108,6 +109,7 @@ export class SdContactsContactList extends Component {
                 self.state.departments = data['department_list'];
                 self.state.projects = data['project_list'];
                 self.state.attendances = data['attendances'];
+                self.state.send_list = data['send_list'];
                 self.state.show = data['show'];
                 self.updateList(self.state.employees)
                 if (self.state.companies.length > 1){
@@ -118,6 +120,7 @@ export class SdContactsContactList extends Component {
                     self._onContactsCompanies(e)
                 }
             })
+            console.log("send_list", self.state.send_list)
 
         });
 //        console.log('state', this.state)
@@ -382,7 +385,11 @@ export class SdContactsContactList extends Component {
             }
             return 0; // a and b are equal
         });
-}
+    }
+    async onSendListClick(location){
+        console.log('onSendListClick', location)
+        await rpc('/employee/sendlist', {location})
+    }
 
 
 }

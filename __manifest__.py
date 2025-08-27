@@ -27,6 +27,7 @@
         'security/ir.model.access.csv',
         'views/views.xml',
         'views/gates.xml',
+        'views/send_list.xml',
         'report/present_list.xml',
         'report/present_list_template.xml',
         'report/attendance_list.xml',

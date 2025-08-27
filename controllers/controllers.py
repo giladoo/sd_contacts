@@ -36,6 +36,11 @@ class SdContactsController(http.Controller):
     def sd_employee_contact_data(self, **kwargs):
         return request.env['hr.employee'].sudo().contact_web()
 
+    @http.route('/employee/sendlist', type='json', auth="user", website=True)
+    def sd_employee_send_list(self, location, **kwargs):
+        print(f"\n >>>>>>>>>>>>>>>>>>>>>>\n {location}")
+        return request.env['hr.attendance'].sudo().send_emergency(location)
+
 
 
 
@@ -65,7 +70,7 @@ class SdContactsController(http.Controller):
     @http.route('/employee/contactsimage/<int:employee_id>', type='http', auth='public', website=True)
     def get_employee_avatar(self, employee_id, **kw):
         employee = request.env['hr.employee'].sudo().search([('id', '=', employee_id)])
-        ic(employee, len(employee.image_256))
+        # ic(employee, len(employee.image_256))
         # if not employee or len(employee.avatar_128) < 500:
         #     placeholder_path = request.env['ir.module.module']._get_static_file_path('sd_contacts', 'img/im.jpg') # Get the absolute path
         #     # ic(placeholder_path)

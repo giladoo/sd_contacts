@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="send_list_list" model="ir.ui.view">
+        <field name="name">Send List</field>
+        <field name="model">sd_contacts.send_list</field>
+            <field name="arch" type="xml">
+                <list editable="bottom">
+                    <field name="location"/>
+                    <field name="employee_id" widget="many2many_avatar_employee"/>
+                </list>
+            </field>
+    </record>
+
+    <record id="send_list_search" model="ir.ui.view">
+        <field name="name">Send List</field>
+        <field name="model">sd_contacts.send_list</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="location"/>
+                    <field name="employee_id"/>
+                </search>
+            </field>
+    </record>
+
+    <record id="send_list_action" model="ir.actions.act_window">
+        <field name="name">Send List</field>
+        <field name="res_model">sd_contacts.send_list</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem name="Send List"
+              id="send_list_menu"
+              parent="configuration_menu"
+              groups="sd_contacts.group_sd_contacts_admins"
+              action="send_list_action" />
+
+</odoo>

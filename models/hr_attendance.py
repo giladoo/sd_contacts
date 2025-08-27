@@ -277,7 +277,7 @@ class SdContactsHrAttendance(models.Model):
 
         mail_values = {
             'subject': f'KPE Emergency EXIT {file_datetime_s} [{location.name}]',
-            'body_html': f'<p>KPE Emergency EXIT {file_datetime_s} [{location.name}]</p>',
+            'body_html': f'<p>KPE Emergency EXIT {file_datetime_s} [{location.name}]</p><p>sender:</p><p>{self.env.user.name}</p>',
             'email_to': ','.join(recipients),
             'email_from': 'portal@kpe.ir',
             'attachment_ids': [(6, 0, [attachment.id])],
