@@ -20,6 +20,7 @@
                             <div class="mx-1 h3" t-esc="location"></div>
                         </t>
                     </div>
+                    <input type="checkbox" />
                 </div>
                 <t t-set="list_1" t-value="[1,2,3,4,5,6,7,8,9]"></t>
                 <t t-set="col_counts" t-value="5"/>

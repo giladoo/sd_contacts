@@ -261,13 +261,13 @@ class SdContactsHrAttendance(models.Model):
         # INFO: get recipients from work location
         location = self.env['hr.work.location'].browse(location_id)
         email_recipients = location.emergency_emails
-        recipients = list([rec.private_email for rec in email_recipients if rec.private_email])
+        recipients = list([rec.sudo().private_email for rec in email_recipients if rec.sudo().private_email])
 
         # INFO: get recipients from work send_list
         send_list = self.env['sd_contacts.send_list'].search([('location', '=', location_id)])
         if send_list:
             send_list = send_list.employee_id
-            recipients_2 = list([rec.private_email for rec in send_list if rec.private_email])
+            recipients_2 = list([rec.sudo().private_email for rec in send_list if rec.sudo().private_email])
             recipients = list(set(recipients + recipients_2))
         # ic(recipients)
 
@@ -292,6 +292,6 @@ class SdContactsHrAttendance(models.Model):
             'attachment_ids': [(6, 0, [attachment.id])],
 
         }
-        send_result = self.env['mail.mail'].create(mail_values).send()
+        send_result = self.env['mail.mail'].sudo().create(mail_values).send()
         attachment.unlink()
 
