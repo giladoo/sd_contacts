@@ -7,99 +7,59 @@
 
         <template id="present_list_template">
             <t t-call="web.basic_layout" t-lang="lang">
-                <div class="border rounded p-3" style="font-family: IRANSansFN;">
-                    <div class=" h3" t-esc="date_now_s"></div>
-                    <div class="row row-cols-auto">
-                        <div class=" h6" t-esc="'Present employees:'"></div>
-                        <div class=" h3" t-esc="str(count)"></div>
-
+                <div class="border rounded mb-1 p-3" style="font-family: IRANSansFN;">
+                    <div class="row">
+                        <div class="col">
+                            <div class="row row-cols-auto ">
+                                <div class="mx-1 me-3">Locations List</div>
+                                <t t-foreach="locations" t-as="location" t-key="location">
+                                    <div class="mx-1 h3" t-esc="location"></div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row row-cols-auto">
+                                <div class=" h6 me-3" t-esc="'Present employees:'"></div>
+                                <div class=" h3" t-esc="str(count)"></div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class=" h3" t-esc="date_now_s"></div>
+                        </div>
                     </div>
-                    <div class="row row-cols-auto ">
-                        <div class="mx-1">Locations List</div>
-                        <t t-foreach="locations" t-as="location" t-key="location">
-                            <div class="mx-1 h3" t-esc="location"></div>
-                        </t>
-                    </div>
-                    <input type="checkbox" />
                 </div>
                 <t t-set="list_1" t-value="[1,2,3,4,5,6,7,8,9]"></t>
-                <t t-set="col_counts" t-value="5"/>
+                <t t-set="col_counts" t-value="4"/>
                 <t t-set="row_counts" t-value="len(att_employees)//col_counts + 1"/>
                 <t t-set="row_counter" t-value="0"/>
                 <t t-set="index" t-value="0"/>
-<!--                <div class="" t-esc="'row_counts: ' + str(row_counts)"></div>-->
-
-                <table class="table text-center"  style="font-family: IRANSansFN;">
-                    <tbody>
-                            <tr t-foreach="row_counts" t-as="row_count">
-
-                                <t t-foreach="att_employees[row_count*col_counts:row_count*col_counts + col_counts]" t-as="att" t-key="l">
-<!--                                    <div class="" t-esc="'[row_count: ' + str(row_count) + ' ] {index: ' + str(index) + '}'"></div>-->
-                                    <td class="" style="width: 20%;">
-                                        <div>
-                                            <img t-att-src="'/web/image?model=hr.employee.public&amp;id=' + str(att.employee_id.id) + '&amp;field=avatar_128'"
-                                            style="width: 100px;height: 100px;"
-                                            />
-                                        </div>
-                                        <div class="" t-esc="att.employee_id.name"></div>
-                                        <div class="" t-esc="att.employee_id.department_id.name"></div>
-                                        <div class="" t-esc="att.employee_id.mobile_phone"></div>
-
-                                    </td>
-
-                                 </t>
-                                <t t-set="index" t-value="index+col_counts"/>
-                            </tr>
-                    </tbody>
-                </table>
-                <t t-foreach="grouped_att" t-as="name" t-key="name">
-
-                </t>
-
-<!--                <t t-foreach="grouped_att" t-as="name" t-key="name">-->
-<!--                    <div class="row">-->
-<!--                        <div class="row m-3">-->
-<!--                    <div class="col-1" t-esc="name"></div>-->
-<!--                    &lt;!&ndash;                        <div class="col-2" t-esc="grouped"></div>&ndash;&gt;-->
-<!--                    <div class="col-11 border border-danger">-->
-<!--                        <div class="row row-cols-auto mx-0 border border-info">-->
-<!--                            <t t-foreach="grouped_att[name]" t-as="attendance_list" t-key="attendance_list">-->
-<!--                                <div class="col border border-warning mx-1 px-1">-->
-<!--                                    <div class="img_div employee_image_id">-->
-<!--                                        <img t-att-src="'/web/image?model=hr.employee.public&amp;id=' + str(attendance_list['employee_id']['id']) + '&amp;field=avatar_128'"-->
-<!--                                        />-->
-<!--                                    </div>-->
-<!--                                    <div class="" t-esc="attendance_list['employee_id']['name']"></div>-->
-<!--                                    <div class="" t-esc="attendance_list['employee_id']['department_id']['name']"></div>-->
-
-<!--                                </div>-->
-<!--                            </t>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    </div>-->
-<!--                    </div>-->
-
-<!--                </t>-->
-
-
-                <!--                    <t t-foreach="grouped_att" t-as="group">-->
-                <!--                        -->
-                <!--                    </t>-->
-                <!--                    <t t-foreach="att_employees" t-as="employee" t-key="employee.id">-->
-                <!--                        &lt;!&ndash;                    <img t-att-src="'/web/image?model=hr.employee.public&amp;id=' + employee.employee_id.id + '&amp;field=avatar_128'" id="${rec.id}"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                        class="img_div rounded-circle border  ${statusBorder} employee_image_id" loading="lazy"/>&ndash;&gt;-->
-                <!--                        <div class="col">-->
-                <!--                            <div>-->
-                <!--                                <img t-att-src="'/web/image?model=hr.employee.public&amp;id=' + str(employee.employee_id.id) + '&amp;field=avatar_128'"/>-->
-                <!--                            </div>-->
-                <!--                            <div class="" t-esc="employee.employee_id.name"></div>-->
-                <!--                            <div class="" t-esc="employee.employee_id.department_id.name"></div>-->
-
-                <!--                        </div>-->
-                <!--                    </t>-->
-
+                <div class="">
+                    <t t-foreach="grouped_att" t-as="work_place" t-key="work_place">
+                        <div t-if="work_place" class="h1 bg-500 mt-5 py-3 text-center rounded" t-esc="work_place"></div>
+                        <div t-else="" class="h1 bg-500 mt-5 py-3 text-center rounded" t-esc="''"></div>
+                        <table class="table text-center" style="font-family: IRANSansFN;">
+                            <tbody>
+                                <tr t-foreach="row_counts" t-as="row_count">
+                                    <t t-foreach="grouped_att[work_place][row_count*col_counts:row_count*col_counts + col_counts]"
+                                       t-as="att" t-key="l">
+                                        <td class="" style="width: 20%;">
+                                            <div onClick="onClick(att.employee_id.id)" id="att.employee_id.id" class="emp_image">
+                                                <img t-att-src="'/web/image?model=hr.employee.public&amp;id=' + str(att.employee_id.id) + '&amp;field=avatar_128'"
+                                                     style="width: 120px;height: 120px;"
+                                                />
+                                            </div>
+                                            <div class="h3 mt-2" t-esc="att.employee_id.name"></div>
+                                            <div class="" t-esc="att.employee_id.department_id.name"></div>
+                                            <div class="" t-esc="att.employee_id.mobile_phone"></div>
+                                        </td>
+                                    </t>
+                                    <t t-set="index" t-value="index+col_counts"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
             </t>
         </template>
-
     </data>
 </odoo>

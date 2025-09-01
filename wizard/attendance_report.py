@@ -9,6 +9,7 @@ from odoo.exceptions import ValidationError
 
 class SdContactsAttendanceReport(models.TransientModel):
     _name = 'sd_contacts.attendance_report_wizard'
+    _description = ""
     # _rec_name = 'employee_id'
     report_type = fields.Selection([('daily', 'Daily')], default='daily', required=True)
     location = fields.Many2one('hr.work.location')

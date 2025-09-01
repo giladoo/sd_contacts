@@ -274,7 +274,7 @@ class SdContactsHrAttendance(models.Model):
         # INFO: create pdf report as attachment
         report_obj = self.env['ir.actions.report']
         pdf_content, _ = report_obj._render_qweb_pdf('sd_contacts.present_list_report', [location.id])
-
+        # return
         attachment = self.env['ir.attachment'].create({
             'name': f'kpe_{file_datetime_s}_[{location.name}].pdf',
             'type': 'binary',
@@ -286,7 +286,12 @@ class SdContactsHrAttendance(models.Model):
         # INFO: send email
         mail_values = {
             'subject': f'KPE Emergency EXIT {file_datetime_s} [{location.name}]',
-            'body_html': f'<p>KPE Emergency EXIT {file_datetime_s} [{location.name}]</p><p>sender:</p><p>{self.env.user.name}</p>',
+            # 'body_html': f'<p>KPE Emergency EXIT {file_datetime_s} [{location.name}]</p><p>sender:</p><p>{self.env.user.name}</p>',
+            'body_html': f'''
+                        <p>KPE Emergency EXIT {file_datetime_s} [{location.name}]</p>
+                        <p>sender:</p><span>{self.env.user.name}</span>
+
+                        ''',
             'email_to': ','.join(recipients),
             'email_from': 'portal@kpe.ir',
             'attachment_ids': [(6, 0, [attachment.id])],

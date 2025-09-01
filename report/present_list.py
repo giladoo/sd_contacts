@@ -33,33 +33,41 @@ class ReportSdContactsPresentList(models.AbstractModel):
 
         att_domain = [('check_out', '=', False),]
         if location_ids:
-            locations = self.env['hr.work.location'].browse(location_ids)
+            locations = [self.env['hr.work.location'].browse(location_ids)]
             att_domain = att_domain + [('in_gate.location', 'in', location_ids),]
         else:
             locations = self.env['hr.work.location'].search([])
-
+        locations = list([rec.name for rec in locations])
         tz = pytz.timezone(self._context.get('tz', 'UTC'))
         date_now = fields.Datetime.now().astimezone(tz)
         date_now_s = f"{jdatejs(date_now, DATE_FORMAT_J)}  {date_now.strftime(TIME_FORMAT)}" \
             if is_fa else date_now.strftime(DATETIME_FORMAT)
 
         att_employees = self.env['hr.attendance'].search(att_domain )
-        att = dict(tools.groupby(att_employees, key=lambda a: a.in_gate.location))
-        grouped_att = dict({k.name: v for k, v in att.items()})
+        # att = dict(tools.groupby(att_employees, key=lambda a: a.in_gate.location))
+        grouped_att = dict(
+            tools.groupby(att_employees, key=lambda a: a.employee_id.work_place_id))
+        grouped_att = dict(sorted(
+            grouped_att.items(),
+            key=lambda item: item[0].sequence if item[0] else 9999  # item[0] is the key (recordset)
+        ))
+
+        grouped_att = dict({k.name: v for k, v in grouped_att.items()})
+
         docs = []
         all_data_1 = {
 
             'docids': docids,
             'docs': docs,
             'lang': lang,
-            'locations': list([rec for rec in grouped_att]),
+            'locations': locations,
             'date_now_s': date_now_s,
             'att_employees': att_employees,
             'grouped_att': grouped_att,
             'count': len(att_employees)
 
         }
-        ic(all_data_1)
+        # ic(all_data_1)
         return all_data_1
 
 
