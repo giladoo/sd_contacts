@@ -98,7 +98,22 @@ export class SdContactsContactList extends Component {
 
 //            console.log('con onMounted 3')
 
-        await rpc('/employee/contactdata', {})
+            this.refreshList()
+            console.log("send_list", self.state.send_list)
+
+        });
+//        console.log('state', this.state)
+
+        this._onContactsSearch = this._onContactsSearch.bind(this);
+        this._copyToClipBoard = this._copyToClipBoard.bind(this);
+        this._onContactsCompanies = this._onContactsCompanies.bind(this);
+        this.refreshList = this.refreshList.bind(this);
+//        this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
+//        this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
+    }
+    async refreshList(){
+        let self = this;
+         await rpc('/employee/contactdata', {})
             .then(data => JSON.parse(data))
             .then(data=> {
                 console.log('data:', data, session)
@@ -120,16 +135,6 @@ export class SdContactsContactList extends Component {
                     self._onContactsCompanies(e)
                 }
             })
-            console.log("send_list", self.state.send_list)
-
-        });
-//        console.log('state', this.state)
-
-        this._onContactsSearch = this._onContactsSearch.bind(this);
-        this._copyToClipBoard = this._copyToClipBoard.bind(this);
-        this._onContactsCompanies = this._onContactsCompanies.bind(this);
-//        this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
-//        this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
     }
     selectLocation(location){
         this.state.selectedLocation = location

@@ -74,25 +74,7 @@ export class SdContactsDashboard extends Component {
 //        await self.orm.searchRead('hr.employee',
 //                                [],
 //                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],{order: 'sequence'})
-            await self.orm.call('hr.employee', 'contact_web', [[]], {})
-                .then(data => JSON.parse(data))
-                .then(data=> {
-                    self.state.employees = data['contact_list'];
-//                    console.log('employees\n', self.state.employees)
-                    self.state.contacts_filtered = data['contact_list'];
-                    self.state.companies = data['company_list'];
-                    self.state.locations = data['location_list'];
-                    self.state.departments = data['department_list'];
-                    self.state.attendances = data['attendances'];
-                    self.updateList(self.state.employees)
-                    if (self.state.companies.length > 1){
-                        self.contactsCompanies.el.classList.remove('d-none')
-                        self.updateCompanyList(self.state.companies)
-                        let e = Object();
-                        e['target'] = 'all'
-                        self._onContactsCompanies(e)
-                    }
-                })
+        this.refreshList()
         });
         onWillUnmount(() => {
 //                    console.log('con onWillUnmount')
@@ -109,6 +91,29 @@ export class SdContactsDashboard extends Component {
         this._onContactsCompanies = this._onContactsCompanies.bind(this);
         this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
         this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
+        this.refreshList = this.refreshList.bind(this);
+    }
+    async refreshList(){
+        let self = this;
+        await self.orm.call('hr.employee', 'contact_web', [[]], {})
+            .then(data => JSON.parse(data))
+            .then(data=> {
+                self.state.employees = data['contact_list'];
+//                    console.log('employees\n', self.state.employees)
+                self.state.contacts_filtered = data['contact_list'];
+                self.state.companies = data['company_list'];
+                self.state.locations = data['location_list'];
+                self.state.departments = data['department_list'];
+                self.state.attendances = data['attendances'];
+                self.updateList(self.state.employees)
+                if (self.state.companies.length > 1){
+                    self.contactsCompanies.el.classList.remove('d-none')
+                    self.updateCompanyList(self.state.companies)
+                    let e = Object();
+                    e['target'] = 'all'
+                    self._onContactsCompanies(e)
+                }
+            })
     }
     sendUpdates(){
         console.log('getUpdates')
