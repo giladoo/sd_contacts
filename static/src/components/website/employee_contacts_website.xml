@@ -15,6 +15,13 @@
                         <div class="row mx-0">
                             <div class="col-12 col-md-4">
                                 <div class="row">
+                                    <div class="col-1 px-2">
+                                        <input type="checkbox" class="form-check-input border-success rounded-1"
+                                               t-ref="present_list" t-on-change="(ev) => this.onPresentList(ev)">
+                                        </input>
+
+                                    </div>
+
                                     <div class="col-1 btn  border-0 px-2"
                                          t-ref="refresh_list" t-on-click="() => this.refreshList()">
                                         <i class=" fa fa-refresh text-600"></i>
@@ -22,7 +29,7 @@
                                     <div class="col-1 btn  border-0 btn-close px-2"
                                          t-ref="search_clear" t-on-click="() => this.selectFilterItems(true)">
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-8">
                                         <input type="text" t-ref="contacts_search"
                                                class="contacts_search form-control shadow-lg border border-primary-subtle"/>
                                     </div>

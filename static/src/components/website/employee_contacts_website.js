@@ -18,7 +18,8 @@ export class SdContactsContactList extends Component {
     static components = { Dropdown, DropdownItem };
     setup(){
         let self = this;
-                this.state = useState({
+        this.state = useState({
+            presents: false,
             employees: [],
             contacts_filtered: [],
             departments: ['Deps...'],
@@ -108,11 +109,18 @@ export class SdContactsContactList extends Component {
         this._copyToClipBoard = this._copyToClipBoard.bind(this);
         this._onContactsCompanies = this._onContactsCompanies.bind(this);
         this.refreshList = this.refreshList.bind(this);
+        this.onPresentList = this.onPresentList.bind(this)
+
 //        this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
 //        this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
     }
+    onPresentList(ev){
+        this.state.presents = ev.target.checked
+        this.selectFilterItems()
+    }
     async refreshList(){
         let self = this;
+        this.selectFilterItems(true)
          await rpc('/employee/contactdata', {})
             .then(data => JSON.parse(data))
             .then(data=> {
@@ -126,7 +134,10 @@ export class SdContactsContactList extends Component {
                 self.state.attendances = data['attendances'];
                 self.state.send_list = data['send_list'];
                 self.state.show = data['show'];
-                self.updateList(self.state.employees)
+                if (this.state.presents){
+                    self.state.contacts_filtered = this.state.employees.filter(rec => rec.hr_icon_display == "presence_present")
+                }
+                self.updateList(self.state.contacts_filtered)
                 if (self.state.companies.length > 1){
                     self.contactsCompanies.el.classList.remove('d-none')
                     self.updateCompanyList(self.state.companies)
@@ -156,11 +167,13 @@ export class SdContactsContactList extends Component {
             location = _t('All')
             department = _t('All')
             project = _t('All')
+//            this.state.presents = false
             this.state.search = ['']
             this.contactsSearch.el.value = ''
             this.state.dir.name = ''
 
         }
+
 
 
         if (location != _t('All')){
@@ -172,6 +185,7 @@ export class SdContactsContactList extends Component {
             this.state.contacts_filtered = this.state.employees
 
         }
+
         if (department != _t('All')){
             this.selectedDepartment ? this.selectedDepartment.el.innerHTML =  `${department}` : ''
             this.state.contacts_filtered = this.state.contacts_filtered
@@ -192,6 +206,9 @@ export class SdContactsContactList extends Component {
             this.state.show.show_projects ? this.selectedProject.el.innerHTML = this.state.labels.projects : ''
             this.state.selectedProject = _t('All')
             this.state.contacts_filtered = this.state.contacts_filtered
+        }
+        if (this.state.presents){
+            this.state.contacts_filtered = this.state.contacts_filtered.filter(rec => rec.hr_icon_display == "presence_present")
         }
         this._onContactsSearch('')
     }
