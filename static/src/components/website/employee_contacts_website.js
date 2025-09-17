@@ -39,83 +39,63 @@ export class SdContactsContactList extends Component {
             },
             show: {show_locations: true, show_projects: true, show_job_title: true},
         })
-//        console.log('start:', this.state.show)
         this.contactsSearch = useRef('contacts_search')
         this.contactsList = useRef('contacts_list')
         this.contactsPhone = useRef('contacts_phone')
         this.contactsEmail = useRef('contacts_email')
         this.contactsCompanies = useRef('contacts_companies')
-
         this.contactsSelectDepartment = useRef('contacts_select_department')
         this.selectedDepartment = useRef('selected_department')
-
         this.selectedLocation = this.state.show.show_locations ? useRef('selected_location') : false
         this.contactsSelectLocation = this.state.show.show_locations ? useRef('contacts_select_location') : false
         this.selectedProject = this.state.show.show_projects ? useRef('selected_project') : false
-
         this.searchClear = useRef('search_clear')
         this.popover = usePopover(Tooltip);
 
 
         const labelsFa = {
-                title: _t('اطلاعات تماس کارکنان'),
-                name: _t('نام'),
-                depjob: `${_t('شغل')} / ${_t('واحد سازمانی')}`,
-                location_project: `${_t('محل کار')} / ${_t('پروژه')}`,
-//                location: _t('Location'),
-//                project: _t('Project'),
-                phone: _t('تلفن'),
-                email: _t('ایمیل'),
-                projects: 'پروژه',
-                departments: 'واحد سازمانی',
-                locations: 'محل کار',
-                }
+                        title: _t('اطلاعات تماس کارکنان'),
+                        name: _t('نام'),
+                        depjob: `${_t('شغل')} / ${_t('واحد سازمانی')}`,
+                        location_project: `${_t('محل کار')} / ${_t('پروژه')}`,
+                        phone: _t('تلفن'),
+                        email: _t('ایمیل'),
+                        projects: 'پروژه',
+                        departments: 'واحد سازمانی',
+                        locations: 'محل کار',
+                        }
         const labelsEn = {
-                title: _t('Employees Contact Information 1'),
-                name: _t('Name'),
-                depjob: `${_t('Job')} ${_t('Department')}`,
-                location_project: `${_t('Location')} ${_t('Project')}`,
-//                location: _t('Location'),
-//                project: _t('Project'),
-                phone: _t('Phone'),
-                email: _t('Email'),
-                projects: 'Projects',
-                departments: 'Departments',
-                locations: 'Locations',
-                }
+                        title: _t('Employees Contact Information 1'),
+                        name: _t('Name'),
+                        depjob: `${_t('Job')} ${_t('Department')}`,
+                        location_project: `${_t('Location')} ${_t('Project')}`,
+                        phone: _t('Phone'),
+                        email: _t('Email'),
+                        projects: 'Projects',
+                        departments: 'Departments',
+                        locations: 'Locations',
+                        }
 
         this.state.labels = session.lang_url_code == 'fa' ? labelsFa : labelsEn
         this.contacts_select_location = useRef('contacts_select_location')
         onMounted(async () => {
-//            console.log('con onMounted 1')
             browser.addEventListener('keyup', self._onContactsSearch);
             browser.addEventListener('click', self._copyToClipBoard)
-//            self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
-
-//            console.log('con onMounted 2')
             this.selectedDepartment ? this.selectedDepartment.el.innerHTML = this.state.labels.departments : ''
             this.state.show.show_locations ? this.selectedLocation.el.innerHTML = this.state.labels.locations : ''
-             this.state.show.show_projects ? this.selectedProject.el.innerHTML = this.state.labels.projects : ''
-
-//            console.log('con onMounted 3')
-
+            this.state.show.show_projects ? this.selectedProject.el.innerHTML = this.state.labels.projects : ''
             this.refreshList()
-            console.log("send_list", self.state.send_list)
-
         });
-//        console.log('state', this.state)
 
         this._onContactsSearch = this._onContactsSearch.bind(this);
         this._copyToClipBoard = this._copyToClipBoard.bind(this);
         this._onContactsCompanies = this._onContactsCompanies.bind(this);
         this.refreshList = this.refreshList.bind(this);
         this.onPresentList = this.onPresentList.bind(this)
-
-//        this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
-//        this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
     }
-    onPresentList(ev){
+    async onPresentList(ev){
         this.state.presents = ev.target.checked
+        await this.refreshList()
         this.selectFilterItems()
     }
     async refreshList(){
@@ -167,15 +147,10 @@ export class SdContactsContactList extends Component {
             location = _t('All')
             department = _t('All')
             project = _t('All')
-//            this.state.presents = false
             this.state.search = ['']
             this.contactsSearch.el.value = ''
             this.state.dir.name = ''
-
         }
-
-
-
         if (location != _t('All')){
             this.state.show.show_locations ? this.selectedLocation.el.innerHTML =  `${location}` : ''
             this.state.contacts_filtered = this.state.employees.filter(rec => rec.work_location == location)
@@ -183,14 +158,12 @@ export class SdContactsContactList extends Component {
             this.state.show.show_locations ? this.selectedLocation.el.innerHTML = this.state.labels.locations : ''
             this.state.selectedLocation = _t('All')
             this.state.contacts_filtered = this.state.employees
-
         }
 
         if (department != _t('All')){
             this.selectedDepartment ? this.selectedDepartment.el.innerHTML =  `${department}` : ''
             this.state.contacts_filtered = this.state.contacts_filtered
                 .filter(rec => rec.department == department || rec.parent_department_1 == department )
-
         } else {
             this.selectedDepartment ? this.selectedDepartment.el.innerHTML = this.state.labels.departments : ''
             this.state.selectedDepartment = _t('All')
@@ -216,7 +189,6 @@ export class SdContactsContactList extends Component {
         let contacts_search_value = this.contactsSearch.el.value
         if( e.keyCode == 13){
             this.updateList(this.state.contacts_filtered)
-//            console.log('_onContactsSearch:', this.state.contacts_filtered)
             this.state.search = ['']
             this.contactsSearch.el.value = ''
         } else{
@@ -229,7 +201,6 @@ export class SdContactsContactList extends Component {
     }
     setImageClass(rec){
         let res;
-//        if (["presence_present", "presence_out_of_working_hour"].includes(rec.hr_icon_display)){
         if (["presence_present",].includes(rec.hr_icon_display)){
             res = 'border-success border-5'
         } else if (rec.hr_icon_display == 'away' || this.state.attendances.includes(rec.id)){
