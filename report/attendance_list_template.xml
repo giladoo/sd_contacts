@@ -6,8 +6,9 @@
         </template>
 
         <template id="attendance_list_template">
-            <t t-call="web.basic_layout" t-lang="lang">
-                <div class="">
+            <t t-call="web.basic_layout" t-lang="lang"  >
+                <div style="font-family: IRANSansFN;">
+                <div class="" >
                     Attendance
                 </div>
                 <div class="row row-cols-auto my-3 p-2 border rounded rounded-3">
@@ -31,13 +32,15 @@
                 </div>
                 <t t-foreach="grouped" t-as="name" t-key="name">
                     <div class="row border">
-                        <div class="col-2" t-esc="name"></div>
+                        <div class="col-4 px-2" t-esc="name"></div>
 <!--                        <div class="col-2" t-esc="grouped"></div>-->
-                        <div class="col-10">
-                            <t t-foreach="grouped['name']" t-as="attendance_list" t-key="attendance_list">
-                                <div class="col-2" t-esc="attendance_list['check_in']"></div>
+                        <div class="col-8">
+                            <t t-foreach="grouped[name]" t-as="attendance_list" t-key="attendance_list">
+                                <div class="row">
+                                    <div class="col-4" t-esc="attendance_list['check_in']"></div>
+                                    <div class="col-4" t-esc="attendance_list['check_out']"></div>
 
-
+                                </div>
                             </t>
 
                         </div>
@@ -55,6 +58,7 @@
 <!--                        <div class="col-2" t-esc="attendance['check_out']"></div>-->
 <!--                    </div>-->
 <!--                </t>-->
+                </div>
             </t>
 <!--            <t t-foreach="docs" t-as="o">-->
 <!--                <t t-call="web.basic_layout" t-lang="lang">-->

@@ -41,6 +41,7 @@
         'views/hr_leave.xml',
         'views/settings.xml',
         'views/hr_work_location.xml',
+        'views/visitors_views.xml',
         ],
     'assets': {
         'web._assets_common_scripts': [

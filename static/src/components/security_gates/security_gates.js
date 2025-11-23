@@ -12,10 +12,11 @@ import { renderToElement } from "@web/core/utils/render";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SdContactsDashboard } from "../web/employee_contacts_web";
+import { SdContactsVisitorsDashboard } from "../web/visitors_contacts_web";
 
 export class SdContactsSecurityGates extends Component {
     static template = "sd_contacts.security_gates_template";
-    static components = {SdContactsDashboard, Dropdown, DropdownItem, };
+    static components = {SdContactsDashboard, SdContactsVisitorsDashboard, Dropdown, DropdownItem, };
     setup(){
         let self = this;
         this.orm = useService('orm')
@@ -59,6 +60,7 @@ export class SdContactsSecurityGates extends Component {
 //            console.log('this.viewId', this.viewId)
         })
         this.onEmployeeListClick = this.onEmployeeListClick.bind(this)
+        this.onVisitListClick = this.onVisitListClick.bind(this)
         this.onInOutClick = this.onInOutClick.bind(this)
         this.onCounterClick = this.onCounterClick.bind(this)
         this.lastAttendanceListViewUpdate = this.lastAttendanceListViewUpdate.bind(this)
@@ -66,6 +68,17 @@ export class SdContactsSecurityGates extends Component {
         this.getAttendances = this.getAttendances.bind(this)
         this.sendEmergency = this.sendEmergency.bind(this)
 
+    }
+    async onVisitListClick(e, visit_id=0){
+        if (visit_id == 0 && e.target.classList.contains('visit_id')){
+            visit_id = e.target.id
+        }else if (visit_id == 0 && e.target.parentElement.classList.contains('visit_id')){
+            visit_id = e.target.parentElement.id
+        }
+        console.log('onVisitListClick:', visit_id)
+        if (visit_id){
+        // TODO: show record data on the info box
+        }
     }
     async onEmployeeListClick(e, employee_id=0){
         if (employee_id == 0 && e.target.classList.contains('employee_image_id')){

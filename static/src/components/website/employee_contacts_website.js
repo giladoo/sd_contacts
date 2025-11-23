@@ -104,7 +104,7 @@ export class SdContactsContactList extends Component {
          await rpc('/employee/contactdata', {})
             .then(data => JSON.parse(data))
             .then(data=> {
-                console.log('data:', data, session)
+//                console.log('data:', data, session)
                 self.state.employees = data['contact_list'];
                 self.state.contacts_filtered = data['contact_list'];
                 self.state.companies = data['company_list'];
@@ -258,7 +258,7 @@ export class SdContactsContactList extends Component {
             <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
 
                 <div class="col-2 col-md-1 px-1 py-1">
-                    <div class="img_div rounded-circle border  p-1 ${statusBorder}"
+                    <div class="img_div rounded-circle border  p-1 ${statusBorder}" id="${rec.id}"
                     style="background-image: url(${url})"></div>
                 </div>
 
@@ -323,10 +323,15 @@ export class SdContactsContactList extends Component {
         this.popover.open(target, { tooltip: _t("Copied") });
         browser.setTimeout(this.popover.close, 800);
     }
+    showAttendance(target) {
+        this.popover.open(target, { tooltip: _t("111") });
+        browser.setTimeout(this.popover.close, 2000);
+    }
     _copyToClipBoard(e){
         let copyText = e.target.innerText;
         let target = e.target
         let parent = e.target.parentElement
+//        console.log('target', target)
         if (target.classList.contains('copy_to_clip_board')){
             navigator.clipboard.writeText(target.innerText);
             this.showTooltip(target)
@@ -352,6 +357,14 @@ export class SdContactsContactList extends Component {
         else if (target.classList.contains('sort_phone') || parent.classList.contains('sort_phone') ){
             this.state.dir.phone = this.state.dir.phone == 'down' ? 'up' : 'down'
             this.updateList(this.state.data, 'work_phone', this.state.dir.phone)
+        }
+        else if (target.classList.contains('img_div') || parent.classList.contains('img_div') ){
+            let res_id = target.id
+//            console.log('aaaa', target, res_id)
+            // TODO: Attendance info
+            //      1- check if user is eligible to see attendance
+            //      2- find the id from list of attendances
+            //      3- show attendance time(s)
         }
 
         }

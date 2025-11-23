@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template xml:space="preserve">
+
+
+    <t t-name="sd_contacts.visitors_contacts_template" owl="1">
+        <div class="overflow-auto bg-muted" style="height: 50vh;">
+            <div class="container1 h-100 my-4 px-1 ">
+                <div class="sd_employee_contacts  ">
+                    <div class="row mx-0">
+                        <div class="col-12 col-md-4 ">
+                            <div class="row">
+                                <div class="col-1 btn  border-0 px-2"
+                                         t-ref="refresh_list" t-on-click="() => this.refreshList()">
+                                    <i class=" fa fa-refresh text-600"></i>
+                                </div>
+                                <div class="col-1 btn btn-outline-primary btn-close px-2"
+                                     t-ref="search_clear" t-on-click="() => this.selectFilterItems(true)">
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" t-ref="contacts_search"
+                                           class="contacts_search form-control shadow-lg border border-primary-subtle"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4"></div>
+                        <div class="col-12 col-md-4">
+                            <div class="btn btn-primary" t-ref="new_visit_create" t-on-click="() => this._newVisitCreate()">New</div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4  contacts_search_keys1"></div>
+                    </div>
+
+                    <div t-ref="contacts_companies"
+                         class="contacts_companies d-none bg-white text-center rounded-top  shadow-lg mt-2 mx-4 p-1 p-md-3 "></div>
+
+                    <div class="mt-4 shadow-lg">
+                        <div class="row contacts_list_header bg-primary rounded-top shadow-sm mx-0 py-1">
+                            <div class="col-12 row p-3 p-md-0">
+                                    <div class="col-12 col-md-1 p-1 text-center"></div>
+                                    <div class="col-12 col-md-3 p-1 text-center">Name</div>
+                                    <div class="col-12 col-md-2 p-1 text-center d-none1 d-md-block">Employee</div>
+                                    <div class="col-12 col-md-2 p-1 text-center d-none1 d-md-block">Check IN</div>
+                                    <div class="col-12 col-md-2 p-1 text-center d-none1 d-md-block">Check OUT</div>
+                            </div>
+                        </div>
+                        <div t-ref="visit_contacts_list" t-on-click="onVisitsClick" class="contacts_list mx-0 h-100"></div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </t>
+</template>

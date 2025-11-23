@@ -11,7 +11,143 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-export class SdContactsDashboard extends Component {
+export class SdContactsVisitorsDashboard extends Component {
+//    static template = "sd_contacts.contacts_template";
+//    static components = { Dropdown, DropdownItem };
+    setup(){
+//        super.setup();
+        let self = this;
+        this.action = useService("action");
+        this.orm = useService('orm')
+        this.newVisitCreate = useRef('new_visit_create')
+        this.visitContactsList = useRef('visit_contacts_list')
+        this.state = useState({
+            visits: []
+
+        })
+        onWillUpdateProps(async (nextProps) => {
+            let data = this.getData()
+            console.log('data 1:', data)
+
+        });
+        onMounted(async () => {
+            this.refreshList()
+        });
+        onWillUnmount(() => {
+
+
+        });
+        this._newVisitCreate = this._newVisitCreate.bind(this);
+        this.refreshList = this.refreshList.bind(this);
+        this.onVisitsClick = this.onVisitsClick.bind(this);
+
+    }
+    async refreshList(){
+        let data = await this.getData()
+        console.log('data 2:', data)
+
+    }
+
+    async refreshList(){
+        let data = await this.getData()
+        this.state.visits = data['visits_list'];
+        this.updateList(this.state.visits)
+//        console.log('refreshList:', this.state.visits)
+
+    }
+    async onVisitsClick(e){
+        let visit_id = 0;
+        if (e.target.classList.contains('visit_id_btn')){
+            visit_id = e.target.id
+        }else if (e.target.parentElement.classList.contains('visit_id_btn')){
+            visit_id = e.target.parentElement.id
+        }
+        console.log('onVisitsClick:', visit_id)
+        if (visit_id){
+        // TODO: set check_out for this record
+                let data = await this.orm.call('sd_contacts.visits', 'set_check_out', [false, visit_id,])
+            this.refreshList()
+        }
+    }
+    updateList(data){
+//        if(!data || !this.contactsList){
+//            return
+//        }
+//        console.log('updateList:', data)
+        this.visitContactsList.el.innerHTML = ''
+
+
+
+        let visitListHtml = ''
+        data.forEach(rec => {
+            visitListHtml += `
+            <div id="${rec.id}" class="visit_id row border-bottom p-2 mb-1 shadow-sm mx-0 " >
+                <div class="col-1"> <button id="${rec.id}" class="visit_id_btn px-2 btn btn-fill-custom bg-danger-light fa fa-sign-out">out</button></div>
+                <div class="col-3"> ${rec.name}</div>
+                <div class="col-2"> ${rec.employee || ''}</div>
+                <div class="col-2"> ${rec.check_in}</div>
+                <div class="col-2"> ${rec.check_out || ''}</div>
+            </div>
+            `
+        })
+
+        visitListHtml += '<div style="height: 100px;"></div>'
+        this.visitContactsList.el.innerHTML = visitListHtml;
+
+    }
+    async getData(){
+    let data = await this.orm.call('sd_contacts.visits', 'contact_web', [[]], {})
+//    console.log('getData:', JSON.parse(data))
+    return JSON.parse(data)
+    }
+
+
+    _newVisitCreate(){
+        let res_model, domain, context, action_name;
+        res_model = "sd_contacts.visits"
+        action_name = _t("New visit")
+        domain = []
+        context = {}
+
+        this.action.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: action_name,
+                res_model: res_model,
+                views: [[false, "form"],],
+                view_mode: "form",
+                domain: domain,
+                context: context,
+                target: 'new',
+            },
+            { onClose: () =>{
+//            console.log('this:', this)
+            this.refreshList()
+            }
+            })
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export class SdContactsVisitorsDashboard1 extends Component {
 //    static template = "sd_contacts.contacts_template";
 //    static components = { Dropdown, DropdownItem };
     setup(){
@@ -43,13 +179,13 @@ export class SdContactsDashboard extends Component {
             let images
             images = self.contactsList.el.querySelectorAll('.img_div')
 //            console.log('nextProps', self, images)
-            await self.orm.call('hr.employee', 'contact_web', [[]], {})
+            await self.orm.call('sd_contacts.visitors', 'contact_web', [[]], {})
                 .then(data => JSON.parse(data))
                 .then(data=> {
                     self.state.employees = data['contact_list'];
                     self.state.attendances = data['attendances'];
                 })
-//            console.log('aaaa', self.state.employees[10])
+            console.log('aaaa', self.state.employees[10])
             images.forEach(r => {
                 r.classList.remove('border-success', 'border-warning', 'border-gray', 'border-5')
                 const rec = self.state.employees.find(i => i.id == r.id)
@@ -66,14 +202,9 @@ export class SdContactsDashboard extends Component {
             browser.addEventListener('keyup', self._onContactsSearch);
             browser.addEventListener('click', self._copyToClipBoard)
             self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
-//            self.contactsSelectLocation.el.addEventListener('click', self._onContactsSelectLocation)
-//            self.contactsSelectDepartment.el.addEventListener('click', self._onContactsSelectDepartment)
-
             this.selectedLocation.el.innerHTML = _t('Location')
             this.selectedDepartment.el.innerHTML = _t('Department')
-//        await self.orm.searchRead('hr.employee',
-//                                [],
-//                                ['id', 'name', 'work_phone', 'work_email', 'department_id', 'job_title'],{order: 'sequence'})
+
         this.refreshList()
         });
         onWillUnmount(() => {
@@ -323,13 +454,13 @@ export class SdContactsDashboard extends Component {
     }
 }
 
-SdContactsDashboard.template = "sd_contacts.contacts_template";
+SdContactsVisitorsDashboard.template = "sd_contacts.visitors_contacts_template";
 //SdContactsDashboard.template = "sd_contacts.contacts_template_website_new";
-SdContactsDashboard.components = { Dropdown, DropdownItem };
+SdContactsVisitorsDashboard.components = { Dropdown, DropdownItem };
 
 //SdContactsDashboard.template = xml`<div>,,,,xml....</div>`;
 
-registry.category("actions").add("sd_contacts.contacts_dashboard", SdContactsDashboard);
+registry.category("actions").add("sd_contacts.visitors_contacts_dashboard", SdContactsVisitorsDashboard);
 //registry.add("w_sd_contacts_contacts_dashboard", SdContactsDashboard);
 
 

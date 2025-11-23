@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!--__________________________________ Visitors ____________________________________-->
+
+    <record id="visitors_list" model="ir.ui.view">
+        <field name="name">Visitors</field>
+        <field name="model">sd_contacts.visitors</field>
+        <field name="arch" type="xml">
+                <list editable="bottom">
+                    <field name="name"/>
+                    <field name="national_id"/>
+                    <field name="mobile_no"/>
+                </list>
+            </field>
+    </record>
+
+    <record id="visitors_action" model="ir.actions.act_window">
+        <field name="name">Visitorss</field>
+        <field name="res_model">sd_contacts.visitors</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="visitors_list"/>
+
+    </record>
+
+    <!--__________________________________ Visits ____________________________________-->
+
+    <record id="visits_form" model="ir.ui.view">
+        <field name="name">Visits</field>
+        <field name="model">sd_contacts.visits</field>
+        <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" placeholder="Visitor's name"/>
+                                <field name="employee_id" placeholder="whom to visit to"/>
+                            </group>
+                            <group>
+                                <field name="check_in" readonly="1"/>
+                                <field name="check_out" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="e.g. Meeting"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+    </record>
+    <record id="visits_list" model="ir.ui.view">
+        <field name="name">Visits</field>
+        <field name="model">sd_contacts.visits</field>
+        <field name="arch" type="xml">
+                <list editable="bottom">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                </list>
+            </field>
+    </record>
+
+    <record id="visits_action" model="ir.actions.act_window">
+        <field name="name">Visits</field>
+        <field name="res_model">sd_contacts.visits</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="visits_list"/>
+
+    </record>
+
+    <!--__________________________________ Menu ____________________________________-->
+
+    <menuitem name="Visitors"
+              id="visitors_menu"
+              parent="configuration_menu"
+              groups="sd_contacts.group_sd_contacts_admins"
+              action="visitors_action" />
+
+    <menuitem name="Visits"
+              id="visits_menu"
+              parent="configuration_menu"
+              groups="sd_contacts.group_sd_contacts_admins"
+              action="visits_action" />
+
+
+</odoo>

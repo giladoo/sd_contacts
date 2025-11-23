@@ -30,9 +30,11 @@ class ReportSdContacts(models.AbstractModel):
 
         gate_ids = data.get('form_data').get('gate')
         gates = self.env['sd_contacts.gate_info'].browse(gate_ids)
-        location = data.get('form_data').get('location')
 
-        if report_type == 'daily':
+        location = data.get('form_data').get('location')
+        ic(location)
+
+        if report_type == 'daily' and gates:
             start_date = data.get('form_data').get('daily_start')
             end_date = data.get('form_data').get('daily_end')
             # todo: timezone
@@ -48,15 +50,17 @@ class ReportSdContacts(models.AbstractModel):
                       ]
             attendances = self.env['hr.attendance'].search(domain)
             if location:
-                attendances = list([rec for rec in attendances if rec.in_gate.location == location[0] or rec.out_gate.location == location[0]])
+                attendances = list([rec for rec in attendances if rec.in_gate.location.id == location[0] or rec.out_gate.location.id == location[0]])
             if gate_ids:
-                attendances = list([rec for rec in attendances if rec.in_gate in gate_ids or rec.out_gate in gate_ids])
+                attendances = list([rec for rec in attendances if rec.in_gate.id in gate_ids or rec.out_gate.id in gate_ids])
         elif report_type == 'aa':
             start_date = data.get('form_data').get('start_date')
             end_date = data.get('form_data').get('end_date')
             gate = data.get('form_data').get('gate')
             start_date = datetime.strptime(start_date, DATETIME_FORMAT)
             end_date = datetime.strptime(end_date, DATETIME_FORMAT)
+            end_date = end_date.replace(hour=20, minute=29, second=59, microsecond=0)
+            start_date = start_date.replace(hour=20, minute=30, second=0, microsecond=0) - timedelta(days=1)
             data = {'gate': gate[1],
                     'start_date': self.date_converter(start_date, lang),
                     'end_date': self.date_converter(end_date, lang)
