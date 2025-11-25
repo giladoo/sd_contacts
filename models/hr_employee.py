@@ -16,31 +16,34 @@ class HrEmployeeSdContacts(models.Model):
 
 
     def contact_web(self):
-        # ic('contact_web')
         # company_id = self.env.user.company_id
         # company_ids = self.env.user.company_ids
         today = datetime.now(pytz.timezone(self.env.context.get('tz', 'Asia/Tehran'))).date()
+
+        utc_now = datetime.now()
+        start_of_day_local = utc_now.astimezone(pytz.timezone(self.env.context.get('tz', 'Asia/Tehran')))
+        start_of_day_local_1 = start_of_day_local.replace(hour=0, minute=0, second=0, microsecond=0)
+        start_of_day_local_2 = start_of_day_local_1.astimezone(pytz.timezone('UTC'))
+        start_of_day = start_of_day_local_2.replace(tzinfo=None)
+
         if self.env.is_admin():
             company_ids = self.env['res.company'].search([])
         else:
             # todo: error psycopg2.errors.UndefinedTable: relation "res_company_res_users_rel" does not exist
             # company_ids = self.env.user.sd_contacts_companies
             company_ids = self.env['res.company'].sudo().search([])
+
         show_projects = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_projects')
         show_locations = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_locations')
         show_job_title = self.env['ir.config_parameter'].sudo().get_param('sd_contacts.show_job_title')
+        domain = [('company_id', 'in', company_ids.ids), ('show_in_contact_list', '=', True)]
+        employee_list = self.sudo().search(domain, order='sequence')
 
-        employee_list = self.sudo().search([('company_id', 'in', company_ids.ids), ('show_in_contact_list', '=', True)], order='sequence')
-        attendances = self.env['hr.attendance'].sudo().search_read([('check_in', '>=', today )], [ 'employee_id',])
+        # domain = ['|', ('check_in', '>=', start_of_day ), ('check_out', '=', False)]
+        domain = [('check_in', '>=', start_of_day ), ]
+        attendances = self.env['hr.attendance'].sudo().search_read(domain, [ 'employee_id',])
         attendances = list({rec['employee_id'][0] for rec in attendances})
 
-#         print(f'''
-#
-#                 {self.env.user.name}  is admin: {self.env.is_admin()}
-#                 {company_ids}
-#                 employee_list: {len(employee_list)}
-#
-# ''')
         contact_list = list([
             {
                 'sequence' : rec.sequence,
@@ -63,28 +66,19 @@ class HrEmployeeSdContacts(models.Model):
             for rec in employee_list
         ])
 
-        location_list = list({
-                    rec.work_location_id.name for rec in employee_list if rec.work_location_id
-                    })
+        location_list = list({ rec.work_location_id.name for rec in employee_list if rec.work_location_id})
         location_list.insert(0, _('All'))
 
-        department_list = list({
-                    rec.department_id.name for rec in employee_list if rec.department_id
-                    })
+        department_list = list({rec.department_id.name for rec in employee_list if rec.department_id})
         department_list.insert(0, _('All'))
-        project_list = list({
-                    rec.project_name.name for rec in employee_list if rec.project_name
-                    })
+
+        project_list = list({rec.project_name.name for rec in employee_list if rec.project_name})
         project_list.insert(0, _('All'))
 
-        company_list = list([
-            rec.name
-            for rec in company_ids
-        ])
+        company_list = list([rec.name for rec in company_ids ])
         employee = self.env.user.employee_id
         send_list = self.env['sd_contacts.send_list'].search_read([('employee_id', 'in', employee.id)],
                                                                   ['location',])
-        # print(f"\n >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n{employee.id} {employee.name}\n{send_list}\n")
 
         labels = {
             'title': _('Employees Contact Information'),
@@ -94,7 +88,7 @@ class HrEmployeeSdContacts(models.Model):
             'phone': _('Phone'),
             'email': _('Email'),
             }
-        # ic(contact_list, company_list, location_list, department_list)
+
         return json.dumps({'contact_list': contact_list,
                            'company_list': company_list,
                            'location_list': location_list,

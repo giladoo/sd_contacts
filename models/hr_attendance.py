@@ -152,11 +152,21 @@ class SdContactsHrAttendance(models.Model):
                                                               ['name', 'hr_icon_display'])
         today = fields.Datetime.today()
         # today = today.astimezone(pytz.timezone(user_tz))
+        utc_now = datetime.now()
+        start_of_day_local = utc_now.astimezone(pytz.timezone(self.env.context.get('tz', 'Asia/Tehran')))
+        start_of_day_local_1 = start_of_day_local.replace(hour=0, minute=0, second=0, microsecond=0)
+        start_of_day_local_2 = start_of_day_local_1.astimezone(pytz.timezone('UTC'))
+        start_of_day = start_of_day_local_2.replace(tzinfo=None)
 
-        attendances = self.sudo().search([('employee_id', '=', employee_id), ('check_in', '>=', today ) ], order='id')
+        attendances = self.sudo().search([('employee_id', '=', employee_id),
+                                          '|','|',
+                                          ('check_in', '>=', start_of_day ) ,
+                                          ('check_out', '>=', start_of_day ) ,
+                                          ('check_out', '=', False ) ,
+                                          ], order='id')
 
         attendance_times = list([{'id': rec.id,
-                                  'check_in': self.get_time(rec.check_in),
+                                  'check_in': self.get_time(rec.check_in, month=True if rec.check_in < start_of_day else False),
                                   'check_out': self.get_time(rec.check_out),
                                   'in_gate': rec.in_gate.code,
                                   'out_gate': rec.out_gate.code,
@@ -164,8 +174,8 @@ class SdContactsHrAttendance(models.Model):
 
         # ic(employee, attendances, today, attendance_times)
         employee_leaves = self.env['hr.leave'].sudo().search([('employee_id', '=', employee_id),
-                                                              ('date_from', '<=', today  + timedelta(days=1)),
-                                                              ('date_to', '>=', today),
+                                                              ('date_from', '<=', start_of_day  + timedelta(days=1)),
+                                                              ('date_to', '>=', start_of_day),
                                                               ], order='id')
         # print(f"$$$$$$$$$$$ LEAVE:\n {employee_leaves}")
         leaves = []
@@ -173,8 +183,8 @@ class SdContactsHrAttendance(models.Model):
             time_of_date_from = leave.date_from.astimezone(pytz.timezone(user_tz)).strftime("%H:%M")
             time_of_date_to = leave.date_to.astimezone(pytz.timezone(user_tz)).strftime("%H:%M")
 
-            leave_start = '00:00' if leave.date_from < today else time_of_date_from
-            leave_end = '23:59' if leave.date_to > today + timedelta(days=1) else time_of_date_to
+            leave_start = '00:00' if leave.date_from < start_of_day else time_of_date_from
+            leave_end = '23:59' if leave.date_to > start_of_day + timedelta(days=1) else time_of_date_to
             if leave.state == 'validate':
                 state_icon = 'fa-check'
             elif leave.state == 'confirm':
@@ -235,6 +245,7 @@ class SdContactsHrAttendance(models.Model):
                 res =  (ddate, dtime)
             else:
                 res = dtime
+
         else:
             res =  ''
 

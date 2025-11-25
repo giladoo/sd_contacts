@@ -39,15 +39,46 @@ class SdContactsVisits(models.Model):
 
 
 
-    def contact_web(self):
-        today = datetime.now(pytz.timezone(self.env.context.get('tz', 'Asia/Tehran'))).date()
-
-        visits = self.sudo().search([('check_in', '>=', today)], )
-
+    def contact_web(self, present='presents'):
         destination_tz = pytz.timezone(self.env.context.get('tz', 'Asia/Tehran'))
         def local_date(date_time, destination_tz):
             date_time = pytz.utc.localize(date_time).astimezone(destination_tz)
             return jdatetimejs(date_time, '%Y/%m/%d %H:%M')
+
+        today = datetime.now(pytz.timezone(self.env.context.get('tz', 'Asia/Tehran'))).date()
+
+        # utc_now = fields.Datetime.now()
+        # tz_name = self.env.user.tz or 'UTC'
+        # tz = pytz.timezone(tz_name)
+        # local_dt = utc_now.astimezone(tz)
+        # start_of_day = utc_now.replace(hour=0, minute=0, second=0, microsecond=0)
+        # start_of_day_local = pytz.utc.localize(start_of_day).astimezone(destination_tz)
+
+        utc_now = datetime.now()
+        start_of_day_local = utc_now.astimezone(pytz.timezone(self.env.context.get('tz', 'Asia/Tehran')))
+        start_of_day_local_1 = start_of_day_local.replace(hour=0, minute=0, second=0, microsecond=0)
+        start_of_day_local_2 = start_of_day_local_1.astimezone(pytz.timezone('UTC'))
+        start_of_day = start_of_day_local_2.replace(tzinfo=None)
+
+        domain = [ ('check_out', '=', False)]
+        order = "check_in desc"
+        if present == 'all':
+            domain = ['|', ('check_in', '>=', start_of_day), ('check_out', '=', False) ]
+            order = "name, check_in desc"
+        # print(f"<<<<<<<<<<<<<<<< \npresent: {present} \ndomain: {domain}\norder: {order}")
+        visits = self.sudo().search(domain, order=order )
+        # value = fields.Datetime.context_timestamp(self, value)
+        # print(f"ddddddddddddddddddddd\n"
+        #       f"check_in:              {visits[0].check_in}\n"
+        #       f"utc_now:               {utc_now}\n"
+        #       f"start_of_day_local:    {start_of_day_local}\n"
+        #       f"start_of_day_local_1:  {start_of_day_local_1}\n"
+        #       f"start_of_day_local_2:  {start_of_day_local_2}\n"
+        #       f"start_of_day :         {start_of_day}")
+        # TODO:  check_in between 00:00 to 03:30 are not shown in today
+        #  today: 2025-11-25
+        #  check_in: 2025-11-24 20:44:56
+
 
         visits_list = list([
             {

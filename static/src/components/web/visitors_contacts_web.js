@@ -22,7 +22,8 @@ export class SdContactsVisitorsDashboard extends Component {
         this.newVisitCreate = useRef('new_visit_create')
         this.visitContactsList = useRef('visit_contacts_list')
         this.state = useState({
-            visits: []
+            visits: [],
+            presents: 'presents',
 
         })
         onWillUpdateProps(async (nextProps) => {
@@ -37,15 +38,16 @@ export class SdContactsVisitorsDashboard extends Component {
 
 
         });
-        this._newVisitCreate = this._newVisitCreate.bind(this);
+        this._onVisitButton = this._onVisitButton.bind(this);
         this.refreshList = this.refreshList.bind(this);
         this.onVisitsClick = this.onVisitsClick.bind(this);
+        this.onShowAllVisits = this.onShowAllVisits.bind(this);
 
     }
-    async refreshList(){
-        let data = await this.getData()
-        console.log('data 2:', data)
 
+    onShowAllVisits(ev){
+        this.state.present = ev.target.checked ? 'presents' : 'all'
+        this.refreshList()
     }
 
     async refreshList(){
@@ -76,13 +78,21 @@ export class SdContactsVisitorsDashboard extends Component {
 //        console.log('updateList:', data)
         this.visitContactsList.el.innerHTML = ''
 
-
+        let textColor = ''
+        let btnOut = ''
 
         let visitListHtml = ''
         data.forEach(rec => {
+            if (!rec.check_out){
+                textColor = 'text-success'
+                btnOut = `<button id="${rec.id}" class="visit_id_btn px-2 btn btn-fill-custom bg-danger-light fa fa-sign-out">out</button>`
+            } else{
+                textColor = 'text-bg-300'
+                btnOut = ''
+            }
             visitListHtml += `
-            <div id="${rec.id}" class="visit_id row border-bottom p-2 mb-1 shadow-sm mx-0 " >
-                <div class="col-1"> <button id="${rec.id}" class="visit_id_btn px-2 btn btn-fill-custom bg-danger-light fa fa-sign-out">out</button></div>
+            <div id="${rec.id}" class="visit_id row border-bottom p-2 mb-1 shadow-sm mx-0 ${textColor} " >
+                <div class="col-1">${btnOut} </div>
                 <div class="col-3"> ${rec.name}</div>
                 <div class="col-2"> ${rec.employee || ''}</div>
                 <div class="col-2"> ${rec.check_in}</div>
@@ -96,26 +106,35 @@ export class SdContactsVisitorsDashboard extends Component {
 
     }
     async getData(){
-    let data = await this.orm.call('sd_contacts.visits', 'contact_web', [[]], {})
-//    console.log('getData:', JSON.parse(data))
-    return JSON.parse(data)
+        let data = await this.orm.call('sd_contacts.visits', 'contact_web', [false, this.state.present], {})
+        return JSON.parse(data)
     }
 
-
-    _newVisitCreate(){
-        let res_model, domain, context, action_name;
-        res_model = "sd_contacts.visits"
-        action_name = _t("New visit")
-        domain = []
-        context = {}
+    _onVisitButton(name=''){
+        let res_model, views, view_mode, domain, context, action_name;
+        if(name == 'new'){
+            res_model = "sd_contacts.visits"
+            action_name = _t("New visit")
+            views = [[false, "form"],]
+            view_mode = "form"
+            domain = []
+            context = {}
+        } else if(name == 'visits'){
+            res_model = "sd_contacts.visits"
+            action_name = _t("Visits List")
+            views = [[false, "list"],]
+            view_mode = "list"
+            domain = []
+            context = {}
+        }
 
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
                 name: action_name,
                 res_model: res_model,
-                views: [[false, "form"],],
-                view_mode: "form",
+                views: views,
+                view_mode: view_mode,
                 domain: domain,
                 context: context,
                 target: 'new',

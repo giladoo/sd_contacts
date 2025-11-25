@@ -7,24 +7,30 @@
             <div class="container1 h-100 my-4 px-1 ">
                 <div class="sd_employee_contacts  ">
                     <div class="row mx-0">
-                        <div class="col-12 col-md-4 ">
+                        <div class="col-12 col-md-6 ">
                             <div class="row">
-                                <div class="col-1 btn  border-0 px-2"
+                                <div class="col-1 mx-1 px-2">
+                                    <input type="checkbox" class="form-check-input border-success rounded-1"
+                                               t-ref="present_list" checked="1" t-on-change="(ev) => this.onShowAllVisits(ev)">
+                                    </input>
+
+                                </div>
+                                <div class="col-1 mx-1 btn  border-0 px-2"
                                          t-ref="refresh_list" t-on-click="() => this.refreshList()">
                                     <i class=" fa fa-refresh text-600"></i>
                                 </div>
-                                <div class="col-1 btn btn-outline-primary btn-close px-2"
+                                <div class="col-1 mx-1 btn btn-outline-primary btn-close px-2"
                                      t-ref="search_clear" t-on-click="() => this.selectFilterItems(true)">
                                 </div>
-                                <div class="col-9">
+                                <div class="col-8">
                                     <input type="text" t-ref="contacts_search"
                                            class="contacts_search form-control shadow-lg border border-primary-subtle"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-4"></div>
-                        <div class="col-12 col-md-4">
-                            <div class="btn btn-primary" t-ref="new_visit_create" t-on-click="() => this._newVisitCreate()">New</div>
+                        <div class="col-12 col-md-6 text-end">
+                            <div class="btn btn-primary mx-1" t-ref="new_visit_create" t-on-click="() => this._onVisitButton('new')">New</div>
+                            <div class="btn btn-primary mx-1" t-ref="new_visit_create" t-on-click="() => this._onVisitButton('visits')">Visits</div>
                         </div>
 
                     </div>
