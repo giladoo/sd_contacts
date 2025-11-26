@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-23 23:22+0000\n"
-"PO-Revision-Date: 2025-08-24 02:58+0330\n"
+"POT-Creation-Date: 2025-11-26 17:00+0000\n"
+"PO-Revision-Date: 2025-11-26 20:36+0330\n"
 "Last-Translator: Arash Homayounfar <homayounfar@msn.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,9 +23,25 @@ msgid "'attendance-%s' % object.name "
 msgstr ""
 
 #. module: sd_contacts
+#: model:ir.actions.report,print_report_name:sd_contacts.present_list_report
+msgid "'kpe_present-%s' % ''"
+msgstr ""
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
+msgid "111"
+msgstr ""
+
+#. module: sd_contacts
 #: model_terms:ir.ui.view,arch_db:sd_contacts.gate_attendance_search
 msgid "2 days ago"
 msgstr "دو روز قبل"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.attendance_list_template
+msgid "<span class=\"col mx-2\">All Gates</span>"
+msgstr ""
 
 #. module: sd_contacts
 #. odoo-javascript
@@ -90,6 +106,29 @@ msgid "Cancel"
 msgstr ""
 
 #. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.xml:0
+msgid "Check IN"
+msgstr "ورود"
+
+#. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__check_in
+#: model_terms:ir.ui.view,arch_db:sd_contacts.visits_search
+msgid "Check In"
+msgstr "ورود"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.xml:0
+msgid "Check OUT"
+msgstr "خروج"
+
+#. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__check_out
+msgid "Check Out"
+msgstr "خروج"
+
+#. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__code
 msgid "Code"
 msgstr "کد"
@@ -119,13 +158,34 @@ msgstr "کپی شد"
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__create_uid
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__create_uid
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_send_list__create_uid
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__create_uid
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__create_date
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__create_date
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_send_list__create_date
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__create_date
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: sd_contacts
+#: model:ir.model.fields.selection,name:sd_contacts.selection__sd_contacts_attendance_report_wizard__report_type__daily
+msgid "Daily"
+msgstr "روزانه"
+
+#. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__daily_end
+msgid "Daily End"
+msgstr ""
+
+#. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__daily_start
+msgid "Daily Start"
 msgstr ""
 
 #. module: sd_contacts
@@ -161,8 +221,16 @@ msgid "Department"
 msgstr "واحد سازمانی"
 
 #. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__description
+msgid "Description"
+msgstr "توضیحات"
+
+#. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__display_name
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__display_name
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_send_list__display_name
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__display_name
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -178,7 +246,14 @@ msgid "Email"
 msgstr "ایمیل"
 
 #. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_hr_work_location__emergency_emails
+msgid "Emergency Emails"
+msgstr "ایمیلهای اضطراری"
+
+#. module: sd_contacts
 #: model:ir.model,name:sd_contacts.model_hr_employee
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_send_list__employee_id
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__employee_id
 msgid "Employee"
 msgstr "کارمند"
 
@@ -239,6 +314,11 @@ msgid "Gates"
 msgstr "درب ورودی"
 
 #. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.attendance_list_template
+msgid "Gates:"
+msgstr "گیت ها"
+
+#. module: sd_contacts
 #. odoo-javascript
 #: code:addons/sd_contacts/static/src/components/security_gates/security_gates.xml:0
 msgid "Guests"
@@ -247,11 +327,15 @@ msgstr "میهمان ها"
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__id
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__id
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_send_list__id
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__id
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__id
 msgid "ID"
 msgstr ""
 
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_hr_attendance__in_gate
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__in_gate
 msgid "In Gate"
 msgstr "گیت ورود"
 
@@ -264,12 +348,18 @@ msgstr "ورود/خروج"
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__write_uid
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__write_uid
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_send_list__write_uid
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__write_uid
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__write_date
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__write_date
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_send_list__write_date
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__write_date
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -285,9 +375,38 @@ msgstr "مرخصی/ماموریت"
 #: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.js:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__location
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__location
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_send_list__location
 msgid "Location"
 msgstr "محل کار"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.attendance_list_template
+msgid "Location:"
+msgstr "محل کار:\v"
+
+#. module: sd_contacts
+#: model:ir.actions.act_window,name:sd_contacts.location_action
+#: model:ir.ui.menu,name:sd_contacts.location_menu
+msgid "Locations"
+msgstr "مکان ها"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.present_list_template
+msgid "Locations List"
+msgstr "لیست مکان ها"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.xml:0
+msgid "Mobile"
+msgstr "موبایل"
+
+#. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__mobile_no
+msgid "Mobile No"
+msgstr "شماره موبایل"
 
 #. module: sd_contacts
 #. odoo-javascript
@@ -296,13 +415,39 @@ msgstr "محل کار"
 #: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website.xml:0
 #: code:addons/sd_contacts/static/src/components/teml/employee_contacts_website_new.xml:0
 #: code:addons/sd_contacts/static/src/components/web/employee_contacts_web.xml:0
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.xml:0
 #: code:addons/sd_contacts/static/src/components/website/employee_contacts_website.js:0
 #: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_gate_info__name
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__name
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__name
 msgid "Name"
 msgstr "نام"
 
 #. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visitors__national_id
+msgid "National"
+msgstr "کدملی"
+
+#. module: sd_contacts
+#: model:ir.model.constraint,message:sd_contacts.constraint_sd_contacts_visitors_national_id_uniq
+msgid "National ID MUST be unique!"
+msgstr "کدملی نمی تواند تکراری باشد"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.xml:0
+msgid "New"
+msgstr "جدید"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.js:0
+msgid "New visit"
+msgstr "ملاقات جدید"
+
+#. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_hr_attendance__out_gate
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_visits__out_gate
 msgid "Out Gate"
 msgstr "گیت خروج"
 
@@ -322,6 +467,12 @@ msgstr "تلفن"
 #: model_terms:ir.ui.view,arch_db:sd_contacts.gate_leave_search
 msgid "Present"
 msgstr "حاضر"
+
+#. module: sd_contacts
+#: model:ir.actions.report,name:sd_contacts.present_list_report
+#: model:ir.model,name:sd_contacts.model_report_sd_contacts_present_list_template
+msgid "Present List"
+msgstr "لیست حاضر ها"
 
 #. module: sd_contacts
 #. odoo-javascript
@@ -353,6 +504,11 @@ msgid "Public Employee"
 msgstr "کارمند عمومی"
 
 #. module: sd_contacts
+#: model:ir.model.fields,field_description:sd_contacts.field_sd_contacts_attendance_report_wizard__report_type
+msgid "Report Type"
+msgstr ""
+
+#. module: sd_contacts
 #: model:ir.ui.menu,name:sd_contacts.reports_menu
 msgid "Reports"
 msgstr "گزارش ها"
@@ -372,6 +528,15 @@ msgstr ""
 #: model:ir.actions.client,name:sd_contacts.sd_contacts_security_gates_action
 msgid "Security Gates"
 msgstr "درب ها"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/security_gates/security_gates.xml:0
+#: model:ir.actions.act_window,name:sd_contacts.send_list_action
+#: model:ir.model,name:sd_contacts.model_sd_contacts_send_list
+#: model:ir.ui.menu,name:sd_contacts.send_list_menu
+msgid "Send List"
+msgstr "لیست ارسال"
 
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_hr_employee__sequence
@@ -414,6 +579,7 @@ msgstr "تاریخ شروع"
 #. module: sd_contacts
 #: model_terms:ir.ui.view,arch_db:sd_contacts.gate_attendance_search
 #: model_terms:ir.ui.view,arch_db:sd_contacts.gate_leave_search
+#: model_terms:ir.ui.view,arch_db:sd_contacts.visits_search
 msgid "Today"
 msgstr "امروز"
 
@@ -433,9 +599,61 @@ msgid "Viewer"
 msgstr ""
 
 #. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.xml:0
+#: model_terms:ir.ui.view,arch_db:sd_contacts.visits_form
+msgid "Visited"
+msgstr "ملاقات شونده"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.visits_search
+msgid "Visitor"
+msgstr "ملاقات کننده"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.visits_form
+msgid "Visitor's name"
+msgstr "نام ملاقات کننده"
+
+#. module: sd_contacts
+#: model:ir.ui.menu,name:sd_contacts.visitors_menu
+msgid "Visitors"
+msgstr "ملاقات کننده ها"
+
+#. module: sd_contacts
+#: model:ir.model,name:sd_contacts.model_sd_contacts_visitors
+msgid "Visitors data"
+msgstr "اطلاعات ملاقات کننده ها"
+
+#. module: sd_contacts
+#: model:ir.actions.act_window,name:sd_contacts.visitors_action
+msgid "Visitorss"
+msgstr ""
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.xml:0
+#: model:ir.actions.act_window,name:sd_contacts.visits_action
+#: model:ir.ui.menu,name:sd_contacts.visits_menu
+msgid "Visits"
+msgstr "ملاقات"
+
+#. module: sd_contacts
+#. odoo-javascript
+#: code:addons/sd_contacts/static/src/components/web/visitors_contacts_web.js:0
+msgid "Visits List"
+msgstr "لیست ملاقات"
+
+#. module: sd_contacts
+#: model:ir.model,name:sd_contacts.model_sd_contacts_visits
+msgid "Visits data"
+msgstr "اطلاعات ملاقات"
+
+#. module: sd_contacts
+#: model:ir.model,name:sd_contacts.model_hr_work_location
 #: model:ir.model.fields,field_description:sd_contacts.field_hr_attendance__work_location_id
 msgid "Work Location"
-msgstr "محل کار"
+msgstr "مکان کاری"
 
 #. module: sd_contacts
 #: model_terms:ir.ui.view,arch_db:sd_contacts.gate_attendance_search
@@ -448,6 +666,11 @@ msgid "attendance_list_report_template"
 msgstr ""
 
 #. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.visits_form
+msgid "e.g. Meeting"
+msgstr "برای مثال: جلسه"
+
+#. module: sd_contacts
 #: model:ir.model.fields,help:sd_contacts.field_sd_contacts_gate_info__code
 msgid "ex: G1, G2, ..."
 msgstr ""
@@ -457,6 +680,11 @@ msgstr ""
 #: code:addons/sd_contacts/static/src/components/security_gates/security_gates.xml:0
 msgid "latest Attendances"
 msgstr "آخرین تردد ها"
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.present_list_report_template
+msgid "present_list_report_template"
+msgstr ""
 
 #. module: sd_contacts
 #: model:ir.module.category,description:sd_contacts.module_category_sd_contacts
@@ -472,6 +700,11 @@ msgstr "اطلاعات تماس کارکنان"
 #: model:ir.model,name:sd_contacts.model_sd_contacts_attendance_report_wizard
 msgid "sd_contacts.attendance_report_wizard"
 msgstr ""
+
+#. module: sd_contacts
+#: model_terms:ir.ui.view,arch_db:sd_contacts.visits_form
+msgid "whom to visit to"
+msgstr "نام ملاقات شونده"
 
 #. module: sd_contacts
 #. odoo-javascript
