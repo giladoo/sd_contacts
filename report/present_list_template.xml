@@ -58,6 +58,34 @@
                             </tbody>
                         </table>
                     </t>
+                    <div  class="h1 bg-500 mt-5 py-3 text-center rounded" t-esc="'Visitors'"></div>
+                <t t-set="col_counts" t-value="4"/>
+                <t t-set="row_counts" t-value="len(att_visitors)//col_counts + 1"/>
+                <t t-set="row_counter" t-value="0"/>
+                <t t-set="index" t-value="0"/>
+<!--                    <t t-foreach="att_visitors" t-as="visit" t-key="visit.id">-->
+                        <table class="table text-center" style="font-family: IRANSansFN;">
+                            <tbody>
+                                <tr t-foreach="row_counts" t-as="row_count">
+                                    <t t-foreach="att_visitors[row_count*col_counts:row_count*col_counts + col_counts]"
+                                       t-as="att" t-key="l">
+                                        <td class="" style="width: 20%;">
+<!--                                            <div onClick="onClick(att.employee_id.id)" id="att.employee_id.id" class="emp_image">-->
+<!--                                                <img t-att-src="'/web/image?model=hr.employee.public&amp;id=' + str(att.employee_id.id) + '&amp;field=avatar_128'"-->
+<!--                                                     style="width: 120px;height: 120px;"-->
+<!--                                                />-->
+<!--                                            </div>-->
+                                            <div class="h3 mt-2" t-esc="att.name.name"></div>
+                                            <div class="" t-esc="att.name.mobile_no"></div>
+                                            <div class="" t-esc="att.employee_id.name"></div>
+                                        </td>
+                                    </t>
+                                    <t t-set="index" t-value="index+col_counts"/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+<!--                    </t>-->
                 </div>
             </t>
         </template>

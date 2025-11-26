@@ -30,34 +30,27 @@ export class SdContactsDashboard extends Component {
         this.searchClear = useRef('search_clear')
         this.popover = usePopover(Tooltip);
         this.state = useState({
+            presents: false,
             employees: [],
             contacts_filtered: [],
             departments: ['q'],
             locations: ['w'],
             companies: [],
             search: [''],
+            selectedLocation: _t('All'),
             selectedDepartment: _t('All'),
             attendances: [],
         })
         onWillUpdateProps(async (nextProps) => {
             let images
             images = self.contactsList.el.querySelectorAll('.img_div')
-//            console.log('nextProps', self, images)
-            await self.orm.call('hr.employee', 'contact_web', [[]], {})
-                .then(data => JSON.parse(data))
-                .then(data=> {
-                    self.state.employees = data['contact_list'];
-                    self.state.attendances = data['attendances'];
-                })
-//            console.log('aaaa', self.state.employees[10])
+            let data = await self.getData()
+            self.state.employees = data['contact_list'];
+            self.state.attendances = data['attendances'];
             images.forEach(r => {
                 r.classList.remove('border-success', 'border-warning', 'border-gray', 'border-5')
                 const rec = self.state.employees.find(i => i.id == r.id)
                 const words = self.setImageClass(rec).split(' ')
-
-
-                r.id == 4 ? console.log('bbb', words) : ''
-//                console.log('bbb', self.setImageClass(quoted))
                 r.classList.add(...words)
             })
 
@@ -92,28 +85,39 @@ export class SdContactsDashboard extends Component {
         this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
         this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
         this.refreshList = this.refreshList.bind(this);
+        this.onPresentList = this.onPresentList.bind(this)
+
+    }
+    async onPresentList(ev){
+        this.state.presents = ev.target.checked
+        await this.refreshList()
+        this.selectFilterItems()
+    }
+    async getData(){
+        let data = await this.orm.call('hr.employee', 'contact_web', [[]], {})
+        return JSON.parse(data)
     }
     async refreshList(){
         let self = this;
-        await self.orm.call('hr.employee', 'contact_web', [[]], {})
-            .then(data => JSON.parse(data))
-            .then(data=> {
-                self.state.employees = data['contact_list'];
-//                    console.log('employees\n', self.state.employees)
-                self.state.contacts_filtered = data['contact_list'];
-                self.state.companies = data['company_list'];
-                self.state.locations = data['location_list'];
-                self.state.departments = data['department_list'];
-                self.state.attendances = data['attendances'];
-                self.updateList(self.state.employees)
-                if (self.state.companies.length > 1){
-                    self.contactsCompanies.el.classList.remove('d-none')
-                    self.updateCompanyList(self.state.companies)
-                    let e = Object();
-                    e['target'] = 'all'
-                    self._onContactsCompanies(e)
-                }
-            })
+        let data = await this.getData()
+
+        self.state.employees = data['contact_list'];
+        self.state.contacts_filtered = data['contact_list'];
+        self.state.companies = data['company_list'];
+        self.state.locations = data['location_list'];
+        self.state.departments = data['department_list'];
+        self.state.attendances = data['attendances'];
+        if (self.state.presents){
+            self.state.contacts_filtered = self.state.employees.filter(rec => ["presence_present",].includes(rec.hr_icon_display))
+        }
+        self.updateList(self.state.contacts_filtered)
+        if (self.state.companies.length > 1){
+            self.contactsCompanies.el.classList.remove('d-none')
+            self.updateCompanyList(self.state.companies)
+            let e = Object();
+            e['target'] = 'all'
+            self._onContactsCompanies(e)
+        }
     }
     sendUpdates(){
         console.log('getUpdates')
@@ -134,9 +138,7 @@ export class SdContactsDashboard extends Component {
             department = _t('All')
             this.state.search = ['']
             this.contactsSearch.el.value = ''
-
         }
-
         if (location != _t('All')){
             this.selectedLocation.el.innerHTML =  `${location}`
             this.state.contacts_filtered = this.state.employees.filter(rec => rec.work_location == location)
@@ -144,7 +146,6 @@ export class SdContactsDashboard extends Component {
             this.selectedLocation.el.innerHTML = _t('Location')
             this.state.selectedLocation = _t('All')
             this.state.contacts_filtered = this.state.employees
-
         }
         if (department != _t('All')){
             this.selectedDepartment.el.innerHTML =  `${department}`
@@ -156,7 +157,10 @@ export class SdContactsDashboard extends Component {
             this.state.contacts_filtered = this.state.contacts_filtered
         }
 
+        if (this.state.presents){
 
+            this.state.contacts_filtered = this.state.contacts_filtered.filter(rec => ["presence_present",].includes(rec.hr_icon_display))
+        }
         this._onContactsSearch('')
     }
     _onContactsSelectLocation(e){
@@ -314,12 +318,12 @@ export class SdContactsDashboard extends Component {
 //            || rec.work_email ? rec.work_email.includes(st) : false
 //        }))
         return ar.filter(rec => {
-        return ((rec.name ? rec.name.includes(st) : false)
-            || (rec.work_phone ? rec.work_phone.includes(st) : false)
-            || (rec.work_location ? rec.work_location.includes(st) : false)
-            || (rec.work_email ? rec.work_email.includes(st) : false)
-            || (rec.barcode ? rec.barcode.includes(st) : false))
-        })
+                    return ((rec.name ? rec.name.includes(st) : false)
+                        || (rec.work_phone ? rec.work_phone.includes(st) : false)
+                        || (rec.work_location ? rec.work_location.includes(st) : false)
+                        || (rec.work_email ? rec.work_email.includes(st) : false)
+                        || (rec.barcode ? rec.barcode.includes(st) : false))
+                    })
     }
 }
 

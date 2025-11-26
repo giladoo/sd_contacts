@@ -23,6 +23,7 @@ export class SdContactsSecurityGates extends Component {
         this.action = useService("action");
         this.state = useState({
             sendUpdates: 1,
+            sendVisitUpdates: 1,
             gate: {name: 'main', id: 1},
             gates: [{name: 'main', id: 1}],
             today: '',
@@ -30,6 +31,7 @@ export class SdContactsSecurityGates extends Component {
         })
 
         this.employeeAttendanceData = useRef('employee_attendance_data')
+        this.visitorAttendanceData = useRef('visitors_attendance_data')
         this.SdContactsDashboardRef = useRef('sd_contacts_dashboard')
         this.todayDate = useRef('today_date')
         this.selectedGate = useRef('selected_gate')
@@ -75,9 +77,17 @@ export class SdContactsSecurityGates extends Component {
         }else if (visit_id == 0 && e.target.parentElement.classList.contains('visit_id')){
             visit_id = e.target.parentElement.id
         }
-        console.log('onVisitListClick:', visit_id)
         if (visit_id){
         // TODO: show record data on the info box
+            let data = await this.orm.call('sd_contacts.visits', 'get_attendance', [false, visit_id,])
+            data = JSON.parse(data)
+//            console.log('get_attendance', data)
+            const bannerElement = renderToElement("sd_contacts.visitor_template", {
+                props: { data, }, this: this
+            });
+            this.visitorAttendanceData.el.innerHTML = ''
+            this.visitorAttendanceData.el.appendChild(bannerElement)
+
         }
     }
     async onEmployeeListClick(e, employee_id=0){
@@ -173,6 +183,12 @@ export class SdContactsSecurityGates extends Component {
         let data = await this.orm.call('hr.attendance', 'set_attendance', [false, employee_id, this.state.gate.id])
         this.onEmployeeListClick(false, employee_id)
         this.state.sendUpdates = [{id: 4, hr_icon_display: this.state.sendUpdates.hr_icon_display == 'presence_present' ? 'presence_absence' : 'presence_present'}]
+    }
+    async onVisitInOutClick(visitor_id){
+        let visit_id = await this.orm.call('sd_contacts.visits', 'set_attendance', [false, visitor_id, this.state.gate.id])
+        this.onVisitListClick(false, visit_id)
+//        this.state.sendUpdates = [{id: 4, hr_icon_display: this.state.sendUpdates.hr_icon_display == 'presence_present' ? 'presence_absence' : 'presence_present'}]
+        this.state.sendVisitUpdates += 1
     }
     sendUpdates(){
 //        console.log('sendUpdates')

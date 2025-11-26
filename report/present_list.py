@@ -44,6 +44,7 @@ class ReportSdContactsPresentList(models.AbstractModel):
             if is_fa else date_now.strftime(DATETIME_FORMAT)
 
         att_employees = self.env['hr.attendance'].search(att_domain )
+        att_visitors = self.env['sd_contacts.visits'].search(att_domain )
         # att = dict(tools.groupby(att_employees, key=lambda a: a.in_gate.location))
         grouped_att = dict(
             tools.groupby(att_employees, key=lambda a: a.employee_id.work_place_id))
@@ -64,6 +65,7 @@ class ReportSdContactsPresentList(models.AbstractModel):
             'date_now_s': date_now_s,
             'att_employees': att_employees,
             'grouped_att': grouped_att,
+            'att_visitors': att_visitors,
             'count': len(att_employees)
 
         }

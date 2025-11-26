@@ -12,308 +12,44 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class SdContactsVisitorsDashboard extends Component {
-//    static template = "sd_contacts.contacts_template";
-//    static components = { Dropdown, DropdownItem };
     setup(){
-//        super.setup();
         let self = this;
         this.action = useService("action");
         this.orm = useService('orm')
         this.newVisitCreate = useRef('new_visit_create')
         this.visitContactsList = useRef('visit_contacts_list')
+        this.contactsSearch = useRef('contacts_search')
         this.state = useState({
             visits: [],
             presents: 'presents',
+            gateId: this.props.gateId,
+            search: [],
+            contacts_filtered: [],
 
         })
         onWillUpdateProps(async (nextProps) => {
-            let data = this.getData()
-            console.log('data 1:', data)
+//            let data = this.getData()
+//            console.log('data 1:', nextProps.sendVisitUpdates, this.props.sendVisitUpdates)
+            if(nextProps.sendVisitUpdates != this.props.sendVisitUpdates){
+                this.refreshList()
+            }
 
         });
         onMounted(async () => {
             this.refreshList()
+            browser.addEventListener('keyup', self._onContactsSearch);
+
         });
         onWillUnmount(() => {
-
+            browser.removeEventListener('keyup', self._onContactsSearch);
 
         });
         this._onVisitButton = this._onVisitButton.bind(this);
         this.refreshList = this.refreshList.bind(this);
         this.onVisitsClick = this.onVisitsClick.bind(this);
         this.onShowAllVisits = this.onShowAllVisits.bind(this);
-
-    }
-
-    onShowAllVisits(ev){
-        this.state.present = ev.target.checked ? 'presents' : 'all'
-        this.refreshList()
-    }
-
-    async refreshList(){
-        let data = await this.getData()
-        this.state.visits = data['visits_list'];
-        this.updateList(this.state.visits)
-//        console.log('refreshList:', this.state.visits)
-
-    }
-    async onVisitsClick(e){
-        let visit_id = 0;
-        if (e.target.classList.contains('visit_id_btn')){
-            visit_id = e.target.id
-        }else if (e.target.parentElement.classList.contains('visit_id_btn')){
-            visit_id = e.target.parentElement.id
-        }
-        console.log('onVisitsClick:', visit_id)
-        if (visit_id){
-        // TODO: set check_out for this record
-                let data = await this.orm.call('sd_contacts.visits', 'set_check_out', [false, visit_id,])
-            this.refreshList()
-        }
-    }
-    updateList(data){
-//        if(!data || !this.contactsList){
-//            return
-//        }
-//        console.log('updateList:', data)
-        this.visitContactsList.el.innerHTML = ''
-
-        let textColor = ''
-        let btnOut = ''
-
-        let visitListHtml = ''
-        data.forEach(rec => {
-            if (!rec.check_out){
-                textColor = 'text-success'
-                btnOut = `<button id="${rec.id}" class="visit_id_btn px-2 btn btn-fill-custom bg-danger-light fa fa-sign-out">out</button>`
-            } else{
-                textColor = 'text-bg-300'
-                btnOut = ''
-            }
-            visitListHtml += `
-            <div id="${rec.id}" class="visit_id row border-bottom p-2 mb-1 shadow-sm mx-0 ${textColor} " >
-                <div class="col-1">${btnOut} </div>
-                <div class="col-3"> ${rec.name}</div>
-                <div class="col-2"> ${rec.employee || ''}</div>
-                <div class="col-2"> ${rec.check_in}</div>
-                <div class="col-2"> ${rec.check_out || ''}</div>
-            </div>
-            `
-        })
-
-        visitListHtml += '<div style="height: 100px;"></div>'
-        this.visitContactsList.el.innerHTML = visitListHtml;
-
-    }
-    async getData(){
-        let data = await this.orm.call('sd_contacts.visits', 'contact_web', [false, this.state.present], {})
-        return JSON.parse(data)
-    }
-
-    _onVisitButton(name=''){
-        let res_model, views, view_mode, domain, context, action_name;
-        if(name == 'new'){
-            res_model = "sd_contacts.visits"
-            action_name = _t("New visit")
-            views = [[false, "form"],]
-            view_mode = "form"
-            domain = []
-            context = {}
-        } else if(name == 'visits'){
-            res_model = "sd_contacts.visits"
-            action_name = _t("Visits List")
-            views = [[false, "list"],]
-            view_mode = "list"
-            domain = []
-            context = {}
-        }
-
-        this.action.doAction(
-            {
-                type: "ir.actions.act_window",
-                name: action_name,
-                res_model: res_model,
-                views: views,
-                view_mode: view_mode,
-                domain: domain,
-                context: context,
-                target: 'new',
-            },
-            { onClose: () =>{
-//            console.log('this:', this)
-            this.refreshList()
-            }
-            })
-    }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export class SdContactsVisitorsDashboard1 extends Component {
-//    static template = "sd_contacts.contacts_template";
-//    static components = { Dropdown, DropdownItem };
-    setup(){
-//        super.setup();
-        let self = this;
-        this.orm = useService('orm')
-        this.contactsSearch = useRef('contacts_search')
-        this.contactsList = useRef('contacts_list')
-        this.contactsPhone = useRef('contacts_phone')
-        this.contactsEmail = useRef('contacts_email')
-        this.contactsCompanies = useRef('contacts_companies')
-        this.contactsSelectLocation = useRef('contacts_select_location')
-        this.selectedLocation = useRef('selected_location')
-        this.contactsSelectDepartment = useRef('contacts_select_department')
-        this.selectedDepartment = useRef('selected_department')
-        this.searchClear = useRef('search_clear')
-        this.popover = usePopover(Tooltip);
-        this.state = useState({
-            employees: [],
-            contacts_filtered: [],
-            departments: ['q'],
-            locations: ['w'],
-            companies: [],
-            search: [''],
-            selectedDepartment: _t('All'),
-            attendances: [],
-        })
-        onWillUpdateProps(async (nextProps) => {
-            let images
-            images = self.contactsList.el.querySelectorAll('.img_div')
-//            console.log('nextProps', self, images)
-            await self.orm.call('sd_contacts.visitors', 'contact_web', [[]], {})
-                .then(data => JSON.parse(data))
-                .then(data=> {
-                    self.state.employees = data['contact_list'];
-                    self.state.attendances = data['attendances'];
-                })
-            console.log('aaaa', self.state.employees[10])
-            images.forEach(r => {
-                r.classList.remove('border-success', 'border-warning', 'border-gray', 'border-5')
-                const rec = self.state.employees.find(i => i.id == r.id)
-                const words = self.setImageClass(rec).split(' ')
-
-
-                r.id == 4 ? console.log('bbb', words) : ''
-//                console.log('bbb', self.setImageClass(quoted))
-                r.classList.add(...words)
-            })
-
-        });
-        onMounted(async () => {
-            browser.addEventListener('keyup', self._onContactsSearch);
-            browser.addEventListener('click', self._copyToClipBoard)
-            self.contactsCompanies.el.addEventListener('click', self._onContactsCompanies)
-            this.selectedLocation.el.innerHTML = _t('Location')
-            this.selectedDepartment.el.innerHTML = _t('Department')
-
-        this.refreshList()
-        });
-        onWillUnmount(() => {
-//                    console.log('con onWillUnmount')
-
-            browser.removeEventListener('keyup', self._onContactsSearch);
-            browser.removeEventListener('click', self._copyToClipBoard)
-            self.contactsCompanies.el.removeEventListener('click', self._onContactsCompanies)
-//            self.contactsSelectLocation.el.removeEventListener('click', self._onContactsSelectLocation)
-//            self.contactsSelectDepartment.el.removeEventListener('click', self._onContactsSelectDepartment)
-
-        });
         this._onContactsSearch = this._onContactsSearch.bind(this);
-        this._copyToClipBoard = this._copyToClipBoard.bind(this);
-        this._onContactsCompanies = this._onContactsCompanies.bind(this);
-        this._onContactsSelectLocation = this._onContactsSelectLocation.bind(this);
-        this._onContactsSelectDepartment = this._onContactsSelectDepartment.bind(this);
-        this.refreshList = this.refreshList.bind(this);
-    }
-    async refreshList(){
-        let self = this;
-        await self.orm.call('hr.employee', 'contact_web', [[]], {})
-            .then(data => JSON.parse(data))
-            .then(data=> {
-                self.state.employees = data['contact_list'];
-//                    console.log('employees\n', self.state.employees)
-                self.state.contacts_filtered = data['contact_list'];
-                self.state.companies = data['company_list'];
-                self.state.locations = data['location_list'];
-                self.state.departments = data['department_list'];
-                self.state.attendances = data['attendances'];
-                self.updateList(self.state.employees)
-                if (self.state.companies.length > 1){
-                    self.contactsCompanies.el.classList.remove('d-none')
-                    self.updateCompanyList(self.state.companies)
-                    let e = Object();
-                    e['target'] = 'all'
-                    self._onContactsCompanies(e)
-                }
-            })
-    }
-    sendUpdates(){
-        console.log('getUpdates')
-    }
-    selectLocation(location){
-        this.state.selectedLocation = location
-        this.selectFilterItems()
-    }
-    selectDepartment(department){
-        this.state.selectedDepartment = department
-        this.selectFilterItems()
-    }
-    selectFilterItems(search_clear = false){
-        let location = this.state.selectedLocation
-        let department = this.state.selectedDepartment
-        if (search_clear){
-            location = _t('All')
-            department = _t('All')
-            this.state.search = ['']
-            this.contactsSearch.el.value = ''
 
-        }
-
-        if (location != _t('All')){
-            this.selectedLocation.el.innerHTML =  `${location}`
-            this.state.contacts_filtered = this.state.employees.filter(rec => rec.work_location == location)
-        } else {
-            this.selectedLocation.el.innerHTML = _t('Location')
-            this.state.selectedLocation = _t('All')
-            this.state.contacts_filtered = this.state.employees
-
-        }
-        if (department != _t('All')){
-            this.selectedDepartment.el.innerHTML =  `${department}`
-            this.state.contacts_filtered = this.state.contacts_filtered.filter(rec => rec.department == department)
-
-        } else {
-            this.selectedDepartment.el.innerHTML = _t('Department')
-            this.state.selectedDepartment = _t('All')
-            this.state.contacts_filtered = this.state.contacts_filtered
-        }
-
-
-        this._onContactsSearch('')
-    }
-    _onContactsSelectLocation(e){
-        console.log('_onContactsSelectLocation:', e)
-    }
-    _onContactsSelectDepartment(e){
-        console.log('_onContactsSelectDepartment:', e)
     }
     _onContactsSearch(e){
 //        console.log('con _onContactsSearch', e, this.contactsSearch)
@@ -335,157 +71,133 @@ export class SdContactsVisitorsDashboard1 extends Component {
         }
 
     }
-    setImageClass(rec){
-        let res;
-//        if (["presence_present", "presence_out_of_working_hour"].includes(rec.hr_icon_display)){
-        if (["presence_present",].includes(rec.hr_icon_display)){
-            res = 'border-success border-5'
-        } else if (rec.hr_icon_display == 'away' || this.state.attendances.includes(rec.id)){
-            res = 'border-warning border-5'
-        } else {
-            res = 'border-gray'
-        }
-        return res
+        _isInclude(ar, st){
+        return ar.filter(rec => {
+                        return ((rec.name ? rec.name.includes(st) : false)
+                            || (rec.national_id ? rec.national_id.includes(st) : false)
+                            || (rec.mobile_no ? rec.mobile_no.includes(st) : false)
+                            || (rec.employee ? rec.employee.includes(st) : false)
+                //            || (rec.barcode ? rec.barcode.includes(st) : false)
+                                )
+        })
     }
-    updateList(data){
-        if(!data || !this.contactsList){
-            return
+    selectFilterItems(search_clear = false){
+        if (search_clear){
+            this.state.search = ['']
+            this.contactsSearch.el.value = ''
         }
-        let statusBorder = 'border-gray';
-//        console.log('updateList', data)
-        this.contactsList.el.innerHTML = '';
-//                        <div class="col-2 px-1 img_div employee_image_id " id="${rec.id}"><img src="/web/image?model=hr.employee&amp;id=${rec.id}&amp;field=avatar_128"/></div>
-//                            <div class="img_div rounded-circle border  p-1 ${statusBorder} employee_image_id" id="${rec.id}"
-//                    style="background-image: url(/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128)" loading="lazy"></div>
-        let contactsListHtml = ''
+        this._onContactsSearch('')
+    }
+    onShowAllVisits(ev){
+        this.state.present = ev.target.checked ? 'presents' : 'all'
+        this.refreshList()
+    }
+
+    async refreshList(){
+        let data = await this.getData()
+        this.state.visits = data['visits_list'];
+        this.state.contacts_filtered = data['visits_list'];
+        this.updateList(this.state.visits)
+
+    }
+
+    updateList(data){
+//        if(!data || !this.contactsList){
+//            return
+//        }
+//        console.log('updateList:', data)
+        this.visitContactsList.el.innerHTML = ''
+
+        let textColor = ''
+        let btnOut = ''
+        let name = ''
+
+        let visitListHtml = ''
         data.forEach(rec => {
-            statusBorder = this.setImageClass(rec)
-
-            contactsListHtml += `
-            <div class="col-12 row mx-0 mb-1 px-0 border-bottom align-items-center shadow-sm">
-                <div class="col-2 col-md-2 px-1 py-1 employee_image_id" id="${rec.id}">
-                <img src="/web/image?model=hr.employee.public&amp;id=${rec.id}&amp;field=avatar_128" id="${rec.id}"
-                class="img_div rounded-circle border  ${statusBorder} employee_image_id" loading="lazy"/>
-
-                </div>
-
-                <div class="row col-10 col-md-10 p-3 p-md-0">
-
-                    <div class="row col-6 col-md-6 mx-0 mb-1 px-0 ">
-                        <div class="col-12 col-md-6 px-1 h6 text-center ">
-                            <div> ${rec.name}</div>
-                            <div class="mt-2"> ${rec.barcode ? rec.barcode : ''}</div>
-                        </div>
-                        <div class="col-12 col-md-6 px-1 text-center">
-                            <div class="h6" >${rec.job_title|| ''}</div>
-                            <div class="small  employee_department_name cursor-pointer">${rec.department || ''}</div>
-                            <div class="small">${this.state.companies.length > 1 ? rec.company : ''}</div>
-                        </div>
-                    </div>
-
-                    <div class="row col-6 col-md-6 mx-0 mb-1 px-0">
-                        <div ref="contacts_location" class="col-12 col-md-3 px-1 h6 text-center  employee_location_name cursor-pointer">
-                            ${rec.work_location || ''}
-                        </div>
-                        <div ref="contacts_phone" class="copy_to_clip_board col-12 col-md-3 px-1 h6 text-center">
-                            ${rec.work_phone || ''}
-                         </div>
-                        <div ref="contacts_email" class="copy_to_clip_board contact_email col-12 col-md-6 px-1  text-center small " >
-                           ${rec.work_email || ''}
-                        </div>
-                    </div>
-
-                </div>
+            if (!rec.check_out){
+                textColor = 'text-success'
+//                btnOut = `<div class="col-1">
+//                                <button id="${rec.id}" class="visit_id_btn px-2 btn btn-fill-custom bg-danger-light fa fa-sign-out">out</button>
+//                          </div>
+//                          `
+            } else{
+                textColor = 'text-bg-300'
+//                btnOut = `<div class="col-1"></div>`
+            }
+            name = rec.national_id ? `${rec.name} - ${rec.national_id}` : rec.name
+            visitListHtml += `
+            <div id="${rec.id}" class="visit_id row border-bottom p-2 mb-1 shadow-sm mx-0 ${textColor} " >
+                ${btnOut}
+                <div class="col-3"> ${name}</div>
+                <div class="col-2"> ${rec.mobile_no || ''}</div>
+                <div class="col-2"> ${rec.employee || ''}</div>
+                <div class="col-2"> ${rec.check_in}</div>
+                <div class="col-2"> ${rec.check_out || ''}</div>
             </div>
             `
         })
 
-        contactsListHtml += '<div style="height: 100px;"></div>'
-        this.contactsList.el.innerHTML = contactsListHtml;
+        visitListHtml += '<div style="height: 100px;"></div>'
+        this.visitContactsList.el.innerHTML = visitListHtml;
 
     }
-    updateCompanyList(data){
-        this.contactsCompanies.el.innerHTML += `
-            <div class="contacts_companies_btn contacts_companies_all btn btn-primary border-0 m-1 text-center ">All</div>
-        `
-        data.forEach(rec => {
-            this.contactsCompanies.el.innerHTML += `
-                <div class="contacts_companies_btn btn btn-primary border-0 m-1 text-center "> ${rec}</div>
-            `
-        })
+    async getData(){
+        let data = await this.orm.call('sd_contacts.visits', 'contact_web', [false, this.state.present], {})
+        return JSON.parse(data)
     }
-    _onContactsCompanies(ev){
-        let contactsCompany = false
-        let target = ev.target
-        if (target == 'all' || target.classList.contains('contacts_companies_all')){
-            contactsCompany = 'all';
-            target = this.el.querySelector('.contacts_companies_all')
-            this.state.contacts_filtered =  this.state.employees
+    async onVisitsClick(e){
+        let visit_id = 0;
+        this.state.gateId = this.props.gateId
+        if (e.target.classList.contains('visit_id_btn')){
+            visit_id = e.target.id
+        }else if (e.target.parentElement.classList.contains('visit_id_btn')){
+            visit_id = e.target.parentElement.id
         }
-        else if (target.classList.contains('contacts_companies_btn')){
-            contactsCompany = ev.target.innerText;
-            this.state.contacts_filtered =  this.state.employees.filter(rec => rec.company == contactsCompany)
+        if (visit_id){
+            await this.orm.call('sd_contacts.visits', 'set_check_out', [false, visit_id, this.state.gateId])
+            this.refreshList()
         }
-        if (contactsCompany){
-            let selected = this.contactsCompanies.el.querySelectorAll('.contacts_companies_selected')
-            selected.forEach(rec => rec.classList.remove('contacts_companies_selected'))
-            target.classList.add('contacts_companies_selected')
-            this.updateList(this.state.contacts_filtered)
+    }
+    _onVisitButton(name=''){
+        let res_model, views, view_mode, domain, context, action_name;
+        this.state.gateId = this.props.gateId
+        if(name == 'new'){
+            res_model = "sd_contacts.visits"
+            action_name = _t("New visit")
+            views = [[false, "form"],]
+            view_mode = "form"
+            domain = []
+            context = {'default_in_gate': this.state.gateId}
+        } else if(name == 'visits'){
+            res_model = "sd_contacts.visits"
+            action_name = _t("Visits List")
+            views = [[false, "list"],]
+            view_mode = "list"
+            domain = []
+            context = {'search_default_today': 1, 'search_default_name_group': 1}
         }
 
-
-    }
-    showTooltip(target) {
-        this.popover.open(target, { tooltip: _t("Copied") });
-        browser.setTimeout(this.popover.close, 800);
-    }
-    _copyToClipBoard(e){
-        let copyText = e.target.innerText;
-        let target = e.target
-        if (target.classList.contains('copy_to_clip_board')){
-            navigator.clipboard.writeText(target.innerText);
-            this.showTooltip(target)
-
-        }
-        else if (target.classList.contains('employee_department_name')){
-            this.selectDepartment(target.innerText)
-        }
-        else if (target.classList.contains('employee_location_name')){
-            this.selectLocation(target.innerText)
-        }
-        else if (target.classList.contains('employee_project_name')){
-            this.selectProject(target.innerText)
-        }
-    }
-    _isInclude(ar, st){
-//        console.log(ar.filter(rec => {
-//        return rec.name ? rec.name.includes(st) : false
-//            || rec.work_phone ? rec.work_phone.includes(st) : false
-//            || rec.work_email ? rec.work_email.includes(st) : false
-//        }))
-        return ar.filter(rec => {
-        return ((rec.name ? rec.name.includes(st) : false)
-            || (rec.work_phone ? rec.work_phone.includes(st) : false)
-            || (rec.work_location ? rec.work_location.includes(st) : false)
-            || (rec.work_email ? rec.work_email.includes(st) : false)
-            || (rec.barcode ? rec.barcode.includes(st) : false))
-        })
+        this.action.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: action_name,
+                res_model: res_model,
+                views: views,
+                view_mode: view_mode,
+                domain: domain,
+                context: context,
+                target: 'new',
+            },
+            { onClose: () =>{
+//            console.log('this:', this)
+            this.refreshList()
+            }
+            })
     }
 }
 
 SdContactsVisitorsDashboard.template = "sd_contacts.visitors_contacts_template";
-//SdContactsDashboard.template = "sd_contacts.contacts_template_website_new";
 SdContactsVisitorsDashboard.components = { Dropdown, DropdownItem };
-
-//SdContactsDashboard.template = xml`<div>,,,,xml....</div>`;
-
+SdContactsVisitorsDashboard.props = { gateId: Number, sendVisitUpdates: Number }
 registry.category("actions").add("sd_contacts.visitors_contacts_dashboard", SdContactsVisitorsDashboard);
-//registry.add("w_sd_contacts_contacts_dashboard", SdContactsDashboard);
 
-
-//registry.category("public_components").add("sd_contacts.contact_list_component_web", SdContactsDashboard);
-
-
-
-
-//export default SdContactsDashboard;

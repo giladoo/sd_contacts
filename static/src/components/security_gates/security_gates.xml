@@ -46,7 +46,8 @@
                     </div>
                     <div class="mt-3 border rounded shadow" style="height: 600px;">
                         <div class="" t-ref="visitors_list"></div>
-                        <SdContactsVisitorsDashboard t-on-click="onVisitListClick" sendUpdates="this.state.sendUpdates"/>
+                        <SdContactsVisitorsDashboard t-on-click="onVisitListClick" gateId="state.gate.id"
+                                                     sendVisitUpdates="this.state.sendVisitUpdates"/>
 
                     </div>
 
@@ -75,8 +76,10 @@
             <div class="col-4 px-2">
                 <t t-foreach="props.data.attendances" t-as="attendance" t-key="attendance.id">
                     <div class="row text-center ">
-                        <div class="col-6 bg-success-light border-bottom rounded-start" t-esc="attendance.check_in + ' / ' + attendance.in_gate"></div>
-                        <div t-if="attendance.check_out" class="col-6 bg-danger-light border-bottom rounded-end" t-esc="attendance.check_out + ' / ' +  attendance.out_gate"></div>
+                        <div class="col-6 bg-success-light border-bottom rounded-start"
+                             t-esc=" attendance.check_in[0] + ' \n ' + attendance.check_in[1] + ' / ' + attendance.in_gate"> </div>
+                        <div t-if="attendance.check_out[1]" class="col-6 bg-danger-light border-bottom rounded-end"
+                             t-esc=" attendance.check_out[0] + ' \n ' + attendance.check_out[1]  + ' / ' +  attendance.out_gate"> </div>
 
                     </div>
                 </t>
@@ -95,6 +98,33 @@
                     </t>
                 </div>
 
+            </div>
+
+        </div>
+    </t>
+
+    <t t-name="sd_contacts.visitor_template" owl="1">
+        <div class="row mx-0 p-3 ">
+            <div class="col-3 text-center align-content-start">
+                <div class="h-75 ">
+                    <div class="h5" t-esc="props.data.visitor.name"></div>
+                    <div class="" t-esc="props.data.visitor.national_id"></div>
+                    <div class="" t-esc="props.data.visitor.mobile_no"></div>
+                </div>
+                <div t-if="props.data.is_operator" class="btn btn-primary mt-2" t-on-click="() => this.onVisitInOutClick(props.data.visitor.id)">
+                    In/Out
+                </div>
+            </div>
+            <div class="col-5 px-1">
+                <t t-foreach="props.data.visit_times" t-as="attendance" t-key="attendance.id">
+                    <div class="row text-center ">
+                        <div class="col-6 bg-success-light border-bottom rounded-start"
+                             t-esc=" attendance.check_in[0] + ' \n ' + attendance.check_in[1] + ' / ' + attendance.in_gate"> </div>
+                        <div t-if="attendance.check_out[1]" class="col-6 bg-danger-light border-bottom rounded-end"
+                             t-esc=" attendance.check_out[0] + ' \n ' + attendance.check_out[1]  + ' / ' +  attendance.out_gate"> </div>
+
+                    </div>
+                </t>
             </div>
 
         </div>

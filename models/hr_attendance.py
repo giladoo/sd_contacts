@@ -204,6 +204,7 @@ class SdContactsHrAttendance(models.Model):
 
         is_operator = self.env.user._has_group('sd_contacts.group_sd_contacts_operators')
         data = {'attendances': attendance_times, 'employee': employee[0], 'leaves': leaves, 'is_operator': is_operator}
+        # print(f",,,,,,,,,,,,,,\n attendances: {attendance_times}")
         return json.dumps(data)
 
     def set_attendance_btn(self):
@@ -244,10 +245,10 @@ class SdContactsHrAttendance(models.Model):
                 ddate = jdatetime.date.fromgregorian(date=date_time.astimezone(pytz.timezone(user_tz))).strftime("%b %d")
                 res =  (ddate, dtime)
             else:
-                res = dtime
+                res = ('', dtime)
 
         else:
-            res =  ''
+            res =  ('', '')
 
         return res
 
