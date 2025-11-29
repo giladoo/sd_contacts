@@ -43,11 +43,13 @@ class ReportSdContactsPresentList(models.AbstractModel):
         date_now_s = f"{jdatejs(date_now, DATE_FORMAT_J)}  {date_now.strftime(TIME_FORMAT)}" \
             if is_fa else date_now.strftime(DATETIME_FORMAT)
 
-        att_employees = self.env['hr.attendance'].search(att_domain )
+        att_employees = self.env['hr.attendance'].search(att_domain, order="employee_id" )
         att_visitors = self.env['sd_contacts.visits'].search(att_domain )
         # att = dict(tools.groupby(att_employees, key=lambda a: a.in_gate.location))
         grouped_att = dict(
             tools.groupby(att_employees, key=lambda a: a.employee_id.work_place_id))
+        print(f">>>>>>>>>>>\n grouped_att: {grouped_att}")
+
         grouped_att = dict(sorted(
             grouped_att.items(),
             key=lambda item: item[0].sequence if item[0] else 9999  # item[0] is the key (recordset)
