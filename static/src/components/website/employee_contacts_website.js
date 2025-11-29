@@ -63,6 +63,7 @@ export class SdContactsContactList extends Component {
                         projects: 'پروژه',
                         departments: 'واحد سازمانی',
                         locations: 'محل کار',
+                        sendList: ' ارسال لیست ',
                         }
         const labelsEn = {
                         title: _t('Employees Contact Information 1'),
@@ -74,6 +75,7 @@ export class SdContactsContactList extends Component {
                         projects: 'Projects',
                         departments: 'Departments',
                         locations: 'Locations',
+                        sendList: ' Send List ',
                         }
 
         this.state.labels = session.lang_url_code == 'fa' ? labelsFa : labelsEn

@@ -5,7 +5,7 @@
             <div class="container h-100 my-4 px-1 ">
                 <div t-if="this.state.send_list.length" class=" mb-2 text-end">
                     <t t-foreach="this.state.send_list" t-as="send" t-key="send.id">
-                        <div class="btn btn-danger" t-esc="send.location[1]" t-on-click="()=>onSendListClick(send.location[0])"></div>
+                        <div class="btn btn-danger" t-esc="this.state.labels.sendList + send.location[1]" t-on-click="()=>onSendListClick(send.location[0])"></div>
 
                     </t>
                 </div>

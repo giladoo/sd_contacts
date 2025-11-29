@@ -536,7 +536,7 @@ msgstr "درب ها"
 #: model:ir.model,name:sd_contacts.model_sd_contacts_send_list
 #: model:ir.ui.menu,name:sd_contacts.send_list_menu
 msgid "Send List"
-msgstr "لیست ارسال"
+msgstr " ارسال لیست"
 
 #. module: sd_contacts
 #: model:ir.model.fields,field_description:sd_contacts.field_hr_employee__sequence
