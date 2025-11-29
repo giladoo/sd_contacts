@@ -31,7 +31,7 @@ class SdContactsAttendanceReport(models.TransientModel):
     @api.onchange('daily_start', 'daily_end')
     def _check_dates(self):
         for record in self:
-            print(f">>>>>>>>>>>>>>>>>>> ?: {record.daily_end < record.daily_start}\n {record.daily_start} \n {record.daily_end}")
+            # print(f">>>>>>>>>>>>>>>>>>> ?: {record.daily_end < record.daily_start}\n {record.daily_start} \n {record.daily_end}")
 
             if record.daily_end and record.daily_start and record.daily_end < record.daily_start:
                 record.daily_end = record.daily_start

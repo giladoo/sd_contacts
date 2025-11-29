@@ -48,7 +48,7 @@ class ReportSdContactsPresentList(models.AbstractModel):
         # att = dict(tools.groupby(att_employees, key=lambda a: a.in_gate.location))
         grouped_att = dict(
             tools.groupby(att_employees, key=lambda a: a.employee_id.work_place_id))
-        print(f">>>>>>>>>>>\n grouped_att: {grouped_att}")
+        # print(f">>>>>>>>>>>\n grouped_att: {grouped_att}")
 
         grouped_att = dict(sorted(
             grouped_att.items(),
